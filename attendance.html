@@ -1,0 +1,270 @@
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Attendance - BuildPro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            background: #1F4E79;
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 30px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .sidebar a:hover {
+            color: #F4A261;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            background: #F4F7FA;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+        }
+
+        #todayDate {
+            margin-bottom: 25px;
+            color: #555;
+        }
+
+        .form-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .form-section h2 {
+            margin-bottom: 15px;
+            color: #1F4E79;
+        }
+
+        input {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            background: #F4A261;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        /* Table Header */
+        .table-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            font-weight: 600;
+            padding: 10px;
+            margin-bottom: 10px;
+            color: #1F4E79;
+        }
+
+        /* Labour Row */
+        .labour-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #fff;
+            border-radius: 8px;
+        }
+
+        .labour-row span {
+            word-break: break-word;
+            font-weight: 500;
+        }
+
+        .labour-row select {
+            padding: 6px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            width: 100%;
+            text-align: center;
+        }
+
+        .remove-btn {
+            padding: 6px 10px;
+            border: none;
+            background: #e74c3c;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .remove-btn:hover {
+            opacity: 0.8;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <h2>BuildPro</h2>
+    <ul>
+        <li><a href="supervisor.html">Dashboard</a></li>
+        <li><a href="attendance.html">Attendance</a></li>
+        <li><a href="#">Daily Updates</a></li>
+        <li><a href="#">Measurements</a></li>
+        <li><a href="#">Logout</a></li>
+    </ul>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+
+    <h1>Labour Attendance</h1>
+    <h3 id="todayDate"></h3>
+
+    <!-- Add Labour -->
+    <div class="form-section">
+        <h2>Add Labour (One-Time Setup)</h2>
+        <input type="text" id="labourNameInput" placeholder="Enter Labour Name">
+        <button onclick="addLabour()">Add</button>
+    </div>
+
+    <!-- Attendance -->
+    <div class="form-section">
+        <h2>Mark Attendance</h2>
+
+        <div class="table-header">
+            <div>Labour Name</div>
+            <div>Status</div>
+            <div>Action</div>
+        </div>
+
+        <div id="attendanceForm"></div>
+    </div>
+
+</div>
+
+<script>
+
+    // Show today's date
+    const today = new Date();
+    document.getElementById("todayDate").innerText =
+        "Date: " + today.toLocaleDateString();
+
+    // Load saved labours
+    window.onload = function() {
+        displayLabours();
+    }
+
+    // Add labour
+    function addLabour() {
+        const name = document.getElementById("labourNameInput").value.trim();
+
+        if (name === "") {
+            alert("Enter labour name");
+            return;
+        }
+
+        let labours = JSON.parse(localStorage.getItem("labours")) || [];
+        labours.push(name);
+        localStorage.setItem("labours", JSON.stringify(labours));
+
+        document.getElementById("labourNameInput").value = "";
+        displayLabours();
+    }
+
+    // Display labours
+    function displayLabours() {
+        const container = document.getElementById("attendanceForm");
+        container.innerHTML = "";
+
+        let labours = JSON.parse(localStorage.getItem("labours")) || [];
+
+        labours.forEach((name, index) => {
+            const div = document.createElement("div");
+            div.classList.add("labour-row");
+
+            div.innerHTML = `
+                <span>${name}</span>
+
+                <select onchange="changeColor(this)">
+                    <option value="present">Present</option>
+                    <option value="absent">Absent</option>
+                </select>
+
+                <button class="remove-btn" onclick="removeLabour(${index})">Remove</button>
+            `;
+
+            container.appendChild(div);
+        });
+    }
+
+    // Remove labour
+    function removeLabour(index) {
+        let labours = JSON.parse(localStorage.getItem("labours")) || [];
+        labours.splice(index, 1);
+        localStorage.setItem("labours", JSON.stringify(labours));
+        displayLabours();
+    }
+
+    // Change color based on selection
+    function changeColor(select) {
+        if (select.value === "present") {
+            select.style.backgroundColor = "#d4edda";
+            select.style.color = "#155724";
+        } else {
+            select.style.backgroundColor = "#f8d7da";
+            select.style.color = "#721c24";
+        }
+    }
+
+</script>
+
+</body>
+</html>

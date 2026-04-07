@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Core Konstruct — Smart Construction Monitoring System</title>
+  <meta name="description"
+    content="Core Konstruct is a premium construction monitoring platform for contractors, supervisors, and clients. Track projects, monitor progress, and manage sites in real time.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/landing.css">
+</head>
+
+<body>
+
+  <!-- ████ NAVBAR ████ -->
+  <header id="navbar" class="scrolled">
+    <div class="nav-logo">
+      <div class="nav-logo-icon">🏗</div>
+      <span class="nav-logo-text">Core<span>Konstruct</span></span>
+    </div>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#projects">Projects</a>
+      <a href="blog.html">Blog</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="login.html" class="btn-primary btn-sm">Login →</a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile nav -->
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#projects">Projects</a>
+    <a href="blog.html">Blog</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+    <a href="login.html" style="color:var(--orange);font-weight:700;">Login →</a>
+  </nav>
+
+  <!-- ████ HERO (Assignment 1) ████ -->
+  <section id="hero" aria-label="Hero section">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">🏗 Smart Construction Platform</div>
+      <h1 class="hero-title">
+        Building Trust Through<br><span class="accent">Transparency</span>
+      </h1>
+      <p class="hero-subtitle">
+        Core Konstruct is the complete construction monitoring system — manage projects, track progress, and keep every
+        stakeholder in sync from site to boardroom.
+      </p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn-glow">View Projects ↓</a>
+        <a href="login.html" class="btn-ghost">Login to Dashboard</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat-item">
+          <div class="num" data-counter data-target="150" data-suffix="+">150+</div>
+          <div class="label">Projects Delivered</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="num" data-counter data-target="98" data-suffix="%">98%</div>
+          <div class="label">Client Satisfaction</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="num" data-counter data-target="12" data-suffix="yr">12yr</div>
+          <div class="label">Industry Experience</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="num" data-counter data-target="320" data-suffix="+">320+</div>
+          <div class="label">Workers Managed</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ████ FEATURES STRIP ████ -->
+  <section id="features-strip" aria-label="Key features">
+    <div class="features-strip-grid">
+      <div class="strip-item reveal">
+        <div class="strip-icon">📊</div>
+        <div class="strip-text">
+          <div class="title">Real-Time Tracking</div>
+          <div class="sub">Live project progress updates</div>
+        </div>
+      </div>
+      <div class="strip-item reveal" data-delay="100">
+        <div class="strip-icon">👷</div>
+        <div class="strip-text">
+          <div class="title">Labour Management</div>
+          <div class="sub">Attendance & workforce tracking</div>
+        </div>
+      </div>
+      <div class="strip-item reveal" data-delay="200">
+        <div class="strip-icon">📸</div>
+        <div class="strip-text">
+          <div class="title">Site Monitoring</div>
+          <div class="sub">Daily photos & visual reports</div>
+        </div>
+      </div>
+      <div class="strip-item reveal" data-delay="300">
+        <div class="strip-icon">💰</div>
+        <div class="strip-text">
+          <div class="title">Cost Control</div>
+          <div class="sub">Budget vs actual analysis</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ████ ABOUT (Assignment 2) ████ -->
+  <section id="about" aria-label="About Core Konstruct">
+    <div class="about-inner">
+      <div class="about-image-wrap reveal-left">
+        <img src="https://images.unsplash.com/photo-1531834685032-c34bf0d84c77?q=80&w=800"
+          alt="Core Konstruct construction team at work" loading="lazy">
+        <div class="about-badge">
+          <div class="years">12+</div>
+          <div class="years-label">Years of Excellence</div>
+        </div>
+      </div>
+      <div class="about-text reveal-right">
+        <div class="section-label">🏢 About Company</div>
+        <h2>India's Trusted Construction Technology Partner</h2>
+        <p>Core Konstruct combines deep construction expertise with modern digital tools to give contractors,
+          supervisors, and clients a single platform to manage, monitor, and deliver projects with full transparency.
+        </p>
+        <p>From residential buildings to highways and bridges — our platform adapts to every project type with
+          specialized workflows, measurement modules, and real-time progress reporting.</p>
+        <div class="about-stats">
+          <div class="about-stat">
+            <div class="val" data-counter data-target="150" data-suffix="+">150+</div>
+            <div class="lbl">Projects Completed</div>
+          </div>
+          <div class="about-stat">
+            <div class="val" data-counter data-target="48">48</div>
+            <div class="lbl">Active Sites</div>
+          </div>
+          <div class="about-stat">
+            <div class="val" data-counter data-target="320" data-suffix="+">320+</div>
+            <div class="lbl">Workers</div>
+          </div>
+          <div class="about-stat">
+            <div class="val" data-counter data-target="98" data-suffix="%">98%</div>
+            <div class="lbl">Client Satisfaction</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ████ SERVICES / SKILLS (Assignment 2) ████ -->
+  <section id="services" aria-label="Our services">
+    <div class="services-inner">
+      <div class="section-header reveal">
+        <div class="section-label">⚙️ What We Do</div>
+        <h2>Construction Services &amp; Specialisations</h2>
+        <p>End-to-end project management across all construction domains — delivered with precision.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card reveal" data-delay="0">
+          <div class="service-icon">🏢</div>
+          <h3>Building Construction</h3>
+          <p>Residential complexes, commercial towers, and industrial facilities — managed stage-by-stage with full WBS
+            tracking.</p>
+        </div>
+        <div class="service-card reveal" data-delay="100">
+          <div class="service-icon">🛣</div>
+          <h3>Road &amp; Highway Works</h3>
+          <p>Earthwork, sub-base, base course, and asphalt surfacing with precision measurement logging at every layer.
+          </p>
+        </div>
+        <div class="service-card reveal" data-delay="200">
+          <div class="service-icon">🌉</div>
+          <h3>Bridge Engineering</h3>
+          <p>Piling, abutments, deck slabs, and railing systems with structural safety checklists and photo
+            documentation.</p>
+        </div>
+        <div class="service-card reveal" data-delay="0">
+          <div class="service-icon">🚰</div>
+          <h3>Drainage &amp; Pipeline</h3>
+          <p>Underground utility projects with pipe laying, manhole installations, and trench measurement tracking.</p>
+        </div>
+        <div class="service-card reveal" data-delay="100">
+          <div class="service-icon">📋</div>
+          <h3>Project Management</h3>
+          <p>Work Breakdown Structure, supervisor assignment, timeline management, and delay analysis — all in one
+            dashboard.</p>
+        </div>
+        <div class="service-card reveal" data-delay="200">
+          <div class="service-icon">📸</div>
+          <h3>Site Monitoring</h3>
+          <p>Daily photo uploads by supervisors with weather reports, issue logs, and labour attendance tracking.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ████ PROJECT SHOWCASE (Assignment 2) ████ -->
+  <section id="projects" aria-label="Completed project showcase">
+    <div class="projects-inner">
+      <div class="section-header reveal">
+        <div class="section-label">🏗 Our Work</div>
+        <h2>Featured Projects</h2>
+        <p>A showcase of landmark projects delivered with quality, precision, and on-time performance.</p>
+      </div>
+      <div class="projects-grid">
+        <div class="project-card reveal" data-delay="0">
+          <div class="project-img">
+            <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?q=80&w=600" alt="City Center Complex"
+              loading="lazy">
+            <div class="project-overlay">
+              <span class="project-progress-badge">68% Complete</span>
+            </div>
+          </div>
+          <div class="project-info">
+            <div class="meta"><span class="badge badge-orange">Building</span> 📍 Mumbai, MH</div>
+            <h3>City Center Complex</h3>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin-top:4px;">36-floor commercial tower with smart
+              monitoring.</p>
+            <div class="progress-bar-wrap mt-8">
+              <div class="progress-bar-fill" style="width:68%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="project-card reveal" data-delay="120">
+          <div class="project-img">
+            <img src="https://images.unsplash.com/photo-1545558014-8692077e9b5c?q=80&w=600" alt="NH-48 Road Expansion"
+              loading="lazy">
+            <div class="project-overlay">
+              <span class="project-progress-badge">41% Complete</span>
+            </div>
+          </div>
+          <div class="project-info">
+            <div class="meta"><span class="badge badge-info">Road</span> 📍 Pune–Nashik</div>
+            <h3>NH-48 Road Expansion</h3>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin-top:4px;">18km 6-lane highway widening project.
+            </p>
+            <div class="progress-bar-wrap mt-8">
+              <div class="progress-bar-fill" style="width:41%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="project-card reveal" data-delay="240">
+          <div class="project-img">
+            <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=600"
+              alt="Old Town Canal Bridge" loading="lazy">
+            <div class="project-overlay">
+              <span class="project-progress-badge">✓ Completed 2023</span>
+            </div>
+          </div>
+          <div class="project-info">
+            <div class="meta"><span class="badge badge-success">Bridge</span> 📍 Aurangabad, MH</div>
+            <h3>Old Town Canal Bridge</h3>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin-top:4px;">80m pre-stressed concrete river bridge.
+            </p>
+            <div class="progress-bar-wrap mt-8">
+              <div class="progress-bar-fill" style="width:100%;background:var(--success)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:40px;">
+        <a href="login.html" class="btn-primary">View All Projects →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ████ TESTIMONIALS ████ -->
+  <section id="testimonials" aria-label="Client testimonials">
+    <div class="testimonials-inner">
+      <div class="section-header reveal">
+        <div class="section-label">💬 Testimonials</div>
+        <h2>What Our Clients Say</h2>
+        <p>Real feedback from contractors, site engineers, and project owners.</p>
+      </div>
+      <div class="carousel-wrap reveal">
+        <div class="carousel-track" id="carousel-track">
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">"Core Konstruct transformed how we manage our sites. The progress tracking and
+              supervisor daily reports have saved us hours every week. Our clients love the transparency it provides."
+            </p>
+            <div class="testi-author">
+              <div class="testi-avatar">RV</div>
+              <div>
+                <div class="testi-author-name">Rohit Verma</div>
+                <div class="testi-author-role">Project Director, V&R Constructions, Pune</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">"The client dashboard is perfect. My clients can view progress, photos, and timelines
+              without calling me every day. It's professional and builds trust automatically."</p>
+            <div class="testi-author">
+              <div class="testi-avatar">SP</div>
+              <div>
+                <div class="testi-author-name">Smita Patil</div>
+                <div class="testi-author-role">Contractor, Patil Build Corp, Mumbai</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★☆</div>
+            <p class="testi-text">"Marking attendance and uploading site photos from my mobile is so easy now. The
+              system catches issues early and I can write my daily report in 5 minutes."</p>
+            <div class="testi-author">
+              <div class="testi-avatar">AS</div>
+              <div>
+                <div class="testi-author-name">Arjun Singh</div>
+                <div class="testi-author-role">Site Supervisor, NH-48 Project</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">"The finance module helped us identify that we were overspending on materials in the
+              3rd month. We corrected course and finished the project 4% under budget. Incredible tool."</p>
+            <div class="testi-author">
+              <div class="testi-avatar">KM</div>
+              <div>
+                <div class="testi-author-name">Kavita Mehta</div>
+                <div class="testi-author-role">Admin Manager, Mehta Infratech</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">"As a client I always felt out of the loop on my apartment building. With Core
+              Konstruct I can see real photos and the real completion percentage every day. Peace of mind!"</p>
+            <div class="testi-author">
+              <div class="testi-avatar">PM</div>
+              <div>
+                <div class="testi-author-name">Priya Mehta</div>
+                <div class="testi-author-role">Client — City Center Complex Buyer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-controls">
+        <div class="carousel-dot active"></div>
+        <div class="carousel-dot"></div>
+        <div class="carousel-dot"></div>
+        <div class="carousel-dot"></div>
+        <div class="carousel-dot"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ████ BLOG PREVIEW (Assignment 3 link) ████ -->
+  <section id="blog-preview" aria-label="Blog articles preview">
+    <div class="blog-preview-inner">
+      <div class="section-header reveal">
+        <div class="section-label">📝 Blog</div>
+        <h2>Knowledge &amp; Insights</h2>
+        <p>Expert articles on construction techniques, site management, and project delivery.</p>
+      </div>
+      <div class="blog-preview-grid">
+        <div class="blog-preview-card reveal" data-delay="0">
+          <div class="blog-preview-img">
+            <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=600"
+              alt="Stages of Building Construction" loading="lazy">
+          </div>
+          <div class="blog-preview-body">
+            <div class="blog-preview-meta">
+              <span class="badge badge-orange">Construction</span>
+              <span style="font-size:0.78rem;color:var(--text-muted);">Mar 15, 2026</span>
+            </div>
+            <h3>Stages of Building Construction Explained</h3>
+            <p>From site preparation to handover — understand the complete building lifecycle and why each stage
+              matters.</p>
+            <a href="blog.html" class="blog-read-more">Read Article →</a>
+          </div>
+        </div>
+        <div class="blog-preview-card reveal" data-delay="150">
+          <div class="blog-preview-img">
+            <img src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?q=80&w=600"
+              alt="Importance of Site Monitoring" loading="lazy">
+          </div>
+          <div class="blog-preview-body">
+            <div class="blog-preview-meta">
+              <span class="badge badge-info">Site Management</span>
+              <span style="font-size:0.78rem;color:var(--text-muted);">Mar 28, 2026</span>
+            </div>
+            <h3>Why Daily Site Monitoring Prevents Costly Mistakes</h3>
+            <p>Learn how consistent daily monitoring and photo documentation saves contractors lakhs in rework and
+              delays.</p>
+            <a href="blog.html" class="blog-read-more">Read Article →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ████ FAQ (Assignment 4) ████ -->
+  <section id="faq" aria-label="Frequently Asked Questions">
+    <div class="faq-inner">
+      <div class="section-header reveal">
+        <div class="section-label">❓ FAQ</div>
+        <h2>Frequently Asked Questions</h2>
+        <p>Everything you need to know about Core Konstruct.</p>
+      </div>
+      <div class="faq-list reveal">
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            How do you track project progress?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Project progress is tracked stage-by-stage using a Work Breakdown Structure (WBS). Each supervisor updates
+              the percentage completion for their assigned stage daily. The system automatically calculates the overall
+              project progress as a weighted average of all stages. Contractors see a live dashboard with circular
+              progress rings and stage trackers.
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            How can clients view project updates?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Clients receive a secure login to their dedicated Client Dashboard. They can view real-time progress bars,
+              current construction stage, a photo gallery of daily site photos, and a project timeline with milestones.
+              The client view is deliberately simplified — no technical or financial data is shown, keeping it clean and
+              easy to understand.
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            What types of construction projects do you handle?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Core Konstruct supports Buildings (residential &amp; commercial), Roads &amp; Highways, Bridges, Drainage
+              &amp; Pipeline projects, and custom project types. Each project type has a tailored measurement module —
+              for example, road projects track layer thickness and length completed, while building projects track slab
+              area and column heights.
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Is Core Konstruct mobile-friendly for supervisors?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Absolutely. The Supervisor Dashboard is built with a mobile-first approach — large buttons, simple forms,
+              and an easy photo upload interface designed for use on a construction site. Supervisors can mark
+              attendance, submit daily reports, enter material usage, and upload photos all from their smartphone.
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Can I add or manage multiple projects as a contractor?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Yes. The Contractor/Admin Dashboard supports unlimited projects. You can create new projects, select the
+              project type, define work stages, assign a supervisor, and set the budget. All active projects are
+              displayed with progress rings, delay indicators, and financial summaries so you control everything from
+              one screen.
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            How does the finance module work?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              The finance module tracks Labour Cost, Material Cost, and Miscellaneous Expenses separately for each
+              project. The admin dashboard shows a cost breakdown with animated bars, compares actual spending against
+              the project budget, and highlights if costs exceed safe thresholds. Financial data is only visible to
+              admin — supervisors and clients cannot see financial details.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ████ CONTACT (Assignment 5 – Character Counter) ████ -->
+  <section id="contact" aria-label="Contact Core Konstruct">
+    <div class="contact-inner">
+      <div class="contact-info reveal-left">
+        <div class="section-label">📬 Get In Touch</div>
+        <h2>Let's Build Something Great Together</h2>
+        <p>Whether you're a contractor looking to digitise your projects, or a client wanting to track your investment —
+          we're here to help.</p>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📍</div>
+          <div class="contact-detail-text">
+            <div class="label">Office Address</div>
+            <div class="val">3rd Floor, Infra Tower, Bandra Kurla Complex, Mumbai — 400051</div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📞</div>
+          <div class="contact-detail-text">
+            <div class="label">Phone</div>
+            <div class="val">+91 98765 43210</div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">✉️</div>
+          <div class="contact-detail-text">
+            <div class="label">Email</div>
+            <div class="val">hello@corekonstruct.com</div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">⏰</div>
+          <div class="contact-detail-text">
+            <div class="label">Working Hours</div>
+            <div class="val">Mon – Sat: 9:00 AM – 6:00 PM</div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form-card reveal-right">
+        <h3>Send Us a Message</h3>
+        <form id="contact-form" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="contact-name">Full Name *</label>
+              <input type="text" id="contact-name" name="name" placeholder="Your name" required>
+            </div>
+            <div class="form-group">
+              <label for="contact-email">Email Address *</label>
+              <input type="email" id="contact-email" name="email" placeholder="you@example.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="contact-subject">Subject</label>
+            <input type="text" id="contact-subject" name="subject" placeholder="How can we help?">
+          </div>
+          <!-- Assignment 5: Character Counter -->
+          <div class="form-group">
+            <label for="contact-message">Message * <small style="color:var(--text-muted);font-weight:400;">(max 500
+                chars)</small></label>
+            <textarea id="contact-message" name="message" placeholder="Tell us about your project or inquiry..."
+              maxlength="500" required></textarea>
+            <div class="char-counter-row">
+              <span></span>
+              <span id="char-counter" class="char-counter">0 / 500 characters</span>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary w-100" id="contact-submit">
+            Send Message ✉
+          </button>
+        </form>
+        <div class="form-success" id="form-success">
+          <div class="success-icon">✅</div>
+          <h3>Message Sent!</h3>
+          <p>Thank you for reaching out. Our team will respond within 24 hours.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ████ FOOTER ████ -->
+  <footer id="footer" aria-label="Site footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="nav-logo" style="margin-bottom:0;">
+            <div class="nav-logo-icon">🏗</div>
+            <span class="nav-logo-text">Core<span>Konstruct</span></span>
+          </div>
+          <p>Smart Construction Monitoring System — empowering contractors, supervisors, and clients with real-time
+            project intelligence.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="blog.html">Blog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="login.html">Admin Login</a></li>
+            <li><a href="login.html">Supervisor Login</a></li>
+            <li><a href="login.html">Client Login</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Core Konstruct. All rights reserved. Built with ❤ for the construction industry.</p>
+        <div class="footer-socials">
+          <a href="#" class="social-btn" aria-label="LinkedIn">in</a>
+          <a href="#" class="social-btn" aria-label="Twitter">𝕏</a>
+          <a href="#" class="social-btn" aria-label="Instagram">📷</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workload / Tenders — Core Konstruct</title>
+  <meta name="description" content="Government construction tenders and workload tracking for Core Konstruct contractors and administrators.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/tenders.css">
+</head>
+<body>
+<div class="dash-layout">
+
+  <!-- ████ SIDEBAR ████ -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">‹</button>
+
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">🏗</div>
+      <span class="sidebar-logo-text">Core<span>Konstruct</span></span>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="sidebar-initials">RK</div>
+      <div class="sidebar-user-info">
+        <div class="name" id="sidebar-name">Rajesh Kumar</div>
+        <div class="role" id="sidebar-role">Contractor / Admin</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Dashboard navigation">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard-admin.html" class="nav-item" data-nav="overview">
+        <span class="nav-icon">🏠</span><span class="nav-label">Overview</span>
+      </a>
+      <a href="dashboard-admin.html" class="nav-item" data-nav="projects">
+        <span class="nav-icon">📋</span><span class="nav-label">Projects</span>
+      </a>
+      <a href="dashboard-admin.html" class="nav-item" data-nav="monitoring">
+        <span class="nav-icon">📊</span><span class="nav-label">Monitoring</span>
+      </a>
+      <a href="dashboard-admin.html" class="nav-item" data-nav="finance">
+        <span class="nav-icon">💰</span><span class="nav-label">Finance</span>
+      </a>
+      <a href="tenders.html" class="nav-item active" data-nav="tenders">
+        <span class="nav-icon">🏗</span><span class="nav-label">Workload/Tenders</span>
+      </a>
+
+      <div class="nav-section-label" style="margin-top:16px;">More</div>
+      <a href="index.html" class="nav-item">
+        <span class="nav-icon">🌐</span><span class="nav-label">Public Site</span>
+      </a>
+      <a href="brochures.html" class="nav-item">
+        <span class="nav-icon">📄</span><span class="nav-label">Brochures</span>
+      </a>
+      <a href="blog.html" class="nav-item">
+        <span class="nav-icon">📝</span><span class="nav-label">Blog</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <button class="logout-btn" onclick="logout()" aria-label="Logout">
+        <span>🚪</span><span>Logout</span>
+      </button>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- ████ MAIN AREA ████ -->
+  <div class="dash-main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="mobile-sidebar-trigger" class="btn-icon hide-desktop" aria-label="Open sidebar">☰</button>
+        <div>
+          <h2 id="topbar-title">Workload / Tenders</h2>
+          <div class="breadcrumb">Core Konstruct → Workload/Tenders</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-date" id="topbar-date"></div>
+        <div class="topbar-badge" title="New tenders available">
+          <button class="btn-icon" aria-label="Alerts">🔔</button>
+          <div class="dot"></div>
+        </div>
+        <span style="font-size:0.85rem;font-weight:600;color:var(--navy);" id="topbar-user">Rajesh Kumar</span>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="dash-content">
+
+      <!-- Hero Banner -->
+      <div class="tender-hero-banner">
+        <div class="tender-hero-inner">
+          <div class="tender-hero-text">
+            <h2>🏗 Government Workload &amp; Tenders</h2>
+            <p>Track available government construction contracts, mark opportunities, and stay ahead of submission deadlines.</p>
+          </div>
+          <div class="tender-hero-stats">
+            <div class="tender-hero-stat">
+              <span class="val" id="stat-open">0</span>
+              <div class="lbl">Open Tenders</div>
+            </div>
+            <div class="tender-hero-stat">
+              <span class="val" id="stat-interested">0</span>
+              <div class="lbl">Interested</div>
+            </div>
+            <div class="tender-hero-stat">
+              <span class="val" id="stat-saved">0</span>
+              <div class="lbl">Saved</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="tender-filter-bar" role="toolbar" aria-label="Tender filters">
+        <span class="tender-filter-label">🔍 Filter:</span>
+        <div class="tender-filter-pills" role="group" aria-label="Project type filter">
+          <button class="filter-pill active" data-filter-type="all" onclick="setFilter('type','all',this)">All Types</button>
+          <button class="filter-pill" data-filter-type="road" onclick="setFilter('type','road',this)">🛣 Road</button>
+          <button class="filter-pill" data-filter-type="building" onclick="setFilter('type','building',this)">🏢 Building</button>
+          <button class="filter-pill" data-filter-type="bridge" onclick="setFilter('type','bridge',this)">🌉 Bridge</button>
+          <button class="filter-pill" data-filter-type="drainage" onclick="setFilter('type','drainage',this)">🚰 Drainage</button>
+          <button class="filter-pill" data-filter-type="infrastructure" onclick="setFilter('type','infrastructure',this)">⚙️ Infrastructure</button>
+        </div>
+
+        <div class="tender-filter-divider"></div>
+        <div class="tender-filter-pills" role="group" aria-label="Status filter">
+          <button class="filter-pill active" data-filter-status="all" onclick="setFilter('status','all',this)">All Status</button>
+          <button class="filter-pill" data-filter-status="open" onclick="setFilter('status','open',this)">✅ Open</button>
+          <button class="filter-pill" data-filter-status="under-review" onclick="setFilter('status','under-review',this)">⏳ Under Review</button>
+          <button class="filter-pill" data-filter-status="closed" onclick="setFilter('status','closed',this)">❌ Closed</button>
+        </div>
+
+        <div class="tender-filter-divider"></div>
+        <div class="tender-search-wrap">
+          <span class="tender-search-icon">🔎</span>
+          <input type="search" id="tender-search" placeholder="Search tenders..." aria-label="Search tenders" oninput="searchTenders(this.value)">
+        </div>
+      </div>
+
+      <!-- Tenders List -->
+      <div class="tender-list-header">
+        <h3>Available Work Opportunities</h3>
+        <span class="tender-count-badge" id="tender-count-badge">📋 0 tenders</span>
+      </div>
+
+      <div id="tender-list-container">
+        <!-- Rendered by JS -->
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ████ TENDER DETAIL MODAL ████ -->
+<div id="tender-detail-modal" class="tender-modal-overlay hidden" role="dialog" aria-modal="true" aria-label="Tender details">
+  <div class="tender-modal-box">
+    <div class="tender-modal-header">
+      <button class="tender-modal-close" onclick="closeTenderModal()" aria-label="Close">✕</button>
+      <div class="tender-modal-title">
+        <div style="margin-bottom:8px;" id="tm-status-badge"></div>
+        <h3 id="tm-title">Tender Title</h3>
+        <div class="dept" id="tm-dept"></div>
+      </div>
+      <div class="tender-modal-kpis">
+        <div class="tender-modal-kpi">
+          <div class="kpi-label">Estimated Budget</div>
+          <div class="kpi-value highlight" id="tm-budget"></div>
+        </div>
+        <div class="tender-modal-kpi">
+          <div class="kpi-label">Submission Deadline</div>
+          <div class="kpi-value" id="tm-deadline"></div>
+        </div>
+        <div class="tender-modal-kpi">
+          <div class="kpi-label">Location</div>
+          <div class="kpi-value" id="tm-location"></div>
+        </div>
+        <div class="tender-modal-kpi">
+          <div class="kpi-label">Reference No.</div>
+          <div class="kpi-value" id="tm-ref"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tender-modal-body">
+
+      <!-- Description -->
+      <div class="tender-modal-section">
+        <div class="tender-modal-section-label">📋 Project Description</div>
+        <p id="tm-description"></p>
+      </div>
+
+      <!-- Details Grid -->
+      <div class="tender-modal-section">
+        <div class="tender-modal-section-label">🔧 Work Details</div>
+        <div class="tender-detail-grid">
+          <div class="tender-detail-item">
+            <div class="item-label">Work Type</div>
+            <div class="item-value" id="tm-work-type"></div>
+          </div>
+          <div class="tender-detail-item">
+            <div class="item-label">Department</div>
+            <div class="item-value" id="tm-dept-detail"></div>
+          </div>
+          <div class="tender-detail-item">
+            <div class="item-label">District</div>
+            <div class="item-value" id="tm-district"></div>
+          </div>
+          <div class="tender-detail-item">
+            <div class="item-label">Bid Security</div>
+            <div class="item-value" id="tm-bid-security"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="tender-modal-section">
+        <div class="tender-modal-section-label">📅 Project Timeline</div>
+        <div class="tender-timeline-bar">
+          <div class="timeline-marker" id="tm-start-date"></div>
+          <div class="timeline-arrow"></div>
+          <div class="timeline-marker" id="tm-end-date"></div>
+        </div>
+        <p style="margin-top:12px;font-size:0.85rem;" id="tm-timeline-note"></p>
+      </div>
+
+      <!-- Budget -->
+      <div class="tender-modal-section">
+        <div class="tender-modal-section-label">💰 Budget Breakdown</div>
+        <div class="tender-detail-grid">
+          <div class="tender-detail-item">
+            <div class="item-label">Estimated Cost</div>
+            <div class="item-value" id="tm-cost"></div>
+          </div>
+          <div class="tender-detail-item">
+            <div class="item-label">Performance Security</div>
+            <div class="item-value" id="tm-perf-security"></div>
+          </div>
+          <div class="tender-detail-item">
+            <div class="item-label">Payment Terms</div>
+            <div class="item-value" id="tm-payment"></div>
+          </div>
+          <div class="tender-detail-item">
+            <div class="item-label">Defect Liability</div>
+            <div class="item-value" id="tm-defect"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Eligibility -->
+      <div class="tender-modal-section">
+        <div class="tender-modal-section-label">✅ Eligibility Criteria</div>
+        <div class="eligibility-list" id="tm-eligibility"></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="tender-modal-actions" id="tm-actions-row"></div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="tender-toast" class="toast hidden" role="alert" aria-live="polite"></div>
+
+<script src="js/auth.js"></script>
+<script>
+/* ================================================================
+   TENDERS PAGE — Data + Logic
+   ================================================================ */
+
+const TENDERS_DATA = [
+  {
+    id: 1,
+    title: 'Road Construction & Widening — Pune Ring Road (Phase 3)',
+    dept: 'Maharashtra Public Works Department (PWD)',
+    deptIcon: '🛣',
+    type: 'road',
+    location: 'Pune, Maharashtra',
+    district: 'Pune District',
+    budget: '₹48.5 Cr',
+    budgetRaw: 48.5,
+    deadline: '2026-05-15',
+    deadlineDisplay: '15 May 2026',
+    status: 'open',
+    ref: 'PWD/PNQ/2026/0342',
+    description: 'Construction and widening of 14.2 km of Pune outer ring road from Katraj to Undri junction, including 6-lane carriageway, service roads, stormwater drains, footpaths, and street lighting. The project is to be executed under NHAI guidelines with full quality control documentation.',
+    workType: 'Road Construction & Widening',
+    startDate: 'Jun 2026',
+    endDate: 'Dec 2027',
+    timelineNote: 'Project duration: 18 months. Monsoon-break allowed in July–August 2026 and 2027.',
+    cost: '₹48.5 Crore',
+    bidSecurity: '₹97 Lakh (2%)',
+    perfSecurity: '5% of contract value',
+    payment: 'Monthly running bills',
+    defect: '24 months',
+    eligibility: [
+      'Minimum turnover of ₹30 Crore in last 3 financial years',
+      'Experience in road construction of at least 10 km length in a single contract',
+      'Valid PWD Class-I contractor registration',
+      'ISO 9001:2015 certification preferred',
+      'Availability of key equipment: Motor Grader, Vibratory Roller, Paver Finisher',
+    ],
+    tags: ['Road', 'PWD', 'NH', '6-Lane'],
+  },
+  {
+    id: 2,
+    title: 'Construction of Government Medical College Building — Phase 2',
+    dept: 'Health Infrastructure Development Corporation (HIDCO)',
+    deptIcon: '🏥',
+    type: 'building',
+    location: 'Nashik, Maharashtra',
+    district: 'Nashik District',
+    budget: '₹112 Cr',
+    budgetRaw: 112,
+    deadline: '2026-04-28',
+    deadlineDisplay: '28 Apr 2026',
+    status: 'open',
+    ref: 'HIDCO/NSK/2026/0178',
+    description: 'Construction of Phase 2 of Government Medical College including 2 academic blocks (G+5 floors each), a 400-seat auditorium, 8 modern laboratories, a library building, and associated site development works including landscaping, internal roads, and utility connections.',
+    workType: 'Multi-Storey Building Construction',
+    startDate: 'May 2026',
+    endDate: 'Nov 2028',
+    timelineNote: 'Total duration: 30 months. Milestone-linked payment schedule with 4 stages.',
+    cost: '₹112 Crore',
+    bidSecurity: '₹2.24 Crore (2%)',
+    perfSecurity: '5% of contract value',
+    payment: 'Milestone-linked payments (4 stages)',
+    defect: '36 months',
+    eligibility: [
+      'Minimum turnover of ₹70 Crore in last 3 financial years',
+      'Completed one similar building project of value ≥ ₹50 Crore',
+      'Class-A contractor with CPWD or equivalent state registration',
+      'Structural Engineer with minimum 10 years experience',
+      'Experience in multi-storey RCC frame structures',
+    ],
+    tags: ['Building', 'HIDCO', 'Government', 'Medical'],
+  },
+  {
+    id: 3,
+    title: 'Construction of Two-Lane Bridge over Bhama River — Khed',
+    dept: 'NRDWP & Rural Development Department',
+    deptIcon: '🌉',
+    type: 'bridge',
+    location: 'Khed, Pune District',
+    district: 'Pune District',
+    budget: '₹18.2 Cr',
+    budgetRaw: 18.2,
+    deadline: '2026-06-10',
+    deadlineDisplay: '10 Jun 2026',
+    status: 'open',
+    ref: 'RDD/KHD/2026/0091',
+    description: 'Construction of a new 2-lane RCC bridge (68m span) over the Bhama river at Khed, replacing the existing damaged causeway. The project includes pile foundation, RCC piers, pre-stressed concrete girders, deck slab, wearing coat, crash barriers, and approach roads on both sides.',
+    workType: 'Bridge Construction',
+    startDate: 'Jul 2026',
+    endDate: 'Dec 2027',
+    timelineNote: 'Project duration: 18 months. River work to be completed before next monsoon (Jun 2027).',
+    cost: '₹18.2 Crore',
+    bidSecurity: '₹36.4 Lakh (2%)',
+    perfSecurity: '5% of contract value',
+    payment: 'Running bills (monthly)',
+    defect: '24 months',
+    eligibility: [
+      'Experience in construction of bridges of span ≥ 30m',
+      'Minimum 2 bridges of value ≥ ₹8 Crore each',
+      'Bridge Engineer with IRC experience',
+      'Equipment: Piling Rig, Crane, Batching Plant, Girder Launching Equipment',
+      'PWD Class-I or Class Special registration',
+    ],
+    tags: ['Bridge', 'RDD', 'PSC Girder', 'Rural'],
+  },
+  {
+    id: 4,
+    title: 'Underground Sewerage Network — Solapur Smart City Zone 4',
+    dept: 'Solapur Smart City Development Corporation',
+    deptIcon: '🚰',
+    type: 'drainage',
+    location: 'Solapur, Maharashtra',
+    district: 'Solapur District',
+    budget: '₹34.8 Cr',
+    budgetRaw: 34.8,
+    deadline: '2026-05-30',
+    deadlineDisplay: '30 May 2026',
+    status: 'under-review',
+    ref: 'SSCDC/SLR/2026/0214',
+    description: 'Construction of underground sewerage network covering Zone 4 of Solapur Smart City including 28.4 km of DI/PVC sewer lines, 486 manholes, 12 lift stations, a 45 MLD sewage treatment plant (STP), and house connections for 18,500 households.',
+    workType: 'Underground Sewerage & STP',
+    startDate: 'Jul 2026',
+    endDate: 'Jan 2028',
+    timelineNote: 'Project duration: 18 months. STP commissioning must be completed by Month 16.',
+    cost: '₹34.8 Crore',
+    bidSecurity: '₹69.6 Lakh (2%)',
+    perfSecurity: '5% of contract value',
+    payment: 'Monthly running bills',
+    defect: '24 months for civil; 12 months for M&E',
+    eligibility: [
+      'Experience in sewerage/water supply projects of value ≥ ₹15 Crore',
+      'Completed at least one STP of capacity ≥ 20 MLD',
+      'JV with M&E firm permissible for STP component',
+      'Environment clearance experience for STP projects',
+      'Valid class-I contractor registration',
+    ],
+    tags: ['Drainage', 'Smart City', 'STP', 'Sewerage'],
+  },
+  {
+    id: 5,
+    title: 'Renovation & Expansion of Aurangabad Railway Station Forecourt',
+    dept: 'South Central Railway / RLDA',
+    deptIcon: '🚉',
+    type: 'infrastructure',
+    location: 'Aurangabad, Maharashtra',
+    district: 'Chhatrapati Sambhajinagar',
+    budget: '₹22.6 Cr',
+    budgetRaw: 22.6,
+    deadline: '2026-07-05',
+    deadlineDisplay: '05 Jul 2026',
+    status: 'open',
+    ref: 'RLDA/AUR/2026/0056',
+    description: 'Development of Aurangabad Railway Station forecourt including a new multilevel parking structure (500 cars), passenger plaza with heritage design elements, taxi/auto bay, landscaping, covered walkways connecting to platform, and complete civil/architectural finishing works.',
+    workType: 'Infrastructure & Civil Works',
+    startDate: 'Aug 2026',
+    endDate: 'Feb 2028',
+    timelineNote: 'Project duration: 18 months. Work to be executed without disrupting railway operations.',
+    cost: '₹22.6 Crore',
+    bidSecurity: '₹45.2 Lakh (2%)',
+    perfSecurity: '5% of contract value',
+    payment: 'Quarterly milestone billing',
+    defect: '18 months',
+    eligibility: [
+      'Experience in railway station or airport infrastructure works',
+      'Minimum contract value of similar work: ₹10 Crore',
+      'Proven ability to work in live railway environment',
+      'Architectural/heritage design capability (in-house or sub-consultant)',
+      'Valid RLDA / CPWD enlistment',
+    ],
+    tags: ['Infrastructure', 'Railway', 'RLDA', 'Heritage'],
+  },
+  {
+    id: 6,
+    title: 'Construction of Government Hostel Building — Amravati',
+    dept: 'Social Justice & Special Assistance Dept. (SJSA)',
+    deptIcon: '🏛',
+    type: 'building',
+    location: 'Amravati, Maharashtra',
+    district: 'Amravati District',
+    budget: '₹9.4 Cr',
+    budgetRaw: 9.4,
+    deadline: '2026-03-31',
+    deadlineDisplay: '31 Mar 2026',
+    status: 'closed',
+    ref: 'SJSA/AMR/2026/0033',
+    description: 'Construction of a G+3 student hostel building for SC/ST students with 200-bed capacity, including dormitory blocks, dining hall, reading room, sports facility, and boundary compound. Work to be executed as per standard CPWD specifications.',
+    workType: 'Hostel Building Construction',
+    startDate: 'May 2026',
+    endDate: 'Nov 2027',
+    timelineNote: 'Project duration: 18 months. Hostel must be ready for academic year 2027–28.',
+    cost: '₹9.4 Crore',
+    bidSecurity: '₹18.8 Lakh (2%)',
+    perfSecurity: '5% of contract value',
+    payment: 'Running bills (monthly)',
+    defect: '24 months',
+    eligibility: [
+      'Minimum turnover of ₹6 Crore in last 2 financial years',
+      'Experience in government building construction',
+      'Class-II or above contractor registration with SJSA or equivalent',
+      'Completed 1 residential project of ≥ ₹4 Crore',
+    ],
+    tags: ['Building', 'SJSA', 'Government', 'Social'],
+  },
+  {
+    id: 7,
+    title: 'Expressway Service Road Improvement — Samruddhi Corridor',
+    dept: 'Maharashtra State Road Development Corp (MSRDC)',
+    deptIcon: '🛣',
+    type: 'road',
+    location: 'Nagpur–Shirdi Corridor, MH',
+    district: 'Multiple Districts',
+    budget: '₹67.3 Cr',
+    budgetRaw: 67.3,
+    deadline: '2026-06-20',
+    deadlineDisplay: '20 Jun 2026',
+    status: 'open',
+    ref: 'MSRDC/SAM/2026/0788',
+    description: 'Improvement of 85 km of service roads along the Samruddhi Mahamarg Expressway from Nagpur to Shirdi including resurfacing, guard rails, signage, rumble strips, and roadside drainage. Work involves 3 packages; bidder may quote for all 3 packages.',
+    workType: 'Road Improvement & Resurfacing',
+    startDate: 'Aug 2026',
+    endDate: 'Feb 2028',
+    timelineNote: 'Project duration: 18 months across 3 packages. Simultaneous execution mandatory.',
+    cost: '₹67.3 Crore',
+    bidSecurity: '₹1.35 Crore (2%)',
+    perfSecurity: '5% of contract value',
+    payment: 'Monthly running bills',
+    defect: '24 months',
+    eligibility: [
+      'Minimum turnover of ₹45 Crore for all 3 packages; ₹20 Crore for one package',
+      'Experience in expressway/highway maintenance or construction',
+      'Bituminous hot-mix plant availability mandatory',
+      'Experience with WMM, DBM, BC layers',
+      'MSRDC or equivalent approved contractor status',
+    ],
+    tags: ['Road', 'MSRDC', 'Expressway', 'Highway'],
+  },
+  {
+    id: 8,
+    title: 'Storm Water Drain — Thane Municipal Water Zones 1–3',
+    dept: 'Thane Municipal Corporation (TMC)',
+    deptIcon: '🌊',
+    type: 'drainage',
+    location: 'Thane, Maharashtra',
+    district: 'Thane District',
+    budget: '₹29.1 Cr',
+    budgetRaw: 29.1,
+    deadline: '2026-05-05',
+    deadlineDisplay: '05 May 2026',
+    status: 'open',
+    ref: 'TMC/THN/2026/0412',
+    description: 'Construction of stormwater drainage network in Thane municipal area covering Zones 1, 2, and 3 with an aggregate pipe laying length of 22.6 km using RCC NP3/NP4 pipes of diameters 600mm to 1200mm, 340 manholes, box culverts at 5 road crossings, and 3 outfall structures into Ulhas river.',
+    workType: 'Stormwater Drainage Construction',
+    startDate: 'Jun 2026',
+    endDate: 'Nov 2027',
+    timelineNote: 'Duration: 18 months. Must complete primary trunk lines before monsoon.',
+    cost: '₹29.1 Crore',
+    bidSecurity: '₹58.2 Lakh (2%)',
+    perfSecurity: '5% of contract value',
+    payment: 'Monthly running bills',
+    defect: '24 months',
+    eligibility: [
+      'Experience in underground drainage or water supply works',
+      'Completed drainage project of value ≥ ₹12 Crore',
+      'Available equipment: Hydraulic Excavator, Compactor, Crane',
+      'TMC Class-I or Class-Special registration',
+      'Traffic management plan capability mandatory',
+    ],
+    tags: ['Drainage', 'TMC', 'Stormwater', 'Urban'],
+  },
+];
+
+/* ── State ── */
+let ACTIVE_FILTERS = { type: 'all', status: 'all' };
+let SEARCH_QUERY = '';
+let USER_INTERESTS = JSON.parse(localStorage.getItem('ck_interests') || '{}');
+let USER_SAVED    = JSON.parse(localStorage.getItem('ck_saved')     || '{}');
+
+/* ── Update Hero Stats ── */
+function updateStats() {
+  const open = TENDERS_DATA.filter(t => t.status === 'open').length;
+  const interested = Object.values(USER_INTERESTS).filter(Boolean).length;
+  const saved = Object.values(USER_SAVED).filter(Boolean).length;
+  document.getElementById('stat-open').textContent = open;
+  document.getElementById('stat-interested').textContent = interested;
+  document.getElementById('stat-saved').textContent = saved;
+}
+
+/* ── Filter Logic ── */
+function setFilter(dimension, value, btn) {
+  ACTIVE_FILTERS[dimension] = value;
+
+  // Update pill active states for this dimension
+  const group = btn.closest('[role="group"]');
+  group.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+
+  renderTenders();
+}
+
+function searchTenders(q) {
+  SEARCH_QUERY = q.toLowerCase().trim();
+  renderTenders();
+}
+
+function getFilteredTenders() {
+  return TENDERS_DATA.filter(t => {
+    const typeMatch = ACTIVE_FILTERS.type === 'all' || t.type === ACTIVE_FILTERS.type;
+    const statusMatch = ACTIVE_FILTERS.status === 'all' || t.status === ACTIVE_FILTERS.status;
+    const searchMatch = !SEARCH_QUERY ||
+      t.title.toLowerCase().includes(SEARCH_QUERY) ||
+      t.dept.toLowerCase().includes(SEARCH_QUERY) ||
+      t.location.toLowerCase().includes(SEARCH_QUERY) ||
+      t.tags.some(tg => tg.toLowerCase().includes(SEARCH_QUERY));
+    return typeMatch && statusMatch && searchMatch;
+  });
+}
+
+/* ── Render Tender List ── */
+function renderTenders() {
+  const container = document.getElementById('tender-list-container');
+  const filtered = getFilteredTenders();
+
+  container.style.opacity = '0.4';
+  container.style.transform = 'translateY(6px)';
+
+  setTimeout(() => {
+    container.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div class="tender-empty">
+          <div class="empty-icon">🔍</div>
+          <h4>No tenders match your filters</h4>
+          <p>Try adjusting your type, status, or search query.</p>
+        </div>
+      `;
+    } else {
+      container.innerHTML = filtered.map(t => renderTenderCard(t)).join('');
+    }
+
+    document.getElementById('tender-count-badge').textContent = `📋 ${filtered.length} tender${filtered.length !== 1 ? 's' : ''}`;
+
+    container.style.opacity = '1';
+    container.style.transform = 'translateY(0)';
+  }, 120);
+}
+
+function renderTenderCard(t) {
+  const isInterested = !!USER_INTERESTS[t.id];
+  const isSaved = !!USER_SAVED[t.id];
+  const urgentClass = isDeadlineUrgent(t.deadline) ? 'urgent' : '';
+
+  return `
+    <div class="tender-card${isInterested ? ' interested' : isSaved ? ' saved' : ''}" 
+         id="tender-card-${t.id}" onclick="openTenderModal(${t.id})" 
+         role="button" tabindex="0" aria-label="View ${t.title}">
+      <div class="tender-card-left">
+        <div class="tender-card-top">
+          <div class="tender-dept-icon">${t.deptIcon}</div>
+          <div class="tender-card-title-wrap">
+            <h4>${t.title}</h4>
+            <div class="tender-dept-name">${t.dept}</div>
+          </div>
+          <div class="status-badge ${t.status}">${statusLabel(t.status)}</div>
+        </div>
+
+        <div class="tender-card-meta">
+          <div class="tender-meta-item">
+            <span class="icon">📍</span>
+            <strong>${t.location}</strong>
+          </div>
+          <div class="tender-meta-item">
+            <span class="icon">📋</span>
+            <span>Ref: ${t.ref}</span>
+          </div>
+          <div class="tender-meta-item">
+            <span class="icon">🔧</span>
+            <span>${t.workType}</span>
+          </div>
+        </div>
+
+        <div class="tender-card-tags">
+          ${t.tags.map(tag => `<span class="tender-tag">${tag}</span>`).join('')}
+          ${isInterested ? '<span class="badge badge-orange">⭐ Interested</span>' : ''}
+          ${isSaved ? '<span class="badge badge-info">🔖 Saved</span>' : ''}
+        </div>
+      </div>
+      <div class="tender-card-right" onclick="event.stopPropagation()">
+        <div class="tender-budget-highlight">
+          <span class="amount">${t.budget}</span>
+          <span class="label">Est. Budget</span>
+        </div>
+        <div class="tender-deadline ${urgentClass}">
+          <span class="date">📅 ${t.deadlineDisplay}</span>
+          <span class="deadline-label">${urgentClass ? '⚠ Deadline Near' : 'Submission Deadline'}</span>
+        </div>
+        <div class="tender-action-btns">
+          <button class="tender-action-btn interested${isInterested ? ' active' : ''}" 
+                  id="btn-interest-${t.id}"
+                  onclick="toggleInterest(${t.id})" 
+                  aria-label="${isInterested ? 'Remove interest' : 'Mark as interested'}">
+            ⭐ ${isInterested ? 'Interested' : 'Mark Interest'}
+          </button>
+          <button class="tender-action-btn save${isSaved ? ' active' : ''}" 
+                  id="btn-save-${t.id}"
+                  onclick="toggleSave(${t.id})" 
+                  aria-label="${isSaved ? 'Remove from saved' : 'Save for later'}">
+            🔖 ${isSaved ? 'Saved' : 'Save for Later'}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ── Open Tender Modal ── */
+function openTenderModal(id) {
+  const t = TENDERS_DATA.find(x => x.id === id);
+  if (!t) return;
+
+  document.getElementById('tm-status-badge').innerHTML = `<span class="status-badge ${t.status}">${statusLabel(t.status)}</span>`;
+  document.getElementById('tm-title').textContent = t.title;
+  document.getElementById('tm-dept').textContent = `${t.deptIcon} ${t.dept}`;
+  document.getElementById('tm-budget').textContent = t.budget;
+  document.getElementById('tm-deadline').textContent = t.deadlineDisplay;
+  document.getElementById('tm-location').textContent = t.location;
+  document.getElementById('tm-ref').textContent = t.ref;
+  document.getElementById('tm-description').textContent = t.description;
+  document.getElementById('tm-work-type').textContent = t.workType;
+  document.getElementById('tm-dept-detail').textContent = t.dept;
+  document.getElementById('tm-district').textContent = t.district;
+  document.getElementById('tm-bid-security').textContent = t.bidSecurity;
+  document.getElementById('tm-start-date').textContent = '▶ ' + t.startDate;
+  document.getElementById('tm-end-date').textContent = t.endDate + ' ◀';
+  document.getElementById('tm-timeline-note').textContent = t.timelineNote;
+  document.getElementById('tm-cost').textContent = t.cost;
+  document.getElementById('tm-perf-security').textContent = t.perfSecurity;
+  document.getElementById('tm-payment').textContent = t.payment;
+  document.getElementById('tm-defect').textContent = t.defect;
+
+  document.getElementById('tm-eligibility').innerHTML = t.eligibility.map(e =>
+    `<div class="eligibility-item">${e}</div>`
+  ).join('');
+
+  const isInterested = !!USER_INTERESTS[id];
+  const isSaved = !!USER_SAVED[id];
+  document.getElementById('tm-actions-row').innerHTML = `
+    <button class="btn-primary${isInterested ? '' : ' btn-outline'}" id="modal-interest-${id}" onclick="toggleInterest(${id}, true)">
+      ⭐ ${isInterested ? 'Remove Interest' : 'Mark as Interested'}
+    </button>
+    <button class="btn-primary${isSaved ? '' : ' btn-outline'}" id="modal-save-${id}" style="${isSaved ? '' : 'background:var(--info);'}" onclick="toggleSave(${id}, true)">
+      🔖 ${isSaved ? 'Remove from Saved' : 'Save for Later'}
+    </button>
+  `;
+
+  const modal = document.getElementById('tender-detail-modal');
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTenderModal() {
+  document.getElementById('tender-detail-modal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('tender-detail-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeTenderModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeTenderModal();
+});
+
+/* ── Toggle Actions ── */
+function toggleInterest(id, fromModal = false) {
+  USER_INTERESTS[id] = !USER_INTERESTS[id];
+  localStorage.setItem('ck_interests', JSON.stringify(USER_INTERESTS));
+  const isOn = USER_INTERESTS[id];
+  showTenderToast(isOn ? '⭐ Marked as Interested!' : '⭐ Removed from Interested list.');
+  updateStats();
+  renderTenders();
+  if (fromModal) openTenderModal(id);
+}
+
+function toggleSave(id, fromModal = false) {
+  USER_SAVED[id] = !USER_SAVED[id];
+  localStorage.setItem('ck_saved', JSON.stringify(USER_SAVED));
+  const isOn = USER_SAVED[id];
+  showTenderToast(isOn ? '🔖 Saved for later!' : '🔖 Removed from saved list.');
+  updateStats();
+  renderTenders();
+  if (fromModal) openTenderModal(id);
+}
+
+/* ── Helpers ── */
+function statusLabel(s) {
+  if (s === 'open') return 'Open';
+  if (s === 'closed') return 'Closed';
+  if (s === 'under-review') return 'Under Review';
+  return s;
+}
+
+function isDeadlineUrgent(dateStr) {
+  const diff = new Date(dateStr) - new Date();
+  return diff > 0 && diff < 14 * 24 * 60 * 60 * 1000; // within 14 days
+}
+
+function showTenderToast(msg) {
+  const toast = document.getElementById('tender-toast');
+  toast.textContent = msg;
+  toast.classList.remove('hidden');
+  setTimeout(() => toast.classList.add('hidden'), 3000);
+}
+
+/* ── Date display ── */
+function updateDate() {
+  const el = document.getElementById('topbar-date');
+  if (!el) return;
+  el.textContent = new Date().toLocaleString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+/* ── Sidebar (mobile) ── */
+function initSidebar() {
+  const toggle = document.getElementById('sidebar-toggle');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const mobileBtn = document.getElementById('mobile-sidebar-trigger');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+      toggle.textContent = sidebar.classList.contains('collapsed') ? '›' : '‹';
+    });
+  }
+  if (mobileBtn) {
+    mobileBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('mobile-open');
+      overlay.classList.toggle('active');
+    });
+  }
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('mobile-open');
+      overlay.classList.remove('active');
+    });
+  }
+}
+
+/* ── Keyboard support on cards ── */
+function addCardKeyboard() {
+  document.getElementById('tender-list-container').addEventListener('keydown', e => {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('tender-card')) {
+      const id = parseInt(e.target.id.replace('tender-card-',''));
+      openTenderModal(id);
+    }
+  });
+}
+
+/* ── Init ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const user = authGuard();
+  if (!user || (user.roleKey !== 'admin' && user.role !== 'Contractor / Admin')) { window.location.href = 'login.html'; return; }
+  fillSidebarUser();
+  updateDate();
+  initSidebar();
+  renderTenders();
+  updateStats();
+  addCardKeyboard();
+});
+</script>
+</body>
+</html>

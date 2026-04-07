@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Brochures — Core Konstruct</title>
+  <meta name="description" content="Explore Core Konstruct's project brochures and company profile. View detailed project overviews, galleries, work stages, and download our company brochure.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/landing.css">
+  <link rel="stylesheet" href="css/brochure.css">
+</head>
+<body>
+
+<!-- ████ NAVBAR ████ -->
+<header id="navbar" class="scrolled">
+  <div class="nav-logo">
+    <div class="nav-logo-icon">🏗</div>
+    <span class="nav-logo-text">Core<span>Konstruct</span></span>
+  </div>
+  <nav class="nav-links" aria-label="Main navigation">
+    <a href="index.html#about">About</a>
+    <a href="index.html#services">Services</a>
+    <a href="index.html#projects">Projects</a>
+    <a href="brochures.html" class="active" style="color:var(--orange);">Brochures</a>
+    <a href="blog.html">Blog</a>
+    <a href="index.html#faq">FAQ</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+  <div class="nav-actions">
+    <a href="login.html" class="btn-primary btn-sm">Login →</a>
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile nav -->
+<nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+  <a href="index.html#about">About</a>
+  <a href="index.html#services">Services</a>
+  <a href="index.html#projects">Projects</a>
+  <a href="brochures.html" style="color:var(--orange);font-weight:700;">Brochures</a>
+  <a href="blog.html">Blog</a>
+  <a href="index.html#faq">FAQ</a>
+  <a href="index.html#contact">Contact</a>
+  <a href="login.html" style="color:var(--orange);font-weight:700;">Login →</a>
+</nav>
+
+<!-- ████ HERO ████ -->
+<section id="brochure-hero" aria-label="Brochure page hero">
+  <div class="brochure-hero-inner">
+    <div class="brochure-hero-eyebrow">📄 Digital Brochures</div>
+    <h1 class="brochure-hero-title">
+      Our Projects &amp;<br><span class="accent">Company Profile</span>
+    </h1>
+    <p class="brochure-hero-sub">
+      Explore detailed project brochures, gallery images, work stage summaries, and our full company profile — all in one place.
+    </p>
+    <div class="brochure-hero-actions">
+      <a href="#project-brochures" class="btn-primary">View Project Brochures ↓</a>
+      <a href="#company-brochure" class="btn-ghost">Company Profile →</a>
+    </div>
+    <!-- Tab switcher -->
+    <div class="brochure-tabs" role="tablist">
+      <button class="brochure-tab active" id="tab-projects" role="tab" aria-selected="true" onclick="switchTab('projects')">🏗 Project Brochures</button>
+      <button class="brochure-tab" id="tab-company" role="tab" aria-selected="false" onclick="switchTab('company')">🏢 Company Profile</button>
+    </div>
+  </div>
+</section>
+
+<!-- ████ PROJECT BROCHURES ████ -->
+<section id="project-brochures" class="brochure-section" aria-label="Project brochures">
+  <div class="brochure-section-inner">
+    <div class="section-header reveal">
+      <div class="section-label">🏗 Projects</div>
+      <h2>Project Brochures</h2>
+      <p>Click any project to view a detailed brochure including gallery, work stages, and key highlights.</p>
+    </div>
+
+    <div class="brochure-grid" id="brochure-grid">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ████ COMPANY BROCHURE ████ -->
+<section id="company-brochure" class="brochure-section-alt" aria-label="Company brochure">
+  <div class="brochure-section-inner">
+
+    <div class="section-header reveal">
+      <div class="section-label" style="color:var(--orange);background:rgba(249,115,22,0.15);">🏢 Company Profile</div>
+      <h2 style="color:var(--white);">About Core Konstruct</h2>
+      <p style="color:rgba(255,255,255,0.65);">India's trusted construction technology partner — delivering precision, transparency, and excellence since 2012.</p>
+    </div>
+
+    <!-- About + Services grid -->
+    <div class="company-brochure-hero reveal">
+      <div class="company-brochure-img">
+        <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=700" alt="Core Konstruct construction team" loading="lazy">
+        <div class="company-brochure-badge">
+          <div class="num">12+</div>
+          <div class="lbl">Years of Excellence</div>
+        </div>
+      </div>
+      <div class="company-brochure-text">
+        <div class="section-label" style="color:var(--orange);background:rgba(249,115,22,0.15);margin-bottom:20px;">⚙️ What We Do</div>
+        <h2>Construction Services &amp; Specialisations</h2>
+        <p>Core Konstruct combines deep construction expertise with modern digital tools to give contractors, supervisors, and clients a single platform for total project transparency.</p>
+        <p>From residential buildings to highways and bridges — our platform adapts to every project type with specialized workflows and real-time reporting.</p>
+        <div class="company-services-grid" style="margin-top:28px;">
+          <div class="company-service-item">
+            <div class="company-service-icon">🏢</div>
+            <div class="company-service-name">Building Construction</div>
+          </div>
+          <div class="company-service-item">
+            <div class="company-service-icon">🛣</div>
+            <div class="company-service-name">Road &amp; Highway</div>
+          </div>
+          <div class="company-service-item">
+            <div class="company-service-icon">🌉</div>
+            <div class="company-service-name">Bridge Engineering</div>
+          </div>
+          <div class="company-service-item">
+            <div class="company-service-icon">🚰</div>
+            <div class="company-service-name">Drainage &amp; Pipeline</div>
+          </div>
+          <div class="company-service-item">
+            <div class="company-service-icon">📋</div>
+            <div class="company-service-name">Project Management</div>
+          </div>
+          <div class="company-service-item">
+            <div class="company-service-icon">📸</div>
+            <div class="company-service-name">Site Monitoring</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Portfolio Preview -->
+    <div class="reveal" style="margin-top:60px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+        <div>
+          <div class="section-label" style="color:var(--orange);background:rgba(249,115,22,0.15);">📸 Portfolio</div>
+          <h3 style="color:var(--white);margin-top:10px;">Completed Projects Showcase</h3>
+        </div>
+        <a href="#project-brochures" onclick="switchTab('projects')" class="btn-primary btn-sm">View All →</a>
+      </div>
+      <div class="portfolio-preview-grid">
+        <div class="portfolio-preview-item">
+          <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?q=80&w=500" alt="City Center Complex" loading="lazy">
+          <div class="portfolio-preview-item-overlay"><span>City Center Complex</span></div>
+        </div>
+        <div class="portfolio-preview-item">
+          <img src="https://images.unsplash.com/photo-1545558014-8692077e9b5c?q=80&w=500" alt="NH-48 Road Expansion" loading="lazy">
+          <div class="portfolio-preview-item-overlay"><span>NH-48 Road Expansion</span></div>
+        </div>
+        <div class="portfolio-preview-item">
+          <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=500" alt="Old Town Canal Bridge" loading="lazy">
+          <div class="portfolio-preview-item-overlay"><span>Canal Bridge</span></div>
+        </div>
+        <div class="portfolio-preview-item">
+          <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=500" alt="Green Valley Residency" loading="lazy">
+          <div class="portfolio-preview-item-overlay"><span>Green Valley Residency</span></div>
+        </div>
+        <div class="portfolio-preview-item">
+          <img src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?q=80&w=500" alt="Industrial Warehouse" loading="lazy">
+          <div class="portfolio-preview-item-overlay"><span>Industrial Warehouse</span></div>
+        </div>
+        <div class="portfolio-preview-item">
+          <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=500" alt="Metro Station Access" loading="lazy">
+          <div class="portfolio-preview-item-overlay"><span>Metro Station Access</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Experience stats -->
+    <div class="experience-stats reveal">
+      <div class="exp-stat">
+        <span class="val" data-counter data-target="150" data-suffix="+">150+</span>
+        <div class="lbl">Projects Completed</div>
+      </div>
+      <div class="exp-stat">
+        <span class="val" data-counter data-target="12" data-suffix=" yr">12 yr</span>
+        <div class="lbl">Industry Experience</div>
+      </div>
+      <div class="exp-stat">
+        <span class="val" data-counter data-target="320" data-suffix="+">320+</span>
+        <div class="lbl">Workers Managed</div>
+      </div>
+      <div class="exp-stat">
+        <span class="val" data-counter data-target="98" data-suffix="%">98%</span>
+        <div class="lbl">Client Satisfaction</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ████ DOWNLOAD CTA ████ -->
+<section class="brochure-section" aria-label="Download brochure">
+  <div class="brochure-section-inner">
+    <div class="download-cta-banner reveal">
+      <div class="download-cta-text">
+        <h3>📥 Download Our Company Brochure</h3>
+        <p>Get the full Core Konstruct company profile, service catalogue, project portfolio, and contact information in a professionally formatted PDF.</p>
+      </div>
+      <button class="btn-white" id="download-brochure-btn" onclick="downloadBrochure()">
+        📄 Download PDF Brochure
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ████ FOOTER ████ -->
+<footer id="footer" aria-label="Site footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:0;">
+          <div class="nav-logo-icon">🏗</div>
+          <span class="nav-logo-text">Core<span>Konstruct</span></span>
+        </div>
+        <p>Smart Construction Monitoring System — empowering contractors, supervisors, and clients with real-time project intelligence.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="index.html#about">About Us</a></li>
+          <li><a href="index.html#services">Services</a></li>
+          <li><a href="index.html#projects">Projects</a></li>
+          <li><a href="brochures.html">Brochures</a></li>
+          <li><a href="blog.html">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="login.html">Admin Login</a></li>
+          <li><a href="login.html">Supervisor Login</a></li>
+          <li><a href="login.html">Client Login</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+          <li><a href="index.html#contact">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Core Konstruct. All rights reserved. Built with ❤ for the construction industry.</p>
+      <div class="footer-socials">
+        <a href="#" class="social-btn" aria-label="LinkedIn">in</a>
+        <a href="#" class="social-btn" aria-label="Twitter">𝕏</a>
+        <a href="#" class="social-btn" aria-label="Instagram">📷</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ████ PROJECT BROCHURE DETAIL MODAL ████ -->
+<div id="brochure-detail-modal" class="hidden" role="dialog" aria-modal="true" aria-label="Project brochure detail">
+  <div class="brochure-detail-box" id="brochure-detail-box">
+    <div class="brochure-detail-hero">
+      <img id="bd-cover" src="" alt="">
+      <div class="brochure-detail-hero-overlay">
+        <div class="brochure-detail-hero-text">
+          <h2 id="bd-title"></h2>
+          <div class="brochure-detail-hero-meta">
+            <span id="bd-type"></span>
+            <span>📍 <span id="bd-location"></span></span>
+            <span>📅 <span id="bd-year"></span></span>
+          </div>
+        </div>
+      </div>
+      <button class="brochure-detail-close" onclick="closeBrochureModal()" aria-label="Close">✕</button>
+    </div>
+
+    <div class="brochure-detail-body">
+      <!-- Overview -->
+      <div class="brochure-detail-section-title">📋 Project Overview</div>
+      <p id="bd-overview" style="color:var(--text-mid);line-height:1.75;"></p>
+
+      <!-- Gallery -->
+      <div class="brochure-detail-section-title">📸 Site Gallery</div>
+      <div class="brochure-gallery" id="bd-gallery"></div>
+
+      <!-- Work Stages -->
+      <div class="brochure-detail-section-title">🏗 Work Stages Summary</div>
+      <div class="brochure-stages" id="bd-stages"></div>
+
+      <!-- Highlights -->
+      <div class="brochure-detail-section-title">⭐ Key Highlights</div>
+      <div class="brochure-highlights" id="bd-highlights"></div>
+
+      <!-- Download bar -->
+      <div class="brochure-download-bar">
+        <div class="brochure-download-bar-text">
+          <strong>📄 Download Project Brochure</strong>
+          <span>Full project details, images, and technical specifications in PDF format.</span>
+        </div>
+        <button class="btn-white" onclick="downloadProjectBrochure()" style="background:rgba(255,255,255,0.15);color:var(--white);border:2px solid rgba(255,255,255,0.3);">
+          Download PDF
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="brochure-toast" class="toast hidden" role="alert" aria-live="polite"></div>
+
+<script src="js/main.js"></script>
+<script>
+/* ================================================================
+   BROCHURES PAGE — Data + Logic
+   ================================================================ */
+
+const BROCHURE_PROJECTS = [
+  {
+    id: 1,
+    name: 'City Center Complex',
+    type: 'Building',
+    typeIcon: '🏢',
+    location: 'Mumbai, MH',
+    year: '2024 – Present',
+    cover: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?q=80&w=900',
+    desc: '36-floor commercial tower with smart monitoring, premium amenities, and sustainable design features.',
+    overview: 'City Center Complex is a landmark 36-floor commercial development in the heart of Mumbai\'s BKC district. The project features state-of-the-art smart building systems, premium office spaces, and ground-floor retail zones. Core Konstruct has been managing the full construction lifecycle — from foundation to MEP installations — with real-time progress tracking and daily supervisor reporting.',
+    gallery: [
+      'https://images.unsplash.com/photo-1486325212027-8081e485255e?q=80&w=700',
+      'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=400',
+      'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?q=80&w=400',
+      'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=400',
+      'https://images.unsplash.com/photo-1569141620282-c432cd4f3c92?q=80&w=400',
+    ],
+    stages: [
+      { name: 'Foundation & Excavation', pct: 100, color: '#10B981' },
+      { name: 'Structural Framework', pct: 100, color: '#10B981' },
+      { name: 'Brickwork & Masonry', pct: 85, color: '#F97316' },
+      { name: 'Plastering & Finishing', pct: 50, color: '#F97316' },
+      { name: 'MEP Installations', pct: 30, color: '#3B82F6' },
+      { name: 'Interior & Handover', pct: 10, color: '#6B7280' },
+    ],
+    highlights: [
+      { icon: '🏢', title: '36 Floors', desc: 'Commercial tower with premium office spaces' },
+      { icon: '🤖', title: 'Smart Systems', desc: 'IoT-enabled building management system' },
+      { icon: '♻️', title: 'Green Design', desc: 'LEED Gold certified sustainable building' },
+      { icon: '🅿️', title: '5-Level Parking', desc: 'Underground automated parking facility' },
+      { icon: '💧', title: 'Rainwater Harvesting', desc: 'On-site water recycling system' },
+      { icon: '📊', title: '₹85 Crore', desc: 'Total project investment' },
+    ],
+  },
+  {
+    id: 2,
+    name: 'NH-48 Road Expansion',
+    type: 'Road',
+    typeIcon: '🛣',
+    location: 'Pune–Nashik, MH',
+    year: '2023 – Present',
+    cover: 'https://images.unsplash.com/photo-1545558014-8692077e9b5c?q=80&w=900',
+    desc: '18km 6-lane highway widening project on the critical Pune–Nashik corridor with modern drainage systems.',
+    overview: 'The NH-48 Road Expansion project is a critical infrastructure upgrade on the Pune–Nashik national highway corridor. The project involves widening 18km of existing 4-lane highway to a full 6-lane expressway with service roads, modern street lighting, and a comprehensive drainage network. Core Konstruct manages layer-by-layer measurement tracking and quality compliance reporting.',
+    gallery: [
+      'https://images.unsplash.com/photo-1545558014-8692077e9b5c?q=80&w=700',
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=400',
+      'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=400',
+      'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?q=80&w=400',
+      'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=400',
+    ],
+    stages: [
+      { name: 'Earthwork & Grading', pct: 100, color: '#10B981' },
+      { name: 'Sub-grade Preparation', pct: 100, color: '#10B981' },
+      { name: 'Sub-base Course', pct: 75, color: '#F97316' },
+      { name: 'Base Course (WMM)', pct: 50, color: '#F97316' },
+      { name: 'Asphalt Surfacing', pct: 25, color: '#3B82F6' },
+      { name: 'Road Markings & Signage', pct: 5, color: '#6B7280' },
+    ],
+    highlights: [
+      { icon: '📏', title: '18 km Stretch', desc: 'Full 6-lane highway expansion' },
+      { icon: '🚦', title: 'Smart Signals', desc: '14 AI-managed traffic junctions' },
+      { icon: '💧', title: 'Modern Drainage', desc: 'Box culverts and stormwater channels' },
+      { icon: '🌳', title: 'Green Avenue', desc: '3,200 trees planted along medians' },
+      { icon: '🔆', title: 'LED Lighting', desc: 'Solar-powered street lighting' },
+      { icon: '📊', title: '₹128 Crore', desc: 'Government-funded infrastructure project' },
+    ],
+  },
+  {
+    id: 3,
+    name: 'Old Town Canal Bridge',
+    type: 'Bridge',
+    typeIcon: '🌉',
+    location: 'Aurangabad, MH',
+    year: '2021 – 2023',
+    cover: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=900',
+    desc: '80m pre-stressed concrete river bridge completed on schedule with full structural safety documentation.',
+    overview: 'The Old Town Canal Bridge is an 80-metre pre-stressed concrete bridge that replaced a century-old colonial-era structure. The project was executed under the PMGSY rural infrastructure programme. Core Konstruct managed the full structural lifecycle from piling through to railing installation, with comprehensive safety checklists and photo documentation at each milestone.',
+    gallery: [
+      'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=700',
+      'https://images.unsplash.com/photo-1531834685032-c34bf0d84c77?q=80&w=400',
+      'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=400',
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=400',
+      'https://images.unsplash.com/photo-1569141620282-c432cd4f3c92?q=80&w=400',
+    ],
+    stages: [
+      { name: 'Piling & Foundation', pct: 100, color: '#10B981' },
+      { name: 'Abutments & Piers', pct: 100, color: '#10B981' },
+      { name: 'Deck Slab (PSC Girders)', pct: 100, color: '#10B981' },
+      { name: 'Wearing Coat', pct: 100, color: '#10B981' },
+      { name: 'Railings & Safety', pct: 100, color: '#10B981' },
+      { name: 'Handover & Inspection', pct: 100, color: '#10B981' },
+    ],
+    highlights: [
+      { icon: '📏', title: '80 m Span', desc: 'Pre-stressed concrete box girder bridge' },
+      { icon: '✅', title: 'On Schedule', desc: 'Completed 3 weeks ahead of deadline' },
+      { icon: '🏛', title: 'PMGSY Funded', desc: 'Rural infrastructure government scheme' },
+      { icon: '🚛', title: '70T Capacity', desc: 'Designed for heavy vehicle loading' },
+      { icon: '📸', title: '1,200 Photos', desc: 'Full photographic documentation archive' },
+      { icon: '🏆', title: 'Award Winner', desc: 'Best Rural Infrastructure 2023' },
+    ],
+  },
+  {
+    id: 4,
+    name: 'Green Valley Residency',
+    type: 'Building',
+    typeIcon: '🏠',
+    location: 'Pune, MH',
+    year: '2022 – 2024',
+    cover: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=900',
+    desc: 'A premium 240-unit residential complex with landscaped gardens, clubhouse, and smart home integration.',
+    overview: 'Green Valley Residency is a premium 240-unit residential complex spread across 5 towers in Wakad, Pune. The project features landscaped podium gardens, a 10,000 sq ft clubhouse, swimming pool, and smart home automation in every apartment. Core Konstruct delivered the project 45 days ahead of schedule with 98.5% client satisfaction across all homebuyers.',
+    gallery: [
+      'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=700',
+      'https://images.unsplash.com/photo-1486325212027-8081e485255e?q=80&w=400',
+      'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=400',
+      'https://images.unsplash.com/photo-1531834685032-c34bf0d84c77?q=80&w=400',
+      'https://images.unsplash.com/photo-1569141620282-c432cd4f3c92?q=80&w=400',
+    ],
+    stages: [
+      { name: 'Foundation & Structure', pct: 100, color: '#10B981' },
+      { name: 'Masonry & Interiors', pct: 100, color: '#10B981' },
+      { name: 'MEP & Electricals', pct: 100, color: '#10B981' },
+      { name: 'Finishing & Paint', pct: 100, color: '#10B981' },
+      { name: 'Landscaping', pct: 100, color: '#10B981' },
+      { name: 'Handover', pct: 100, color: '#10B981' },
+    ],
+    highlights: [
+      { icon: '🏡', title: '240 Units', desc: '2BHK, 3BHK, and penthouse apartments' },
+      { icon: '🌿', title: 'Green Spaces', desc: '40% of land dedicated to landscaping' },
+      { icon: '🏊', title: 'Amenities', desc: 'Pool, gym, clubhouse, kids zone' },
+      { icon: '🔒', title: 'Smart Security', desc: '24/7 CCTV and biometric entry' },
+      { icon: '⚡', title: 'Solar Power', desc: '200kW rooftop solar installation' },
+      { icon: '✅', title: '45 Days Early', desc: 'Delivered ahead of schedule' },
+    ],
+  },
+  {
+    id: 5,
+    name: 'Nagpur Ring Road Drainage',
+    type: 'Drainage',
+    typeIcon: '🚰',
+    location: 'Nagpur, MH',
+    year: '2023 – Present',
+    cover: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=900',
+    desc: 'Underground stormwater drainage network for 12km of Nagpur\'s ring road with 180 manholes.',
+    overview: 'The Nagpur Ring Road Drainage project involves the design and construction of a comprehensive underground stormwater management system along 12km of the Nagpur outer ring road. The project includes RCC pipe laying, 180 manhole installations, 34 catch basins, and 8 major outfall structures. Core Konstruct tracks every pipe section and manhole with GPS-tagged measurement logs.',
+    gallery: [
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=700',
+      'https://images.unsplash.com/photo-1545558014-8692077e9b5c?q=80&w=400',
+      'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=400',
+      'https://images.unsplash.com/photo-1531834685032-c34bf0d84c77?q=80&w=400',
+      'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?q=80&w=400',
+    ],
+    stages: [
+      { name: 'Trench Excavation', pct: 100, color: '#10B981' },
+      { name: 'RCC Pipe Laying', pct: 80, color: '#F97316' },
+      { name: 'Manhole Construction', pct: 65, color: '#F97316' },
+      { name: 'Backfilling & Compaction', pct: 55, color: '#3B82F6' },
+      { name: 'Outfall Structures', pct: 40, color: '#3B82F6' },
+      { name: 'Road Restoration', pct: 15, color: '#6B7280' },
+    ],
+    highlights: [
+      { icon: '📏', title: '12 km Network', desc: 'Underground stormwater drainage system' },
+      { icon: '🕳', title: '180 Manholes', desc: 'Precast RCC manhole chambers' },
+      { icon: '📍', title: 'GPS Tagged', desc: 'All assets mapped with GPS coordinates' },
+      { icon: '🌧', title: 'Flood Control', desc: '500-year storm event design standard' },
+      { icon: '🏛', title: 'NMC Funded', desc: 'Nagpur Municipal Corporation project' },
+      { icon: '📊', title: '₹42 Crore', desc: 'Total project budget' },
+    ],
+  },
+  {
+    id: 6,
+    name: 'Residency Park Bridge',
+    type: 'Bridge',
+    typeIcon: '🌉',
+    location: 'Nashik, MH',
+    year: '2022 – 2025',
+    cover: 'https://images.unsplash.com/photo-1531834685032-c34bf0d84c77?q=80&w=900',
+    desc: '55m pedestrian and light-vehicle bridge over the Godavari river in Nashik\'s Residency Park zone.',
+    overview: 'The Residency Park Bridge is a 55-metre composite steel-concrete bridge over the Godavari river, connecting two residential zones in Nashik city. The project is funded under the Smart City Mission and features decorative LED lighting, anti-skid pavement, and a dedicated bicycle track. The current stage is railing installation, with handover expected in Q3 2025.',
+    gallery: [
+      'https://images.unsplash.com/photo-1531834685032-c34bf0d84c77?q=80&w=700',
+      'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=400',
+      'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=400',
+      'https://images.unsplash.com/photo-1569141620282-c432cd4f3c92?q=80&w=400',
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=400',
+    ],
+    stages: [
+      { name: 'Piling', pct: 100, color: '#10B981' },
+      { name: 'Abutments & Pier Caps', pct: 100, color: '#10B981' },
+      { name: 'Steel Superstructure', pct: 100, color: '#10B981' },
+      { name: 'Deck Slab & Wearing Coat', pct: 100, color: '#10B981' },
+      { name: 'Railings & Lighting', pct: 80, color: '#F97316' },
+      { name: 'Final Inspection', pct: 0, color: '#6B7280' },
+    ],
+    highlights: [
+      { icon: '📏', title: '55 m Span', desc: 'Composite steel-concrete bridge structure' },
+      { icon: '🚲', title: 'Bicycle Track', desc: 'Dedicated 2m-wide cycle lane' },
+      { icon: '💡', title: 'LED Lighting', desc: 'Decorative architectural night lighting' },
+      { icon: '🏙', title: 'Smart City', desc: 'Funded under Smart City Mission' },
+      { icon: '🌊', title: 'Godavari Crossing', desc: 'Over Godavari river at Nashik' },
+      { icon: '📅', title: 'Q3 2025', desc: 'Expected completion and handover' },
+    ],
+  },
+];
+
+/* ── Render Cards ── */
+function renderBrochureGrid() {
+  const grid = document.getElementById('brochure-grid');
+  if (!grid) return;
+  grid.innerHTML = BROCHURE_PROJECTS.map(p => `
+    <div class="brochure-card reveal" data-delay="${(BROCHURE_PROJECTS.indexOf(p) % 3) * 120}" 
+         onclick="openBrochureModal(${p.id})" role="button" tabindex="0" 
+         aria-label="View ${p.name} brochure">
+      <div class="brochure-card-img">
+        <img src="${p.cover}" alt="${p.name}" loading="lazy">
+        <div class="brochure-card-overlay">
+          <div class="brochure-card-location">📍 ${p.location}</div>
+        </div>
+      </div>
+      <div class="brochure-card-body">
+        <div class="brochure-card-type">
+          <span class="badge badge-orange">${p.typeIcon} ${p.type}</span>
+          <span style="font-size:0.75rem;color:var(--text-muted);margin-left:8px;">📅 ${p.year}</span>
+        </div>
+        <h3 class="brochure-card-title">${p.name}</h3>
+        <p class="brochure-card-desc">${p.desc}</p>
+        <span class="brochure-card-cta">View Brochure →</span>
+      </div>
+    </div>
+  `).join('');
+
+  // Keyboard support
+  grid.querySelectorAll('.brochure-card').forEach(card => {
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') card.click();
+    });
+  });
+
+  // Re-trigger reveal on new elements
+  if (typeof window.ckRevealAll === 'function') setTimeout(window.ckRevealAll, 100);
+}
+
+/* ── Open Modal ── */
+function openBrochureModal(id) {
+  const p = BROCHURE_PROJECTS.find(x => x.id === id);
+  if (!p) return;
+
+  document.getElementById('bd-cover').src = p.cover;
+  document.getElementById('bd-cover').alt = p.name;
+  document.getElementById('bd-title').textContent = p.name;
+  document.getElementById('bd-type').innerHTML = `<span class="badge badge-orange">${p.typeIcon} ${p.type}</span>`;
+  document.getElementById('bd-location').textContent = p.location;
+  document.getElementById('bd-year').textContent = p.year;
+  document.getElementById('bd-overview').textContent = p.overview;
+
+  // Gallery
+  const colors = ['#F97316','#10B981','#3B82F6','#8B5CF6','#EC4899'];
+  document.getElementById('bd-gallery').innerHTML = p.gallery.map((src, i) => `
+    <div class="brochure-gallery-item">
+      <img src="${src}" alt="${p.name} gallery image ${i+1}" loading="lazy">
+    </div>
+  `).join('');
+
+  // Work stages
+  document.getElementById('bd-stages').innerHTML = p.stages.map(s => `
+    <div class="brochure-stage-row">
+      <div class="brochure-stage-dot" style="background:${s.color};"></div>
+      <div class="brochure-stage-label">${s.name}</div>
+      <div class="brochure-stage-bar">
+        <div class="brochure-stage-fill" style="width:0%;background:${s.color};" data-target="${s.pct}"></div>
+      </div>
+      <div class="brochure-stage-pct">${s.pct}%</div>
+    </div>
+  `).join('');
+
+  // Highlights
+  document.getElementById('bd-highlights').innerHTML = p.highlights.map(h => `
+    <div class="brochure-highlight-item">
+      <div class="brochure-highlight-icon">${h.icon}</div>
+      <div class="brochure-highlight-text">
+        <strong>${h.title}</strong>
+        <span>${h.desc}</span>
+      </div>
+    </div>
+  `).join('');
+
+  const modal = document.getElementById('brochure-detail-modal');
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  modal.scrollTop = 0;
+
+  // Animate bars after slight delay
+  setTimeout(() => {
+    modal.querySelectorAll('.brochure-stage-fill').forEach(bar => {
+      bar.style.width = bar.dataset.target + '%';
+    });
+  }, 150);
+}
+
+function closeBrochureModal() {
+  document.getElementById('brochure-detail-modal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+// Close on overlay click
+document.getElementById('brochure-detail-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeBrochureModal();
+});
+
+// Close on ESC
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeBrochureModal();
+});
+
+/* ── Tab switching ── */
+function switchTab(tab) {
+  const tabProjects = document.getElementById('tab-projects');
+  const tabCompany = document.getElementById('tab-company');
+  const secProjects = document.getElementById('project-brochures');
+  const secCompany = document.getElementById('company-brochure');
+  const secDownload = document.querySelector('[aria-label="Download brochure"]');
+
+  if (tab === 'projects') {
+    tabProjects.classList.add('active');
+    tabCompany.classList.remove('active');
+    secProjects.style.display = '';
+    secCompany.style.display = 'none';
+    if(secDownload) secDownload.style.display = '';
+    secProjects.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    tabCompany.classList.add('active');
+    tabProjects.classList.remove('active');
+    secProjects.style.display = 'none';
+    secCompany.style.display = '';
+    if(secDownload) secDownload.style.display = '';
+    secCompany.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+/* ── Download Brochure ── */
+function downloadBrochure() {
+  showBrochureToast('📄 Preparing Company Brochure PDF... Download will start shortly!');
+}
+function downloadProjectBrochure() {
+  const title = document.getElementById('bd-title').textContent;
+  showBrochureToast(`📄 Preparing "${title}" PDF brochure...`);
+}
+function showBrochureToast(msg) {
+  const toast = document.getElementById('brochure-toast');
+  toast.textContent = msg;
+  toast.classList.remove('hidden');
+  setTimeout(() => toast.classList.add('hidden'), 3500);
+}
+
+/* ── Auth Guard: Admin Only ── */
+function ckAuthGuard() {
+  const raw = sessionStorage.getItem('ck_user');
+  if (!raw) {
+    // Not logged in — show access denied then redirect
+    document.body.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#0B1F3A;font-family:'Inter',sans-serif;gap:24px;">
+        <div style="font-size:3rem;">🔒</div>
+        <h2 style="color:#fff;font-size:1.6rem;margin:0;">Admin Access Required</h2>
+        <p style="color:rgba(255,255,255,0.6);margin:0;text-align:center;">The Brochures section is only available to logged-in administrators.</p>
+        <a href="login.html" style="background:#F97316;color:#fff;padding:14px 32px;border-radius:10px;text-decoration:none;font-weight:700;margin-top:8px;">Login as Admin →</a>
+      </div>`;
+    return false;
+  }
+  const user = JSON.parse(raw);
+  if (user.roleKey !== 'admin') {
+    document.body.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#0B1F3A;font-family:'Inter',sans-serif;gap:24px;">
+        <div style="font-size:3rem;">🚫</div>
+        <h2 style="color:#fff;font-size:1.6rem;margin:0;">Access Denied</h2>
+        <p style="color:rgba(255,255,255,0.6);margin:0;text-align:center;">Brochures are only accessible to Admin accounts.</p>
+        <a href="dashboard-${user.roleKey}.html" style="background:#F97316;color:#fff;padding:14px 32px;border-radius:10px;text-decoration:none;font-weight:700;margin-top:8px;">← Back to My Dashboard</a>
+      </div>`;
+    return false;
+  }
+  return true;
+}
+
+/* ── Init ── */
+document.addEventListener('DOMContentLoaded', () => {
+  if (!ckAuthGuard()) return;
+  renderBrochureGrid();
+  // Hamburger
+  const ham = document.getElementById('hamburger');
+  const mobileNav = document.getElementById('mobile-nav');
+  if (ham && mobileNav) {
+    ham.addEventListener('click', () => {
+      const open = mobileNav.classList.toggle('open');
+      ham.setAttribute('aria-expanded', open);
+    });
+    mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      mobileNav.classList.remove('open');
+      ham.setAttribute('aria-expanded', false);
+    }));
+  }
+});
+</script>
+</body>
+</html>

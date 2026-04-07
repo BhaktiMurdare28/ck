@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Supervisor Profile - BuildPro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+}
+
+.wrapper{
+    display:flex;
+    flex:1;
+}
+
+/* Sidebar */
+.sidebar{
+    width:220px;
+    background:#1F4E79;
+    color:white;
+    min-height:100vh;
+    padding:20px;
+}
+
+.sidebar h2{
+    margin-bottom:30px;
+}
+
+.sidebar ul{
+    list-style:none;
+}
+
+.sidebar li{
+    margin-bottom:20px;
+}
+
+.sidebar a{
+    text-decoration:none;
+    color:white;
+}
+
+.sidebar a:hover{
+    color:#F4A261;
+}
+
+/* Main */
+.main-content{
+    flex:1;
+    padding:40px;
+    background:#F4F7FA;
+}
+h1{
+    margin-bottom:30px;
+}
+
+.section{
+    background:white;
+    padding:20px;
+    margin-bottom:25px;
+    border-radius:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.section h2{
+    margin-bottom:15px;
+    color:#1F4E79;
+}
+
+input, textarea{
+    width:100%;
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   padding:10px;
+    margin-bottom:15px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+button{
+    background:#F4A261;
+    border:none;
+    padding:10px 20px;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:0.85;
+}
+
+.profile-display{
+    margin-top:15px;
+}
+
+/* Footer */
+footer{
+    background:#0E2A47;
+    color:white;
+    text-align:center;
+    padding:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <h2>BuildPro</h2>
+    <ul>
+        <li><a href="supervisor.html">Dashboard</a></li>
+        <li><a href="attendance.html">Attendance</a></li>
+        <li><a href="supervisor-profile.html">My Profile</a></li>
+        <li><a href="#">Logout</a></li>
+    </ul>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+
+<h1>Supervisor Profile</h1>
+
+<!-- Personal Info -->
+<div class="section">
+    <h2>Personal Information</h2>
+    <input type="text" id="name" placeholder="Full Name *">
+    <input type="text" id="experience" placeholder="Years of Experience *">
+    <input type="text" id="specialization" placeholder="Specialization *">
+</div>
+
+<!-- Contact Info -->
+<div class="section">
+    <h2>Contact Information</h2>
+    <input type="text" id="phone" placeholder="Contact Number (10 digits) *">
+    <input type="email" id="email" placeholder="Email Address *">
+</div>
+
+<!-- Projects -->
+<div class="section">
+    <h2>Previous Projects *</h2>
+    <textarea id="projects" rows="4" placeholder="Enter major projects handled"></textarea>
+</div>
+
+<!-- Certifications -->
+<div class="section">
+    <h2>Certifications & Training *</h2>
+    <textarea id="certifications" rows="3" placeholder="Safety training, certifications etc"></textarea>
+</div>
+
+<button onclick="saveProfile()">Save Profile</button>
+
+<div class="section profile-display">
+    <h2>Saved Profile</h2>
+    <div id="profileOutput"></div>
+</div>
+
+</div>
+</div>
+
+<footer>
+    © 2026 BuildPro Construction Monitoring System | All Rights Reserved
+</footer>
+
+<script>
+
+window.onload = function(){
+    loadProfile();
+};
+
+function saveProfile(){
+
+    const name = document.getElementById("name").value.trim();
+    const experience = document.getElementById("experience").value.trim();
+    const specialization = document.getElementById("specialization").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const projects = document.getElementById("projects").value.trim();
+    const certifications = document.getElementById("certifications").value.trim();
+
+    // Check empty fields
+    if(!name || !experience || !specialization || !phone || !email || !projects || !certifications){
+        alert("Please fill all required fields!");
+        return;
+    }
+
+    // Phone validation (10 digits)
+    const phonePattern = /^[0-9]{10}$/;
+    if(!phone.match(phonePattern)){
+        alert("Please enter a valid 10-digit phone number!");
+        return;
+    }
+
+    // Email validation
+    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    if(!email.match(emailPattern)){
+        alert("Please enter a valid email address!");
+        return;
+    }
+
+    const profileData = {
+        name,
+        experience,
+        specialization,
+        phone,
+        email,
+        projects,
+        certifications
+    };
+
+    localStorage.setItem("supervisorProfile", JSON.stringify(profileData));
+    loadProfile();
+    alert("Profile Saved Successfully!");
+}
+
+function loadProfile(){
+    const data = JSON.parse(localStorage.getItem("supervisorProfile"));
+
+    if(data){
+        document.getElementById("profileOutput").innerHTML = `
+            <p><strong>Name:</strong> ${data.name}</p>
+            <p><strong>Experience:</strong> ${data.experience}</p>
+            <p><strong>Specialization:</strong> ${data.specialization}</p>
+            <p><strong>Contact Number:</strong> ${data.phone}</p>
+            <p><strong>Email:</strong> ${data.email}</p>
+            <p><strong>Projects:</strong> ${data.projects}</p>
+            <p><strong>Certifications:</strong> ${data.certifications}</p>
+        `;
+    }
+}
+
+</script>
+
+</body>
+</html>

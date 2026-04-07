@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Core Konstruct</title>
+  <meta name="description" content="Secure login to the Core Konstruct Construction Monitoring System. Access your Admin, Supervisor, or Client dashboard.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+<div class="login-page">
+
+  <!-- Left Panel -->
+  <div class="login-left">
+    <div class="login-left-logo">
+      <div class="icon">🏗</div>
+      <div class="name">Core<span>Konstruct</span></div>
+    </div>
+    <h2 class="login-tagline">
+      Your Construction<br>Command <span>Centre</span>
+    </h2>
+    <p class="login-desc">
+      One platform to manage projects, track progress, monitor sites, and keep every stakeholder informed — contractor to client.
+    </p>
+    <div class="login-features">
+      <div class="login-feature">
+        <div class="login-feature-icon">📊</div>
+        <div class="login-feature-text">
+          <div class="t">Real-Time Progress Tracking</div>
+          <div class="s">Stage-by-stage dashboards with live data</div>
+        </div>
+      </div>
+      <div class="login-feature">
+        <div class="login-feature-icon">📸</div>
+        <div class="login-feature-text">
+          <div class="t">Daily Photo Documentation</div>
+          <div class="s">Visual site records uploaded by supervisors</div>
+        </div>
+      </div>
+      <div class="login-feature">
+        <div class="login-feature-icon">💰</div>
+        <div class="login-feature-text">
+          <div class="t">Finance &amp; Cost Control</div>
+          <div class="s">Budget vs actual with breakdown by category</div>
+        </div>
+      </div>
+      <div class="login-feature">
+        <div class="login-feature-icon">🔒</div>
+        <div class="login-feature-text">
+          <div class="t">Role-Based Access</div>
+          <div class="s">Each user sees only what they need</div>
+        </div>
+      </div>
+    </div>
+    <a href="index.html" class="back-link" style="margin-top:auto;">← Back to Website</a>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="login-right">
+    <h2>Welcome Back</h2>
+    <p class="subtitle">Sign in to your Core Konstruct account</p>
+
+    <!-- Role selector tabs -->
+    <div class="role-tabs" role="tablist">
+      <button class="role-tab active" data-role="admin" role="tab" aria-selected="true">
+        <span class="role-icon">🏢</span> Admin
+      </button>
+      <button class="role-tab" data-role="supervisor" role="tab" aria-selected="false">
+        <span class="role-icon">👷</span> Supervisor
+      </button>
+      <button class="role-tab" data-role="client" role="tab" aria-selected="false">
+        <span class="role-icon">👤</span> Client
+      </button>
+    </div>
+
+    <!-- Demo hint -->
+    <div class="demo-hint" id="demo-hint">
+      Demo: <strong>admin@corekonstruct.com / admin123</strong>
+    </div>
+
+    <!-- Error -->
+    <div class="login-error" id="login-error" role="alert"></div>
+
+    <!-- Login form -->
+    <form id="login-form" class="login-form" novalidate>
+      <div class="form-group">
+        <label for="login-email">Email Address</label>
+        <div class="input-wrap">
+          <span class="input-icon">✉</span>
+          <input type="email" id="login-email" name="email" placeholder="Enter your email" value="admin@corekonstruct.com" required autocomplete="email">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔑</span>
+          <input type="password" id="login-password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+          <button type="button" id="toggle-pw" class="toggle-pw" aria-label="Show/hide password">👁</button>
+        </div>
+      </div>
+      <button type="submit" class="login-btn" id="login-submit">
+        <span>Sign In</span>
+        <span>→</span>
+      </button>
+    </form>
+
+    <a href="index.html" class="back-link">← Back to Website</a>
+
+    <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--bg-alt);">
+      <p style="font-size:0.78rem;color:var(--text-muted);text-align:center;">
+        🔒 Secure login. Demo credentials shown above for evaluation purposes.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+</body>
+</html>

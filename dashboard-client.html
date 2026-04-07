@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Dashboard — Core Konstruct</title>
+  <meta name="description" content="Core Konstruct Client Dashboard — view your project progress, photos, timeline, and completed works.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+<div class="dash-layout">
+
+  <!-- ████ SIDEBAR ████ -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">‹</button>
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">🏗</div>
+      <span class="sidebar-logo-text">Core<span>Konstruct</span></span>
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="sidebar-initials">PM</div>
+      <div class="sidebar-user-info">
+        <div class="name" id="sidebar-name">Priya Mehta</div>
+        <div class="role" id="sidebar-role">Client</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">My Projects</div>
+      <button class="nav-item" data-nav="ongoing" onclick="switchClientPanel('ongoing')">
+        <span class="nav-icon">🏗</span><span class="nav-label">Ongoing Projects</span>
+      </button>
+      <button class="nav-item" data-nav="detail" onclick="switchClientPanel('detail')">
+        <span class="nav-icon">📊</span><span class="nav-label">Project Details</span>
+      </button>
+      <button class="nav-item" data-nav="completed" onclick="switchClientPanel('completed')">
+        <span class="nav-icon">✅</span><span class="nav-label">Completed Works</span>
+      </button>
+    </nav>
+    <div class="sidebar-bottom">
+      <button class="logout-btn" onclick="logout()">
+        <span>🚪</span><span>Logout</span>
+      </button>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- ████ MAIN ████ -->
+  <div class="dash-main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="mobile-sidebar-trigger" class="btn-icon hide-desktop" aria-label="Open sidebar">☰</button>
+        <div>
+          <h2 id="topbar-title">My Projects</h2>
+          <div class="breadcrumb">Welcome, <span id="topbar-user">Priya Mehta</span></div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-date" id="topbar-date"></div>
+        <div class="badge badge-success" style="font-size:0.78rem;padding:6px 12px;">🔒 Read Only View</div>
+      </div>
+    </header>
+
+    <main class="dash-content">
+
+      <!-- ══ ONGOING PROJECTS ══ -->
+      <div class="client-panel" id="cp-ongoing">
+        <div style="margin-bottom:24px;">
+          <h2 style="font-size:1.2rem;margin-bottom:4px;">🏗 My Ongoing Projects</h2>
+          <p style="color:var(--text-muted);font-size:0.9rem;">Track the real-time progress of your active construction projects.</p>
+        </div>
+        <div class="three-col-grid" id="ongoing-projects">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- ══ PROJECT DETAIL ══ -->
+      <div class="client-panel hidden" id="cp-detail">
+        <!-- Header -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;flex-wrap:wrap;">
+          <button onclick="switchClientPanel('ongoing')" class="btn-icon" title="Back" style="background:var(--bg-alt);">←</button>
+          <div>
+            <h2 style="font-size:1.2rem;" id="detail-name">City Center Complex</h2>
+            <div style="font-size:0.82rem;color:var(--text-muted);">
+              <span id="detail-type">Building</span> &bull; 📍 <span id="detail-location">Mumbai</span>
+            </div>
+          </div>
+          <div style="margin-left:auto;display:flex;gap:10px;align-items:center;">
+            <span class="badge badge-orange" id="detail-stage">Brickwork</span>
+            <span class="badge badge-success">In Progress</span>
+          </div>
+        </div>
+
+        <div class="two-col-grid" style="margin-bottom:24px;">
+          <!-- Progress ring -->
+          <div class="dash-panel">
+            <div class="dash-panel-header">
+              <h3>📊 Overall Progress</h3>
+            </div>
+            <div class="dash-panel-body" style="display:flex;flex-direction:column;align-items:center;gap:20px;">
+              <div class="circle-progress-wrap" style="margin:12px 0">
+                <svg id="client-ring"></svg>
+                <div class="circle-label">
+                  <span style="font-family:Outfit,sans-serif;font-size:2rem;font-weight:800;color:var(--orange);" id="detail-pct-label">68%</span>
+                  <span style="font-size:0.68rem;color:var(--text-muted);">complete</span>
+                </div>
+              </div>
+              <div style="width:100%;">
+                <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-muted);margin-bottom:6px;">
+                  <span>Progress</span><span id="detail-pct-label-2"></span>
+                </div>
+                <div class="progress-bar-wrap" style="height:10px;">
+                  <div class="progress-bar-fill" id="detail-bar-fill" style="width:0%;"></div>
+                </div>
+              </div>
+              <p style="font-size:0.82rem;color:var(--text-muted);text-align:center;" id="detail-milestone"></p>
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <div class="dash-panel">
+            <div class="dash-panel-header">
+              <h3>📅 Project Timeline</h3>
+            </div>
+            <div class="dash-panel-body">
+              <div class="timeline" id="detail-timeline">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo Gallery -->
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <h3>📸 Site Photo Gallery</h3>
+            <span style="font-size:0.8rem;color:var(--text-muted);">Click any photo to view full size</span>
+          </div>
+          <div class="dash-panel-body">
+            <div class="gallery-grid" id="detail-gallery">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ COMPLETED PROJECTS ══ -->
+      <div class="client-panel hidden" id="cp-completed">
+        <div style="margin-bottom:24px;">
+          <h2 style="font-size:1.2rem;margin-bottom:4px;">✅ Completed Projects</h2>
+          <p style="color:var(--text-muted);font-size:0.9rem;">Portfolio of successfully delivered projects by Core Konstruct.</p>
+        </div>
+        <div class="three-col-grid" id="completed-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/client.js"></script>
+<script>
+  const origSwitch = window.switchClientPanel;
+  window.switchClientPanel = function(id) {
+    origSwitch(id);
+    const titles = { ongoing:'My Projects', detail:'Project Details', completed:'Completed Works' };
+    const h2 = document.getElementById('topbar-title');
+    if (h2) h2.textContent = titles[id] || 'Dashboard';
+    if (id === 'detail' && !document.getElementById('client-ring').firstChild) {
+      openProjectView(1);
+    }
+  };
+</script>
+</body>
+</html>

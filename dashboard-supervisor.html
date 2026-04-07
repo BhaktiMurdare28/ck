@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supervisor Dashboard — Core Konstruct</title>
+  <meta name="description" content="Core Konstruct Supervisor Dashboard — mark attendance, enter materials, upload site photos, submit daily reports.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+<div class="dash-layout">
+
+  <!-- ████ SIDEBAR ████ -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">‹</button>
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">🏗</div>
+      <span class="sidebar-logo-text">Core<span>Konstruct</span></span>
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="sidebar-initials">AS</div>
+      <div class="sidebar-user-info">
+        <div class="name" id="sidebar-name">Arjun Singh</div>
+        <div class="role" id="sidebar-role">Site Supervisor</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Overview</div>
+      <button class="nav-item" data-nav="projects" onclick="switchSuperPanel('projects')">
+        <span class="nav-icon">📋</span><span class="nav-label">My Projects</span>
+      </button>
+
+      <div class="nav-section-label" style="margin-top:16px;">Daily Tasks</div>
+      <button class="nav-item" data-nav="report" onclick="switchSuperPanel('report')">
+        <span class="nav-icon">📝</span><span class="nav-label">Daily Report</span>
+      </button>
+      <button class="nav-item" data-nav="attendance" onclick="switchSuperPanel('attendance')">
+        <span class="nav-icon">👷</span><span class="nav-label">Attendance</span>
+      </button>
+      <button class="nav-item" data-nav="materials" onclick="switchSuperPanel('materials')">
+        <span class="nav-icon">🧱</span><span class="nav-label">Materials</span>
+      </button>
+      <button class="nav-item" data-nav="measurements" onclick="switchSuperPanel('measurements')">
+        <span class="nav-icon">📐</span><span class="nav-label">Measurements</span>
+      </button>
+      <button class="nav-item" data-nav="photos" onclick="switchSuperPanel('photos')">
+        <span class="nav-icon">📸</span><span class="nav-label">Site Photos</span>
+      </button>
+      <button class="nav-item" data-nav="progress" onclick="switchSuperPanel('progress')">
+        <span class="nav-icon">📈</span><span class="nav-label">Update Progress</span>
+      </button>
+    </nav>
+    <div class="sidebar-bottom">
+      <button class="logout-btn" onclick="logout()">
+        <span>🚪</span><span>Logout</span>
+      </button>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- ████ MAIN ████ -->
+  <div class="dash-main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="mobile-sidebar-trigger" class="btn-icon hide-desktop" aria-label="Open sidebar">☰</button>
+        <div>
+          <h2 id="topbar-title">Daily Report</h2>
+          <div class="breadcrumb">City Center Complex — Active Project</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-date" id="topbar-date"></div>
+        <span style="font-size:0.85rem;font-weight:600;color:var(--navy);" id="topbar-user">Arjun Singh</span>
+      </div>
+    </header>
+
+    <main class="dash-content">
+
+      <!-- ══ MY PROJECTS ══ -->
+      <div class="super-panel hidden" id="sp-projects">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+          <h2 style="font-size:1.3rem;">Assigned Projects</h2>
+        </div>
+        <div class="three-col-grid" id="assigned-projects-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- ══ DAILY REPORT ══ -->
+      <div class="super-panel" id="sp-report">
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <h3>📝 Daily Site Report</h3>
+            <span class="badge badge-orange">Mandatory</span>
+          </div>
+          <div class="dash-panel-body">
+            <form id="daily-report-form">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+                <div class="form-group">
+                  <label for="report-date">Date *</label>
+                  <input type="date" id="report-date" name="date" required>
+                </div>
+                <div class="form-group">
+                  <label for="report-weather">Weather *</label>
+                  <select id="report-weather" name="weather" required>
+                    <option value="">Select weather</option>
+                    <option value="sunny">☀ Sunny</option>
+                    <option value="cloudy">⛅ Cloudy</option>
+                    <option value="rainy">🌧 Rainy</option>
+                    <option value="windy">💨 Windy</option>
+                    <option value="foggy">🌫 Foggy</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="report-stage">Current Stage *</label>
+                  <select id="report-stage" name="stage" required>
+                    <option value="brickwork">Brickwork</option>
+                    <option value="plastering">Plastering</option>
+                    <option value="structure">Structure</option>
+                    <option value="finishing">Finishing</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="report-work">Work Done Today *</label>
+                <textarea id="report-work" name="work_done" rows="4" placeholder="Describe what construction work was completed today — e.g., 'Completed brickwork for 3rd floor west wing (approx 80 sq.m). 2 columns cast with M25 concrete.'" required></textarea>
+              </div>
+              <div class="form-group">
+                <label for="report-issues">Issues / Problems</label>
+                <textarea id="report-issues" name="issues" rows="3" placeholder="Note any issues, delays, safety concerns, or equipment problems. Leave blank if none."></textarea>
+              </div>
+              <div style="background:rgba(249,115,22,0.06);border:1.5px solid rgba(249,115,22,0.2);border-radius:var(--radius-md);padding:14px 18px;margin-bottom:20px;font-size:0.88rem;color:var(--text-mid);">
+                📸 <strong style="color:var(--orange);">Site photos are mandatory</strong> before submitting a daily report. Please go to <strong>Site Photos</strong> and upload at least one photo first.
+              </div>
+              <button type="submit" class="btn-primary" style="width:100%;">Submit Daily Report ✓</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ ATTENDANCE ══ -->
+      <div class="super-panel hidden" id="sp-attendance">
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <h3>👷 Labour Attendance</h3>
+            <div style="display:flex;gap:20px;font-size:0.85rem;">
+              <span>✅ Present: <strong id="att-present">10</strong></span>
+              <span>❌ Absent: <strong id="att-absent">0</strong></span>
+              <span>Total: <strong id="att-total">10</strong></span>
+            </div>
+          </div>
+          <div class="dash-panel-body">
+            <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:20px;">Tap a worker card to toggle present/absent status. Green = Present, Red = Absent.</p>
+            <div class="attendance-grid" id="attendance-grid"></div>
+            <button id="save-attendance" class="btn-primary" style="margin-top:24px;width:100%;">Save Attendance ✓</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ MATERIALS ══ -->
+      <div class="super-panel hidden" id="sp-materials">
+        <div class="dash-panel" style="margin-bottom:24px;">
+          <div class="dash-panel-header">
+            <h3>🧱 Add Material Entry</h3>
+          </div>
+          <div class="dash-panel-body">
+            <form id="material-form" style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:12px;align-items:end;">
+              <div class="form-group" style="margin:0;">
+                <label for="mat-item">Material Name *</label>
+                <input type="text" id="mat-item" placeholder="e.g. Cement OPC 53, Steel TMT 20mm" required>
+              </div>
+              <div class="form-group" style="margin:0;">
+                <label for="mat-qty">Quantity *</label>
+                <input type="number" id="mat-qty" placeholder="e.g. 50" min="0.01" step="0.01" required>
+              </div>
+              <div class="form-group" style="margin:0;">
+                <label for="mat-unit">Unit *</label>
+                <select id="mat-unit" required>
+                  <option value="bags">Bags</option>
+                  <option value="cu.m">Cu.m</option>
+                  <option value="MT">MT (Tonne)</option>
+                  <option value="nos">Nos</option>
+                  <option value="litres">Litres</option>
+                  <option value="sqm">Sq.m</option>
+                  <option value="rm">R.m</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-primary" style="padding:12px 20px;height:46px;">+ Add</button>
+            </form>
+          </div>
+        </div>
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <h3>📦 Today's Material Log</h3>
+          </div>
+          <div class="dash-panel-body" style="padding:0;">
+            <table class="data-table">
+              <thead><tr><th>Material</th><th>Quantity</th><th>Unit</th><th>Action</th></tr></thead>
+              <tbody id="material-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ MEASUREMENTS ══ -->
+      <div class="super-panel hidden" id="sp-measurements">
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <h3>📐 Work Measurements</h3>
+            <span class="badge badge-info">Dynamic fields by project type</span>
+          </div>
+          <div class="dash-panel-body">
+            <div class="form-group">
+              <label for="meas-project-type">Project Type</label>
+              <select id="meas-project-type">
+                <option value="Building">Building</option>
+                <option value="Road">Road</option>
+                <option value="Bridge">Bridge</option>
+                <option value="Drainage">Drainage/Pipeline</option>
+              </select>
+            </div>
+            <form id="measurement-form">
+              <div id="meas-fields"></div>
+              <div class="form-group">
+                <label for="meas-notes">Notes / Remarks</label>
+                <textarea id="meas-notes" name="notes" rows="2" placeholder="Any additional measurement notes or site conditions..."></textarea>
+              </div>
+              <button type="submit" class="btn-primary" style="width:100%;">Save Measurements ✓</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PHOTOS ══ -->
+      <div class="super-panel hidden" id="sp-photos">
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <h3>📸 Site Photos</h3>
+            <span class="badge badge-danger">Mandatory</span>
+          </div>
+          <div class="dash-panel-body">
+            <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:20px;">Upload at least one site photo before submitting your daily report. Photos are stored and visible to the admin and used in the client progress view.</p>
+            <div class="upload-zone" id="upload-zone" tabindex="0" role="button" aria-label="Click to upload photos">
+              <input type="file" id="photo-input" accept="image/*" multiple>
+              <div class="upload-icon">📷</div>
+              <h4>Click to Upload or Drag &amp; Drop</h4>
+              <p>Supports JPG, PNG, WEBP &bull; Multiple files allowed</p>
+              <div style="margin-top:16px;">
+                <span class="btn-primary btn-sm" style="pointer-events:none;">Choose Photos</span>
+              </div>
+            </div>
+            <div id="photo-count" style="font-size:0.82rem;color:var(--text-muted);margin-top:12px;min-height:20px;"></div>
+            <div class="photo-preview-grid" id="photo-preview"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PROGRESS UPDATE ══ -->
+      <div class="super-panel hidden" id="sp-progress">
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <h3>📈 Update Stage Progress</h3>
+            <span class="badge badge-orange">City Center Complex</span>
+          </div>
+          <div class="dash-panel-body">
+            <p style="margin-bottom:24px;color:var(--text-muted);font-size:0.9rem;">Update the completion percentage of your currently active work stage. This will be reflected on the admin dashboard and client progress view.</p>
+            <div class="form-group">
+              <label>Current Stage: <strong style="color:var(--orange);">Brickwork</strong></label>
+            </div>
+            <div style="margin:24px 0;">
+              <div style="display:flex;justify-content:space-between;font-size:0.88rem;margin-bottom:12px;">
+                <span>Stage Completion</span>
+                <span id="progress-display" style="font-family:Outfit,sans-serif;font-size:1.5rem;font-weight:800;color:var(--orange);">85%</span>
+              </div>
+              <input type="range" id="progress-slider" min="0" max="100" value="85" style="width:100%;accent-color:var(--orange);height:6px;cursor:pointer;">
+              <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-muted);margin-top:4px;"><span>0%</span><span>100%</span></div>
+            </div>
+            <div style="margin:20px 0;">
+              <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:6px;">Preview:</div>
+              <div class="progress-bar-wrap" style="height:12px;">
+                <div class="progress-bar-fill" id="progress-preview-bar" style="width:85%;"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="progress-note">Completion Note</label>
+              <textarea id="progress-note" rows="3" placeholder="Describe what was completed to reach this percentage — e.g. 'East wing brickwork complete up to 4th floor level.'"></textarea>
+            </div>
+            <button id="btn-update-progress" class="btn-primary" style="width:100%;">Update Progress ✓</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/supervisor.js"></script>
+<script>
+  // Update topbar title on panel switch
+  const origSwitch = window.switchSuperPanel;
+  window.switchSuperPanel = function(id) {
+    origSwitch(id);
+    const titles = { projects:'My Projects', report:'Daily Report', attendance:'Labour Attendance', materials:'Material Log', measurements:'Work Measurements', photos:'Site Photos', progress:'Update Progress' };
+    const h2 = document.getElementById('topbar-title');
+    if (h2) h2.textContent = titles[id] || 'Dashboard';
+  };
+</script>
+</body>
+</html>

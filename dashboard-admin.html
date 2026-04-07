@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Core Konstruct</title>
+  <meta name="description" content="Core Konstruct Contractor/Admin Dashboard — manage projects, monitor progress, track finances.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+<div class="dash-layout">
+
+  <!-- ████ SIDEBAR ████ -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">‹</button>
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">🏗</div>
+      <span class="sidebar-logo-text">Core<span>Konstruct</span></span>
+    </div>
+
+    <!-- User -->
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="sidebar-initials">RK</div>
+      <div class="sidebar-user-info">
+        <div class="name" id="sidebar-name">Rajesh Kumar</div>
+        <div class="role" id="sidebar-role">Contractor / Admin</div>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sidebar-nav" aria-label="Dashboard navigation">
+      <div class="nav-section-label">Main</div>
+      <button class="nav-item" data-nav="overview" onclick="switchPanel('overview')">
+        <span class="nav-icon">🏠</span><span class="nav-label">Overview</span>
+      </button>
+      <button class="nav-item" data-nav="projects" onclick="switchPanel('projects')">
+        <span class="nav-icon">📋</span><span class="nav-label">Projects</span>
+      </button>
+      <button class="nav-item" data-nav="monitoring" onclick="switchPanel('monitoring')">
+        <span class="nav-icon">📊</span><span class="nav-label">Monitoring</span>
+      </button>
+      <button class="nav-item" data-nav="finance" onclick="switchPanel('finance')">
+        <span class="nav-icon">💰</span><span class="nav-label">Finance</span>
+      </button>
+
+      <div class="nav-section-label" style="margin-top:16px;">Tools</div>
+      <button class="nav-item" data-nav="sanction" onclick="switchPanel('sanction')">
+        <span class="nav-icon">📜</span><span class="nav-label">Sanction Plan</span>
+      </button>
+
+      <a href="tenders.html" class="nav-item" data-nav="tenders">
+        <span class="nav-icon">🏗</span><span class="nav-label">Workload/Tenders</span>
+      </a>
+
+      <div class="nav-section-label" style="margin-top:16px;">More</div>
+      <a href="index.html" class="nav-item">
+        <span class="nav-icon">🌐</span><span class="nav-label">Public Site</span>
+      </a>
+      <a href="brochures.html" class="nav-item">
+        <span class="nav-icon">📄</span><span class="nav-label">Brochures</span>
+      </a>
+      <a href="blog.html" class="nav-item">
+        <span class="nav-icon">📝</span><span class="nav-label">Blog</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <button class="logout-btn" onclick="logout()" aria-label="Logout">
+        <span>🚪</span><span>Logout</span>
+      </button>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- ████ MAIN AREA ████ -->
+  <div class="dash-main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="mobile-sidebar-trigger" class="btn-icon hide-desktop" aria-label="Open sidebar">☰</button>
+        <div>
+          <h2 id="topbar-title">Dashboard Overview</h2>
+          <div class="breadcrumb">Core Konstruct → Admin</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-date" id="topbar-date"></div>
+        <div class="topbar-badge" title="1 delay alert">
+          <button class="btn-icon" aria-label="Alerts">🔔</button>
+          <div class="dot"></div>
+        </div>
+        <span style="font-size:0.85rem;font-weight:600;color:var(--navy);" id="topbar-user">Rajesh Kumar</span>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="dash-content">
+
+      <!-- ══════ OVERVIEW PANEL ══════ -->
+      <div class="dash-panel-section" id="panel-overview">
+
+        <!-- Stat cards -->
+        <div class="stats-grid">
+          <div class="stat-card orange">
+            <div class="stat-icon orange">📋</div>
+            <div class="stat-body">
+              <div class="val" id="stat-projects">3</div>
+              <div class="lbl">Active Projects</div>
+              <div class="change up">↑ 1 this month</div>
+            </div>
+          </div>
+          <div class="stat-card success">
+            <div class="stat-icon success">💰</div>
+            <div class="stat-body">
+              <div class="val" id="stat-budget">₹215L</div>
+              <div class="lbl">Total Portfolio</div>
+              <div class="change up">↑ ₹98L new projects</div>
+            </div>
+          </div>
+          <div class="stat-card info">
+            <div class="stat-icon info">📈</div>
+            <div class="stat-body">
+              <div class="val" id="stat-progress">64%</div>
+              <div class="lbl">Avg Progress</div>
+              <div class="change up">↑ 8% this week</div>
+            </div>
+          </div>
+          <div class="stat-card danger">
+            <div class="stat-icon danger">⚠</div>
+            <div class="stat-body">
+              <div class="val" id="stat-delays">1</div>
+              <div class="lbl">Delayed Projects</div>
+              <div class="change down">Bridge project</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="two-col-grid">
+          <!-- Progress Ring -->
+          <div class="dash-panel">
+            <div class="dash-panel-header">
+              <h3>🎯 Overall Portfolio Progress</h3>
+              <span class="badge badge-orange">Live</span>
+            </div>
+            <div class="dash-panel-body" style="display:flex;flex-direction:column;align-items:center;gap:24px;">
+              <div class="circle-progress-wrap" style="margin:16px 0;">
+                <svg id="main-ring"></svg>
+                <div class="circle-label">
+                  <span class="pct" id="main-ring-pct" style="font-size:1.8rem;color:var(--orange);"></span>
+                  <span class="sub">Overall</span>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;width:100%;">
+                <div style="text-align:center;padding:12px;background:rgba(16,185,129,0.06);border-radius:10px;">
+                  <div style="font-size:1.3rem;font-weight:800;color:var(--success);">2</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">On Track</div>
+                </div>
+                <div style="text-align:center;padding:12px;background:rgba(239,68,68,0.06);border-radius:10px;">
+                  <div style="font-size:1.3rem;font-weight:800;color:var(--danger);">1</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Delayed</div>
+                </div>
+                <div style="text-align:center;padding:12px;background:rgba(11,31,58,0.06);border-radius:10px;">
+                  <div style="font-size:1.3rem;font-weight:800;color:var(--navy);">10</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Workers</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project list -->
+          <div class="dash-panel">
+            <div class="dash-panel-header">
+              <h3>📋 Active Projects</h3>
+              <button class="btn-primary btn-sm" onclick="switchPanel('projects')">View All →</button>
+            </div>
+            <div class="dash-panel-body" id="proj-list">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Alerts -->
+        <div class="dash-panel" style="margin-top:24px;">
+          <div class="dash-panel-header">
+            <h3>🔔 Recent Alerts</h3>
+            <span class="badge badge-danger">1 Active</span>
+          </div>
+          <div class="dash-panel-body">
+            <div style="display:flex;align-items:flex-start;gap:16px;padding:14px 0;border-bottom:1px solid var(--bg-alt);">
+              <div style="width:40px;height:40px;background:rgba(239,68,68,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem;">⚠</div>
+              <div>
+                <div style="font-weight:700;font-size:0.9rem;color:var(--navy);">Residency Park Bridge — Delay Detected</div>
+                <div style="font-size:0.82rem;color:var(--text-muted);margin-top:3px;">Project is 2 months behind schedule. Current stage: Railings (80%). Expected handover: Mar 2026 → revised Jun 2026.</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:6px;">3 days ago</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:16px;padding:14px 0;">
+              <div style="width:40px;height:40px;background:rgba(16,185,129,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem;">✅</div>
+              <div>
+                <div style="font-weight:700;font-size:0.9rem;color:var(--navy);">City Center Complex — Foundation Stage Complete</div>
+                <div style="font-size:0.82rem;color:var(--text-muted);margin-top:3px;">Foundation and structure stages marked complete. Brickwork now at 85% progress.</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:6px;">1 week ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════ PROJECTS PANEL ══════ -->
+      <div class="dash-panel-section hidden" id="panel-projects">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+          <h2 style="font-size:1.3rem;">Project Management</h2>
+          <button class="btn-primary" onclick="openCreateModal()">+ Create Project</button>
+        </div>
+
+        <div class="three-col-grid" id="projects-full-grid">
+          <!-- Rendered on open -->
+        </div>
+      </div>
+
+      <!-- ══════ MONITORING PANEL ══════ -->
+      <div class="dash-panel-section hidden" id="panel-monitoring">
+        <h2 style="font-size:1.3rem;margin-bottom:24px;">Site Monitoring</h2>
+        <div id="monitoring-content">
+          <!-- Per project stage trackers -->
+        </div>
+      </div>
+
+      <!-- ══════ FINANCE PANEL ══════ -->
+      <div class="dash-panel-section hidden" id="panel-finance">
+        <h2 style="font-size:1.3rem;margin-bottom:24px;">Finance Overview</h2>
+        <div id="finance-content">
+          <!-- Finance tables -->
+        </div>
+      </div>
+
+      <!-- ══════ SANCTION PLAN PANEL ══════ -->
+      <div class="dash-panel-section hidden" id="panel-sanction">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h2 style="font-size:1.3rem;margin:0;">Sanction Plan</h2>
+            <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">Manage government approvals, NOCs, and sanctioned project documents</div>
+          </div>
+          <button class="btn-primary" onclick="openSanctionModal()">+ Add Document</button>
+        </div>
+
+        <!-- Status summary -->
+        <div class="stats-grid" style="margin-bottom:24px;">
+          <div class="stat-card orange">
+            <div class="stat-icon orange">📜</div>
+            <div class="stat-body">
+              <div class="val" id="sanction-total">6</div>
+              <div class="lbl">Total Documents</div>
+            </div>
+          </div>
+          <div class="stat-card success">
+            <div class="stat-icon success">✅</div>
+            <div class="stat-body">
+              <div class="val" id="sanction-approved">4</div>
+              <div class="lbl">Approved</div>
+            </div>
+          </div>
+          <div class="stat-card warning">
+            <div class="stat-icon warning">⏳</div>
+            <div class="stat-body">
+              <div class="val" id="sanction-pending">1</div>
+              <div class="lbl">Pending</div>
+            </div>
+          </div>
+          <div class="stat-card danger">
+            <div class="stat-icon danger">⚠</div>
+            <div class="stat-body">
+              <div class="val" id="sanction-expiring">1</div>
+              <div class="lbl">Expiring Soon</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Documents table -->
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <h3>📁 Sanction Documents</h3>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <select id="sanction-filter" onchange="filterSanctionDocs()" style="border:1.5px solid var(--border);border-radius:8px;padding:6px 12px;font-size:0.82rem;background:var(--white);color:var(--navy);">
+                <option value="all">All Status</option>
+                <option value="approved">✅ Approved</option>
+                <option value="pending">⏳ Pending</option>
+                <option value="expiring">⚠ Expiring</option>
+              </select>
+            </div>
+          </div>
+          <div class="dash-panel-body" style="padding:0;">
+            <table class="data-table">
+              <thead><tr><th>Document</th><th>Project</th><th>Authority</th><th>Date Issued</th><th>Expiry</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody id="sanction-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+<!-- ════ PROJECT DETAIL MODAL ════ -->
+<div class="modal-overlay hidden" id="project-modal" onclick="if(event.target===this)closeProjectModal()">
+  <div class="modal-box" style="max-width:720px;">
+    <button class="modal-close" onclick="closeProjectModal()">✕</button>
+    <div style="display:flex;align-items:flex-start;gap:20px;margin-bottom:28px;flex-wrap:wrap;">
+      <div style="flex:1;">
+        <div class="badge badge-orange mb-8" id="pm-type">Building</div>
+        <h2 id="pm-name" style="margin:8px 0 4px;font-size:1.4rem;"></h2>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:0.85rem;color:var(--text-muted);margin-top:6px;">
+          <span>📍 <span id="pm-location"></span></span>
+          <span>👷 <span id="pm-supervisor"></span></span>
+          <span>📅 <span id="pm-start"></span> → <span id="pm-end"></span></span>
+        </div>
+      </div>
+      <div class="circle-progress-wrap">
+        <svg id="pm-ring"></svg>
+        <div class="circle-label">
+          <span class="pct" id="pm-pct" style="font-size:1.1rem;font-weight:800;color:var(--orange);"></span>
+          <span class="sub">done</span>
+        </div>
+      </div>
+      <div>
+        <span id="pm-status" class="badge"></span>
+      </div>
+    </div>
+
+    <!-- Stage tracker -->
+    <h4 style="margin-bottom:12px;font-size:0.85rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">Work Stages</h4>
+    <div class="stage-tracker" id="pm-stages"></div>
+
+    <!-- Finance -->
+    <h4 style="margin:24px 0 16px;font-size:0.85rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">Finance Breakdown</h4>
+    <div style="display:grid;gap:10px;">
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:4px;">
+          <span style="display:flex;align-items:center;gap:8px;"><span style="width:10px;height:10px;border-radius:50%;background:#3B82F6;display:inline-block;"></span>Labour Cost</span>
+          <strong id="pm-labour"></strong>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" id="pm-labour-bar" style="width:0%;background:#3B82F6;"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:4px;">
+          <span style="display:flex;align-items:center;gap:8px;"><span style="width:10px;height:10px;border-radius:50%;background:#F97316;display:inline-block;"></span>Material Cost</span>
+          <strong id="pm-material"></strong>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" id="pm-material-bar" style="width:0%;background:#F97316;"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:4px;">
+          <span style="display:flex;align-items:center;gap:8px;"><span style="width:10px;height:10px;border-radius:50%;background:#10B981;display:inline-block;"></span>Miscellaneous</span>
+          <strong id="pm-misc"></strong>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" id="pm-misc-bar" style="width:0%;background:#10B981;"></div></div>
+      </div>
+      <div style="padding:14px;background:var(--bg);border-radius:12px;display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+        <div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">Total Spent</div>
+          <div style="font-weight:800;font-size:1.2rem;color:var(--navy);" id="pm-spent"></div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:0.8rem;color:var(--text-muted);">Budget</div>
+          <div style="font-weight:800;font-size:1.2rem;color:var(--navy);" id="pm-budget"></div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:var(--text-muted);margin-bottom:4px;">
+          <span>Budget utilisation</span><span></span>
+        </div>
+        <div class="progress-bar-wrap" style="height:12px;">
+          <div id="pm-budget-fill" style="height:100%;border-radius:999px;width:0%;transition:width 1s ease;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ CREATE PROJECT MODAL ════ -->
+<div class="modal-overlay hidden" id="create-modal" onclick="if(event.target===this)closeCreateModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeCreateModal()">✕</button>
+    <h3 style="margin-bottom:24px;">➕ Create New Project</h3>
+    <form id="create-project-form">
+      <div class="form-group">
+        <label for="proj-name">Project Name *</label>
+        <input type="text" id="proj-name" name="proj-name" placeholder="e.g. Green Valley Apartments" required>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="form-group">
+          <label for="proj-type">Project Type *</label>
+          <select id="proj-type" name="proj-type" required>
+            <option value="Building">Building</option>
+            <option value="Road">Road</option>
+            <option value="Bridge">Bridge</option>
+            <option value="Drainage">Drainage/Pipeline</option>
+            <option value="Custom">Custom</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="proj-location">Location *</label>
+          <input type="text" id="proj-location" name="proj-location" placeholder="e.g. Pune, MH" required>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="form-group">
+          <label for="proj-start">Start Date *</label>
+          <input type="date" id="proj-start" name="proj-start" required>
+        </div>
+        <div class="form-group">
+          <label for="proj-end">End Date *</label>
+          <input type="date" id="proj-end" name="proj-end" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="proj-budget">Total Budget (₹) *</label>
+        <input type="number" id="proj-budget" name="proj-budget" placeholder="e.g. 5000000" required min="0">
+      </div>
+      <div class="form-group">
+        <label for="proj-supervisor">Assigned Supervisor *</label>
+        <select id="proj-supervisor" name="proj-supervisor" required>
+          <option value="">Select Supervisor</option>
+          <option value="Arjun Singh">Arjun Singh</option>
+          <option value="Meera Nair">Meera Nair</option>
+          <option value="Suresh Pillai">Suresh Pillai</option>
+          <option value="Deepa Sharma">Deepa Sharma</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-primary w-100">Create Project →</button>
+    </form>
+  </div>
+</div>
+
+<!-- ════ ADD SANCTION DOCUMENT MODAL ════ -->
+<div class="modal-overlay hidden" id="sanction-modal" onclick="if(event.target===this)closeSanctionModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeSanctionModal()">✕</button>
+    <h3 style="margin-bottom:24px;">📁 Add Sanction Document</h3>
+    <form id="add-sanction-form">
+      <div class="form-group">
+        <label for="sanc-name">Document Name *</label>
+        <input type="text" id="sanc-name" name="sanc-name" placeholder="e.g. Environmental Clearance NOC" required>
+      </div>
+      <div class="form-group">
+        <label for="sanc-project">Related Project *</label>
+        <select id="sanc-project" name="sanc-project" required>
+          <option value="">Select Project</option>
+          <!-- Will be filled dynamically -->
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="sanc-authority">Issuing Authority</label>
+        <input type="text" id="sanc-authority" name="sanc-authority" placeholder="e.g. MPCB">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="form-group">
+          <label for="sanc-date">Date Issued</label>
+          <input type="date" id="sanc-date" name="sanc-date">
+        </div>
+        <div class="form-group">
+          <label for="sanc-expiry">Expiry Date</label>
+          <input type="date" id="sanc-expiry" name="sanc-expiry">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="sanc-status">Status *</label>
+        <select id="sanc-status" name="sanc-status" required>
+          <option value="approved">✅ Approved</option>
+          <option value="pending">⏳ Pending</option>
+          <option value="expiring">⚠ Expiring</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-primary w-100">Add Document →</button>
+    </form>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/admin.js"></script>
+<script>
+  // Render projects and monitoring panels on switch
+  const origSwitch = window.switchPanel;
+  window.switchPanel = function(id) {
+    origSwitch(id);
+    document.getElementById('topbar-title').textContent =
+      id === 'overview' ? 'Dashboard Overview' :
+      id === 'projects' ? 'Project Management' :
+      id === 'monitoring' ? 'Site Monitoring' :
+      id === 'sanction' ? 'Sanction Plan' :
+      id === 'tenders' ? 'Workload / Tenders' :
+      'Finance Overview';
+
+    if (id === 'projects') renderProjectCards();
+    if (id === 'monitoring') renderMonitoring();
+    if (id === 'finance') renderFinanceTables();
+  };
+
+  function renderProjectCards() {
+    const grid = document.getElementById('projects-full-grid');
+    if (!grid || grid.dataset.rendered) return;
+    grid.dataset.rendered = '1';
+    grid.innerHTML = PROJECTS_DATA.map(p => `
+      <div class="premium-card" style="cursor:pointer;" onclick="openProjectDetail(${p.id})">
+        <div style="height:180px;overflow:hidden;position:relative;">
+          <img src="${p.image}" style="width:100%;height:100%;object-fit:cover;" alt="${p.name}">
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(11,31,58,0.75),transparent);display:flex;align-items:flex-end;padding:16px;">
+            <div>
+              <span class="badge ${p.status==='delayed'?'badge-danger':'badge-success'}">${p.status==='delayed'?'⚠ Delayed':'✓ On Track'}</span>
+              <div style="color:var(--white);font-weight:700;margin-top:4px;">${p.name}</div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:18px 20px;">
+          <div class="badge badge-navy mb-8">${p.type}</div>
+          <div style="font-size:0.82rem;color:var(--text-muted);margin:6px 0 10px;">📍 ${p.location} &bull; 👷 ${p.supervisor}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span style="font-size:0.82rem">Progress</span>
+            <strong style="color:var(--orange);">${p.progress}%</strong>
+          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${p.progress}%"></div></div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderMonitoring() {
+    const wrap = document.getElementById('monitoring-content');
+    if (!wrap || wrap.dataset.rendered) return;
+    wrap.dataset.rendered = '1';
+    wrap.innerHTML = PROJECTS_DATA.map(p => `
+      <div class="dash-panel" style="margin-bottom:20px;">
+        <div class="dash-panel-header">
+          <div>
+            <h3>${p.name}</h3>
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;">${p.type} &bull; ${p.location}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="font-family:Outfit,sans-serif;font-size:1.4rem;font-weight:800;color:var(--orange);">${p.progress}%</div>
+            <span class="badge ${p.status==='delayed'?'badge-danger':'badge-success'}">${p.status==='delayed'?'⚠ Delayed':'✓ On Track'}</span>
+          </div>
+        </div>
+        <div class="dash-panel-body">
+          <div class="progress-bar-wrap" style="height:10px;margin-bottom:20px;">
+            <div class="progress-bar-fill" style="width:${p.progress}%;"></div>
+          </div>
+          <div class="stage-tracker" id="stage-${p.id}"></div>
+          <div style="display:flex;gap:16px;margin-top:16px;flex-wrap:wrap;">
+            <div style="font-size:0.82rem;color:var(--text-muted);">📅 ${p.startDate} → ${p.endDate}</div>
+            <div style="font-size:0.82rem;color:var(--text-muted);">👷 Supervisor: ${p.supervisor}</div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+    PROJECTS_DATA.forEach(p => renderStages(document.getElementById('stage-'+p.id), p.stages));
+  }
+
+  function renderFinanceTables() {
+    const wrap = document.getElementById('finance-content');
+    if (!wrap || wrap.dataset.rendered) return;
+    wrap.dataset.rendered = '1';
+    let totalLabour = 0, totalMat = 0, totalMisc = 0, totalBudget = 0;
+    PROJECTS_DATA.forEach(p => { totalLabour += p.labour; totalMat += p.material; totalMisc += p.misc; totalBudget += p.budget; });
+    const totalSpent = totalLabour + totalMat + totalMisc;
+
+    wrap.innerHTML = `
+      <div class="stats-grid" style="margin-bottom:24px;">
+        <div class="stat-card info"><div class="stat-icon info">💼</div><div class="stat-body"><div class="val">₹${(totalLabour/100000).toFixed(0)}L</div><div class="lbl">Total Labour Cost</div></div></div>
+        <div class="stat-card orange"><div class="stat-icon orange">🧱</div><div class="stat-body"><div class="val">₹${(totalMat/100000).toFixed(0)}L</div><div class="lbl">Total Material Cost</div></div></div>
+        <div class="stat-card success"><div class="stat-icon success">🧾</div><div class="stat-body"><div class="val">₹${(totalSpent/100000).toFixed(0)}L</div><div class="lbl">Total Spent</div></div></div>
+        <div class="stat-card warning"><div class="stat-icon warning">💰</div><div class="stat-body"><div class="val">₹${(totalBudget/100000).toFixed(0)}L</div><div class="lbl">Total Budget</div></div></div>
+      </div>
+      <div class="dash-panel">
+        <div class="dash-panel-header"><h3>📊 Finance by Project</h3></div>
+        <div class="dash-panel-body" style="padding:0;">
+          <table class="data-table">
+            <thead><tr><th>Project</th><th>Labour</th><th>Material</th><th>Misc</th><th>Total Spent</th><th>Budget</th><th>Utilisation</th></tr></thead>
+            <tbody>
+              ${PROJECTS_DATA.map(p => {
+                const sp = p.labour + p.material + p.misc;
+                const ut = Math.round(sp / p.budget * 100);
+                const cl = ut > 90 ? 'danger' : ut > 75 ? 'warning' : 'success';
+                return `<tr>
+                  <td><strong>${p.name}</strong><br><span style="font-size:0.75rem;color:var(--text-muted);">${p.type}</span></td>
+                  <td>₹${p.labour.toLocaleString('en-IN')}</td>
+                  <td>₹${p.material.toLocaleString('en-IN')}</td>
+                  <td>₹${p.misc.toLocaleString('en-IN')}</td>
+                  <td><strong>₹${sp.toLocaleString('en-IN')}</strong></td>
+                  <td>₹${p.budget.toLocaleString('en-IN')}</td>
+                  <td><span class="badge badge-${cl}">${ut}%</span></td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+</script>
+</body>
+</html>
