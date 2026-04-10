@@ -13,6 +13,8 @@ const path     = require('path');
 const multer   = require('multer');
 const jwt      = require('jsonwebtoken');
 const fs       = require('fs');
+const http     = require('http');
+const { Server } = require('socket.io');
 
 /* ── Models ─────────────────────────────────────────────────── */
 const User        = require('./models/User');
@@ -30,12 +32,26 @@ const app  = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'ck_fallback_secret';
 
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: '*' } });
+
+function broadcastUpdate() {
+  if (io) io.emit('data_updated', { time: Date.now() });
+}
+
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-/* ── Static files (public folder = project root for HTML/CSS/JS) */
-app.use(express.static(path.join(__dirname, 'public')));
+/* ── Block access to sensitive server-side files ──────────────── */
+const BLOCKED = /^\/(server\.js|seed\.js|build-client\.js|\.env|package\.json|package-lock\.json|launch\.json|settings\.json|models|node_modules)/i;
+app.use((req, res, next) => {
+  if (BLOCKED.test(req.path)) return res.status(403).end();
+  next();
+});
+
+/* ── Static files (served from project root) ─────────────────── */
+app.use(express.static(__dirname, { index: false }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 /* ── Ensure uploads directory exists ────────────────────────── */
@@ -148,25 +164,20 @@ app.get('/api/auth/me', authMiddleware, async (req, res) => {
 });
 
 /* ═══════════════════════════════════════════════════════════════
-   ROUTES — Messages / Contact
+   ROUTES — Users Management (Admin can see supervisors/clients)
    ═══════════════════════════════════════════════════════════════ */
-app.post('/api/messages', async (req, res) => {
+app.get('/api/users', authMiddleware, async (req, res) => {
   try {
-    const msg = await Message.create(req.body);
-    res.status(201).json(msg);
+    const { role } = req.query;
+    const filter = {};
+    if (role) filter.role = role;
+    const users = await User.find(filter).select('-password').sort({ createdAt: -1 });
+    res.json(users);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to send message' });
+    res.status(500).json({ error: 'Failed to fetch users' });
   }
 });
 
-app.get('/api/messages', authMiddleware, async (req, res) => {
-  try {
-    const msgs = await Message.find().sort({ createdAt: -1 });
-    res.json(msgs);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch messages' });
-  }
-});
 
 /* ═══════════════════════════════════════════════════════════════
    ROUTES — Projects
@@ -193,6 +204,7 @@ app.get('/api/projects/:id', authMiddleware, async (req, res) => {
 app.post('/api/projects', authMiddleware, async (req, res) => {
   try {
     const project = await Project.create(req.body);
+    broadcastUpdate();
     res.status(201).json(project);
   } catch (err) {
     console.error('Create project error:', err);
@@ -204,6 +216,7 @@ app.put('/api/projects/:id', authMiddleware, async (req, res) => {
   try {
     const project = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!project) return res.status(404).json({ error: 'Project not found' });
+    broadcastUpdate();
     res.json(project);
   } catch (err) {
     res.status(500).json({ error: 'Failed to update project' });
@@ -213,18 +226,56 @@ app.put('/api/projects/:id', authMiddleware, async (req, res) => {
 app.put('/api/projects/:id/progress', authMiddleware, async (req, res) => {
   try {
     const { progress, stageIndex, note } = req.body;
+    let actualProgress = progress;
+    
     const project = await Project.findById(req.params.id);
     if (!project) return res.status(404).json({ error: 'Project not found' });
 
-    project.progress = progress;
+    // Update the specific stage
     if (typeof stageIndex === 'number' && project.stages[stageIndex]) {
-      project.stages[stageIndex].pct = progress;
-      if (progress >= 100) project.stages[stageIndex].status = 'done';
+      project.stages[stageIndex].pct = Math.min(actualProgress, 100);
+
+      // If stage reaches 100% (or remainingWork is 0), mark it done and activate next pending stage
+      if (actualProgress >= 100) {
+        project.stages[stageIndex].status = 'done';
+
+        // Find and activate the next pending stage
+        const nextPending = project.stages.findIndex((s, i) => i > stageIndex && s.status === 'pending');
+        if (nextPending !== -1) {
+          project.stages[nextPending].status = 'active';
+        }
+      }
     }
+
+    // Recalculate overall progress as average of all stage percentages
+    if (project.stages && project.stages.length > 0) {
+      const totalPct = project.stages.reduce((sum, s) => sum + (s.pct || 0), 0);
+      project.progress = Math.round(totalPct / project.stages.length);
+    } else {
+      project.progress = actualProgress;
+    }
+
+    // Auto-set status to 'completed' if all stages are done
+    if (project.stages && project.stages.length > 0 && project.stages.every(s => s.status === 'done')) {
+      project.status = 'completed';
+    }
+
     await project.save();
+    broadcastUpdate();
     res.json(project);
   } catch (err) {
+    console.error('Progress update error:', err);
     res.status(500).json({ error: 'Failed to update progress' });
+  }
+});
+
+app.delete('/api/projects/:id', authMiddleware, async (req, res) => {
+  try {
+    const project = await Project.findByIdAndDelete(req.params.id);
+    if (!project) return res.status(404).json({ error: 'Project not found' });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete project' });
   }
 });
 
@@ -269,9 +320,14 @@ app.get('/api/attendance', authMiddleware, async (req, res) => {
 
 app.post('/api/attendance', authMiddleware, async (req, res) => {
   try {
-    const record = await Attendance.create(req.body);
+    const record = await Attendance.create({
+      ...req.body,
+      submittedBy: req.user.name || ''
+    });
+    broadcastUpdate();
     res.status(201).json(record);
   } catch (err) {
+    console.error('Attendance create error:', err);
     res.status(500).json({ error: 'Failed to save attendance' });
   }
 });
@@ -281,7 +337,10 @@ app.post('/api/attendance', authMiddleware, async (req, res) => {
    ═══════════════════════════════════════════════════════════════ */
 app.get('/api/materials', authMiddleware, async (req, res) => {
   try {
-    const materials = await Material.find().sort({ createdAt: -1 }).limit(100);
+    const { project } = req.query;
+    const filter = {};
+    if (project) filter.project = project;
+    const materials = await Material.find(filter).sort({ createdAt: -1 }).limit(100);
     res.json(materials);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch materials' });
@@ -290,9 +349,18 @@ app.get('/api/materials', authMiddleware, async (req, res) => {
 
 app.post('/api/materials', authMiddleware, async (req, res) => {
   try {
-    const mat = await Material.create(req.body);
+    const mat = await Material.create({
+      item: req.body.item,
+      qty: req.body.qty,
+      unit: req.body.unit,
+      date: req.body.date || new Date().toISOString().split('T')[0],
+      project: req.body.project || '',
+      submittedBy: req.user.name || ''
+    });
+    broadcastUpdate();
     res.status(201).json(mat);
   } catch (err) {
+    console.error('Material create error:', err);
     res.status(500).json({ error: 'Failed to add material' });
   }
 });
@@ -311,9 +379,18 @@ app.delete('/api/materials/:id', authMiddleware, async (req, res) => {
    ═══════════════════════════════════════════════════════════════ */
 app.post('/api/measurements', authMiddleware, async (req, res) => {
   try {
-    const meas = await Measurement.create(req.body);
+    const meas = await Measurement.create({
+      project: req.body.project || '',
+      projectType: req.body.projectType || 'Building',
+      date: req.body.date || new Date().toISOString().split('T')[0],
+      fields: req.body.fields || {},
+      notes: req.body.notes || '',
+      submittedBy: req.user.name || ''
+    });
+    broadcastUpdate();
     res.status(201).json(meas);
   } catch (err) {
+    console.error('Measurement create error:', err);
     res.status(500).json({ error: 'Failed to save measurements' });
   }
 });
@@ -332,7 +409,7 @@ app.get('/api/measurements', authMiddleware, async (req, res) => {
    ═══════════════════════════════════════════════════════════════ */
 app.get('/api/reports', authMiddleware, async (req, res) => {
   try {
-    const reports = await DailyReport.find().populate('project').sort({ createdAt: -1 }).limit(50);
+    const reports = await DailyReport.find().sort({ createdAt: -1 }).limit(50);
     res.json(reports);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch reports' });
@@ -341,10 +418,60 @@ app.get('/api/reports', authMiddleware, async (req, res) => {
 
 app.post('/api/reports', authMiddleware, async (req, res) => {
   try {
-    const report = await DailyReport.create({ ...req.body, submittedBy: req.user.id });
+    const report = await DailyReport.create({
+      project: req.body.project || '',
+      date: req.body.date || new Date().toISOString().split('T')[0],
+      weather: req.body.weather || '',
+      stage: req.body.stage || '',
+      workDone: req.body.workDone || '',
+      issues: req.body.issues || '',
+      photos: req.body.photos || [],
+      expenses: req.body.expenses || { labour: 0, material: 0, misc: 0, description: '' },
+      submittedBy: req.user.name || '',
+      submittedById: req.user.id
+    });
+
+    // Update project finance if expenses provided
+    if (req.body.expenses && req.body.project) {
+      const exp = req.body.expenses;
+      const totalExpense = (exp.labour || 0) + (exp.material || 0) + (exp.misc || 0);
+      if (totalExpense > 0) {
+        const project = await Project.findOne({ name: req.body.project });
+        if (project) {
+          project.spent   = (project.spent || 0) + totalExpense;
+          project.labour  = (project.labour || 0) + (exp.labour || 0);
+          project.material= (project.material || 0) + (exp.material || 0);
+          project.misc    = (project.misc || 0) + (exp.misc || 0);
+          await project.save();
+        }
+      }
+    }
+
+    broadcastUpdate();
     res.status(201).json(report);
   } catch (err) {
+    console.error('Report create error:', err);
     res.status(500).json({ error: 'Failed to submit report' });
+  }
+});
+
+// Expense aggregation for admin finance
+app.get('/api/reports/expenses', authMiddleware, async (req, res) => {
+  try {
+    const reports = await DailyReport.find({ 'expenses.labour': { $gt: 0 } }).sort({ createdAt: -1 }).limit(100);
+    const byProject = {};
+    reports.forEach(r => {
+      const name = r.project || 'Unknown';
+      if (!byProject[name]) byProject[name] = { labour: 0, material: 0, misc: 0, total: 0, reports: 0 };
+      byProject[name].labour += r.expenses.labour || 0;
+      byProject[name].material += r.expenses.material || 0;
+      byProject[name].misc += r.expenses.misc || 0;
+      byProject[name].total += (r.expenses.labour || 0) + (r.expenses.material || 0) + (r.expenses.misc || 0);
+      byProject[name].reports++;
+    });
+    res.json({ reports, byProject });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to aggregate expenses' });
   }
 });
 
@@ -401,33 +528,60 @@ app.delete('/api/sanctions/:id', authMiddleware, async (req, res) => {
 });
 
 /* ═══════════════════════════════════════════════════════════════
-   ROUTES — Workers (static list for attendance)
+   ROUTES — Contact Messages
    ═══════════════════════════════════════════════════════════════ */
-app.get('/api/workers', authMiddleware, (req, res) => {
-  const WORKERS = [
-    { id: 1, name: 'Ramesh K.',  initials: 'RK' },
-    { id: 2, name: 'Suresh P.',  initials: 'SP' },
-    { id: 3, name: 'Mahesh B.',  initials: 'MB' },
-    { id: 4, name: 'Pradeep N.', initials: 'PN' },
-    { id: 5, name: 'Vijay S.',   initials: 'VS' },
-    { id: 6, name: 'Anand T.',   initials: 'AT' },
-    { id: 7, name: 'Ganesh L.',  initials: 'GL' },
-    { id: 8, name: 'Dinesh R.',  initials: 'DR' },
-    { id: 9, name: 'Mohan C.',   initials: 'MC' },
-    { id:10, name: 'Lokesh M.',  initials: 'LM' }
-  ];
-  res.json(WORKERS);
+app.get('/api/messages', authMiddleware, async (req, res) => {
+  try {
+    const messages = await Message.find().sort({ createdAt: -1 }).limit(50);
+    res.json(messages);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch messages' });
+  }
+});
+
+app.post('/api/messages', async (req, res) => {
+  try {
+    const msg = await Message.create({
+      name: req.body.name || '',
+      email: req.body.email || '',
+      subject: req.body.subject || 'Contact Submission',
+      message: req.body.message || req.body.content || ''
+    });
+    broadcastUpdate();
+    res.status(201).json(msg);
+  } catch (err) {
+    console.error('Message create error:', err);
+    res.status(500).json({ error: 'Failed to save message' });
+  }
+});
+
+app.delete('/api/messages/:id', authMiddleware, async (req, res) => {
+  try {
+    await Message.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete message' });
+  }
 });
 
 /* ═══════════════════════════════════════════════════════════════
-   CATCH-ALL — SPA fallback (serve index.html)
+   ROUTES — Workers (static list for attendance)
+   ═══════════════════════════════════════════════════════════════ */
+// Workers are now managed per-supervisor in localStorage + API
+// This endpoint is kept for backward compatibility
+app.get('/api/workers', authMiddleware, (req, res) => {
+  res.json([]);
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   CATCH-ALL — SPA fallback (serve landing page)
    ═══════════════════════════════════════════════════════════════ */
 app.get('*', (req, res) => {
-  const filePath = path.join(__dirname, 'public', req.path);
+  const filePath = path.join(__dirname, req.path);
   if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
     return res.sendFile(filePath);
   }
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 /* ═══════════════════════════════════════════════════════════════
@@ -435,13 +589,13 @@ app.get('*', (req, res) => {
    ═══════════════════════════════════════════════════════════════ */
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
-    console.log('\n  ✅  MongoDB connected successfully');
-    app.listen(PORT, () => {
+    console.log('\n  <i class="fa-solid fa-circle-check"></i>  MongoDB connected successfully');
+    server.listen(PORT, () => {
       console.log(`  🚀  Core Konstruct API running`);
       console.log(`  🌐  Open: http://localhost:${PORT}\n`);
     });
   })
   .catch(err => {
-    console.error('  ❌  MongoDB connection failed:', err.message);
+    console.error('  <i class="fa-solid fa-circle-xmark"></i>  MongoDB connection failed:', err.message);
     process.exit(1);
   });

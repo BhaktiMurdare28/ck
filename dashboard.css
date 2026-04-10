@@ -63,8 +63,8 @@
 
 .sidebar-toggle {
   position: absolute;
-  top: 22px;
-  right: -14px;
+  top: 26px;
+  right: 12px;
   width: 28px;
   height: 28px;
   background: var(--blue);
@@ -77,8 +77,11 @@
   justify-content: center;
   cursor: pointer;
   z-index: 10;
-  transition: transform var(--trans-base);
+  transition: transform var(--trans-base), background var(--trans-base);
   box-shadow: 0 2px 8px var(--blue-glow);
+}
+.sidebar-toggle:hover {
+  background: var(--blue-dark);
 }
 .sidebar.collapsed .sidebar-toggle { transform: rotate(180deg); }
 
@@ -743,3 +746,210 @@
 @media (max-width: 480px) {
   .stats-grid { grid-template-columns: 1fr; }
 }
+
+/* Worker remove button in attendance grid */
+.worker-toggle {
+  position: relative;
+}
+.worker-remove {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: var(--danger);
+  color: white;
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--trans-base);
+  z-index: 2;
+}
+.worker-toggle:hover .worker-remove {
+  opacity: 1;
+}
+
+/* Selected project highlight in supervisor grid */
+.premium-card.selected-project {
+  border-color: var(--blue) !important;
+  box-shadow: 0 0 0 2px var(--blue-glow), var(--shadow-md) !important;
+}
+
+/* ===== DATA TABLE POLISH ===== */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.data-table thead th {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+  background: var(--glass-bg);
+  white-space: nowrap;
+}
+.data-table tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-mid);
+  vertical-align: middle;
+}
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr:hover { background: var(--glass-bg); }
+.data-table tbody tr { transition: background 0.2s ease; }
+
+/* ===== PREMIUM CARD POLISH ===== */
+.premium-card {
+  background: var(--glass-bg-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(12px);
+}
+.premium-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+}
+
+/* ===== MODAL POLISH ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(6px);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.2s ease;
+}
+.modal-overlay.hidden { display: none; }
+.modal-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  max-width: 620px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+}
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--glass-bg);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.modal-close:hover {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border-color: rgba(239,68,68,0.3);
+}
+
+/* ===== FORM GROUP POLISH ===== */
+.form-group {
+  margin-bottom: 16px;
+}
+.form-group label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  margin-bottom: 6px;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  color: var(--text-dark);
+  font-size: 0.92rem;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+}
+
+/* ===== BUTTON POLISH ===== */
+.btn-sm {
+  font-size: 0.8rem !important;
+  padding: 6px 14px !important;
+}
+
+/* ===== BADGE ALIGNMENT ===== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.badge-blue    { background: var(--blue-soft); color: var(--blue); }
+.badge-success { background: var(--success-bg); color: var(--success); }
+.badge-danger  { background: var(--danger-bg); color: var(--danger); }
+.badge-navy    { background: rgba(10,15,30,0.15); color: var(--text-dark); }
+[data-theme="dark"] .badge-navy { background: rgba(255,255,255,0.08); color: var(--text-dark); }
+.badge-warning { background: var(--warning-bg); color: var(--warning); }
+
+/* ===== TOAST NOTIFICATION ===== */
+.super-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 14px 28px;
+  background: var(--glass-bg-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(16px);
+  color: var(--text-dark);
+  font-size: 0.9rem;
+  font-weight: 600;
+  z-index: 1000;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== SCROLLBAR POLISH ===== */
+.dash-content::-webkit-scrollbar { width: 6px; }
+.dash-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
+.dash-content::-webkit-scrollbar-track { background: transparent; }

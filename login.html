@@ -4,19 +4,84 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login — Core Konstruct</title>
-  <meta name="description" content="Secure login to the Core Konstruct Construction Monitoring System. Access your Admin, Supervisor, or Client dashboard.">
+  <meta name="description" content="Secure login or sign up to the Core Konstruct Construction Management System. Access your Admin, Supervisor, or Client dashboard.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="auth.css">
+  <style>
+    /* ── Auth mode toggle ── */
+    .auth-toggle {
+      display: flex; gap: 0; margin-bottom: 28px;
+      background: var(--glass-bg-md); border: 1px solid var(--border);
+      border-radius: var(--radius-md); overflow: hidden;
+    }
+    .auth-toggle-btn {
+      flex: 1; padding: 12px 0; border: none; background: none;
+      font-size: 0.9rem; font-weight: 600; color: var(--text-muted);
+      cursor: pointer; transition: 0.3s; font-family: var(--font-body);
+      position: relative;
+    }
+    .auth-toggle-btn.active {
+      background: var(--blue); color: var(--white);
+      box-shadow: 0 4px 12px var(--blue-glow);
+    }
+    .auth-toggle-btn:hover:not(.active) { color: var(--blue); }
+
+    /* ── Signup form ── */
+    #signup-section { display: none; }
+    #signup-section.active { display: block; }
+    #login-section { display: block; }
+    #login-section.active { display: block; }
+
+    .signup-role-select {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px;
+    }
+    .signup-role-option {
+      padding: 12px 8px; border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-sm); background: var(--glass-bg-md);
+      text-align: center; cursor: pointer; transition: 0.3s;
+      font-family: var(--font-body);
+    }
+    .signup-role-option:hover { border-color: var(--blue); }
+    .signup-role-option.selected {
+      border-color: var(--blue); background: var(--blue-soft);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+    }
+    .signup-role-option .icon { font-size: 1.3rem; margin-bottom: 4px; }
+    .signup-role-option .label { font-size: 0.78rem; font-weight: 600; color: var(--text-dark); }
+
+    .signup-error, .signup-success {
+      padding: 10px 14px; border-radius: var(--radius-sm);
+      font-size: 0.85rem; font-weight: 500; margin-bottom: 16px;
+      display: none;
+    }
+    .signup-error.show { display: block; background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(248,113,113,0.2); }
+    .signup-success.show { display: block; background: var(--success-bg); color: var(--success); border: 1px solid rgba(45,212,191,0.2); }
+
+    .back-to-home {
+      display: inline-flex; align-items: center; gap: 6px;
+      position: fixed; top: 20px; left: 20px;
+      font-size: 0.85rem; font-weight: 500; color: var(--text-muted);
+      padding: 8px 14px; border-radius: var(--radius-sm);
+      background: var(--glass-bg-md); border: 1px solid var(--border);
+      backdrop-filter: blur(12px); transition: 0.3s; z-index: 10;
+    }
+    .back-to-home:hover { color: var(--blue); border-color: var(--blue); }
+  </style>
 </head>
 <body>
+<a href="index.html" class="back-to-home">← Home</a>
+<button class="theme-toggle-btn theme-toggle-float" id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle Dark/Light Mode">
+  <span class="theme-icon" id="theme-icon"><i class="fa-solid fa-moon"></i></span>
+</button>
 <div class="login-page">
 
   <!-- Left Panel -->
   <div class="login-left">
     <div class="login-left-logo">
-      <div class="icon">🏗</div>
+      <div class="icon"><i class="fa-solid fa-building"></i></div>
       <div class="name">Core<span>Konstruct</span></div>
     </div>
     <h2 class="login-tagline">
@@ -27,96 +92,162 @@
     </p>
     <div class="login-features">
       <div class="login-feature">
-        <div class="login-feature-icon">📊</div>
+        <div class="login-feature-icon"><i class="fa-solid fa-chart-line"></i></div>
         <div class="login-feature-text">
           <div class="t">Real-Time Progress Tracking</div>
           <div class="s">Stage-by-stage dashboards with live data</div>
         </div>
       </div>
       <div class="login-feature">
-        <div class="login-feature-icon">📸</div>
+        <div class="login-feature-icon"><i class="fa-solid fa-camera"></i></div>
         <div class="login-feature-text">
           <div class="t">Daily Photo Documentation</div>
           <div class="s">Visual site records uploaded by supervisors</div>
         </div>
       </div>
       <div class="login-feature">
-        <div class="login-feature-icon">💰</div>
+        <div class="login-feature-icon"><i class="fa-solid fa-sack-dollar"></i></div>
         <div class="login-feature-text">
           <div class="t">Finance &amp; Cost Control</div>
           <div class="s">Budget vs actual with breakdown by category</div>
         </div>
       </div>
       <div class="login-feature">
-        <div class="login-feature-icon">🔒</div>
+        <div class="login-feature-icon"><i class="fa-solid fa-lock"></i></div>
         <div class="login-feature-text">
           <div class="t">Role-Based Access</div>
           <div class="s">Each user sees only what they need</div>
         </div>
       </div>
     </div>
-    <a href="index.html" class="back-link" style="margin-top:auto;">← Back to Website</a>
+
   </div>
 
   <!-- Right Panel -->
   <div class="login-right">
-    <h2>Welcome Back</h2>
-    <p class="subtitle">Sign in to your Core Konstruct account</p>
-
-    <!-- Role selector tabs -->
-    <div class="role-tabs" role="tablist">
-      <button class="role-tab active" data-role="admin" role="tab" aria-selected="true">
-        <span class="role-icon">🏢</span> Admin
-      </button>
-      <button class="role-tab" data-role="supervisor" role="tab" aria-selected="false">
-        <span class="role-icon">👷</span> Supervisor
-      </button>
-      <button class="role-tab" data-role="client" role="tab" aria-selected="false">
-        <span class="role-icon">👤</span> Client
-      </button>
+    <!-- Auth mode toggle -->
+    <div class="auth-toggle">
+      <button class="auth-toggle-btn active" id="toggle-login">Sign In</button>
+      <button class="auth-toggle-btn" id="toggle-signup">Sign Up</button>
     </div>
 
-    <!-- Demo hint -->
-    <div class="demo-hint" id="demo-hint">
-      Demo: <strong>admin@corekonstruct.com / admin123</strong>
-    </div>
+    <!-- ═══ LOGIN SECTION ═══ -->
+    <div id="login-section">
+      <h2>Welcome Back</h2>
+      <p class="subtitle">Sign in to your Core Konstruct account</p>
 
-    <!-- Error -->
-    <div class="login-error" id="login-error" role="alert"></div>
-
-    <!-- Login form -->
-    <form id="login-form" class="login-form" novalidate>
-      <div class="form-group">
-        <label for="login-email">Email Address</label>
-        <div class="input-wrap">
-          <span class="input-icon">✉</span>
-          <input type="email" id="login-email" name="email" placeholder="Enter your email" value="admin@corekonstruct.com" required autocomplete="email">
-        </div>
+      <!-- Role selector tabs -->
+      <div class="role-tabs" role="tablist">
+        <button class="role-tab active" data-role="admin" role="tab" aria-selected="true">
+          <span class="role-icon">🏢</span> Admin
+        </button>
+        <button class="role-tab" data-role="supervisor" role="tab" aria-selected="false">
+          <span class="role-icon"><i class="fa-solid fa-helmet-safety"></i></span> Supervisor
+        </button>
+        <button class="role-tab" data-role="client" role="tab" aria-selected="false">
+          <span class="role-icon">👤</span> Client
+        </button>
       </div>
-      <div class="form-group">
-        <label for="login-password">Password</label>
-        <div class="input-wrap">
-          <span class="input-icon">🔑</span>
-          <input type="password" id="login-password" name="password" placeholder="Enter your password" required autocomplete="current-password">
-          <button type="button" id="toggle-pw" class="toggle-pw" aria-label="Show/hide password">👁</button>
+
+      <!-- Error -->
+      <div class="login-error" id="login-error" role="alert"></div>
+
+      <!-- Login form -->
+      <form id="login-form" class="login-form" novalidate>
+        <div class="form-group">
+          <label for="login-email">Email Address</label>
+          <div class="input-wrap">
+            <span class="input-icon">✉</span>
+            <input type="email" id="login-email" name="email" placeholder="Enter your email" required autocomplete="email">
+          </div>
         </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔑</span>
+            <input type="password" id="login-password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+            <button type="button" id="toggle-pw" class="toggle-pw" aria-label="Show/hide password">👁</button>
+          </div>
+        </div>
+        <button type="submit" class="login-btn" id="login-submit">
+          <span>Sign In</span>
+          <span>→</span>
+        </button>
+      </form>
+
+      <div style="margin-top:24px;text-align:center;">
+        <p style="font-size:0.85rem;color:var(--text-muted);">
+          Don't have an account? <a href="#" id="switch-to-signup" style="color:var(--blue);font-weight:600;">Sign Up →</a>
+        </p>
       </div>
-      <button type="submit" class="login-btn" id="login-submit">
-        <span>Sign In</span>
-        <span>→</span>
-      </button>
-    </form>
 
-    <a href="index.html" class="back-link">← Back to Website</a>
-
-    <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--bg-alt);">
-      <p style="font-size:0.78rem;color:var(--text-muted);text-align:center;">
-        🔒 Secure login. Demo credentials shown above for evaluation purposes.
-      </p>
     </div>
+
+    <!-- ═══ SIGNUP SECTION ═══ -->
+    <div id="signup-section">
+      <h2>Create Account</h2>
+      <p class="subtitle">Sign up to start managing your construction projects</p>
+
+      <!-- Signup error/success -->
+      <div class="signup-error" id="signup-error" role="alert"></div>
+      <div class="signup-success" id="signup-success"></div>
+
+      <form id="signup-form" class="login-form" novalidate>
+        <div class="form-group">
+          <label for="signup-name">Full Name</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" id="signup-name" name="name" placeholder="Your full name" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="signup-email">Email Address</label>
+          <div class="input-wrap">
+            <span class="input-icon">✉</span>
+            <input type="email" id="signup-email" name="email" placeholder="you@example.com" required autocomplete="email">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="signup-password">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔑</span>
+            <input type="password" id="signup-password" name="password" placeholder="Min 6 characters" required minlength="6" autocomplete="new-password">
+            <button type="button" id="toggle-signup-pw" class="toggle-pw" aria-label="Show/hide password">👁</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Select Your Role</label>
+          <div class="signup-role-select">
+            <div class="signup-role-option selected" data-role="admin">
+              <div class="icon">🏢</div>
+              <div class="label">Admin</div>
+            </div>
+            <div class="signup-role-option" data-role="supervisor">
+              <div class="icon"><i class="fa-solid fa-helmet-safety"></i></div>
+              <div class="label">Supervisor</div>
+            </div>
+            <div class="signup-role-option" data-role="client">
+              <div class="icon">👤</div>
+              <div class="label">Client</div>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="login-btn" id="signup-submit">
+          <span>Create Account</span>
+          <span>→</span>
+        </button>
+      </form>
+
+      <div style="margin-top:24px;text-align:center;">
+        <p style="font-size:0.85rem;color:var(--text-muted);">
+          Already have an account? <a href="#" id="switch-to-login" style="color:var(--blue);font-weight:600;">Sign In →</a>
+        </p>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<script src="js/auth.js"></script>
+<script src="auth.js"></script>
 </body>
 </html>

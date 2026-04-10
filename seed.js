@@ -13,7 +13,7 @@ const Material = require('./models/Material');
 async function seed() {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('  ✅  Connected to MongoDB');
+    console.log('  <i class="fa-solid fa-circle-check"></i>  Connected to MongoDB');
 
     /* ── Seed Users ────────────────────────────────────────── */
     const existingUsers = await User.countDocuments();
@@ -124,9 +124,9 @@ async function seed() {
           image: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=600'
         }
       ]);
-      console.log('  📋  3 demo projects seeded');
+      console.log('  <i class="fa-solid fa-clipboard-list"></i>  3 demo projects seeded');
     } else {
-      console.log(`  📋  Projects already exist (${existingProjects}), skipping...`);
+      console.log(`  <i class="fa-solid fa-clipboard-list"></i>  Projects already exist (${existingProjects}), skipping...`);
     }
 
     /* ── Seed Sanction Documents ────────────────────────────── */
@@ -140,9 +140,9 @@ async function seed() {
         { name: 'Tree Felling Permit',      project: 'NH-48 Road Expansion',authority: 'Forest Dept',    date: '2023-06-15', expiry: '2024-06-14', status: 'approved' },
         { name: 'Irrigation Dept Clearance',project: 'Residency Park Bridge',authority:'Irrigation Dept', date: '',           expiry: '',           status: 'pending'  }
       ]);
-      console.log('  📜  6 sanction documents seeded');
+      console.log('  <i class="fa-solid fa-scroll"></i>  6 sanction documents seeded');
     } else {
-      console.log(`  📜  Sanctions already exist (${existingSanctions}), skipping...`);
+      console.log(`  <i class="fa-solid fa-scroll"></i>  Sanctions already exist (${existingSanctions}), skipping...`);
     }
 
     /* ── Seed Materials ─────────────────────────────────────── */
@@ -155,16 +155,16 @@ async function seed() {
           { item: 'Sand (River)',     qty: 8,   unit: 'cu.m',  date: new Date().toISOString().split('T')[0], project: cityProject._id },
           { item: 'Steel (TMT 12mm)',qty: 2.5, unit: 'MT',    date: new Date().toISOString().split('T')[0], project: cityProject._id }
         ]);
-        console.log('  🧱  3 material entries seeded');
+        console.log('  <i class="fa-solid fa-trowel-bricks"></i>  3 material entries seeded');
       }
     } else {
-      console.log(`  🧱  Materials already exist (${existingMaterials}), skipping...`);
+      console.log(`  <i class="fa-solid fa-trowel-bricks"></i>  Materials already exist (${existingMaterials}), skipping...`);
     }
 
-    console.log('\n  ✅  Seed complete!\n');
+    console.log('\n  <i class="fa-solid fa-circle-check"></i>  Seed complete!\n');
     process.exit(0);
   } catch (err) {
-    console.error('  ❌  Seed error:', err.message);
+    console.error('  <i class="fa-solid fa-circle-xmark"></i>  Seed error:', err.message);
     process.exit(1);
   }
 }

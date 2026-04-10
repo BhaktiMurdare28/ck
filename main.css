@@ -99,6 +99,19 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url('hero_doodle_bg.png');
+  background-repeat: repeat;
+  background-position: center;
+  opacity: 0.03; /* Very subtle doodle */
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* --- Custom Scrollbar --- */
@@ -618,3 +631,476 @@ input, textarea, select { font-family: var(--font-body); }
 @media (min-width: 769px) {
   .hide-desktop { display: none !important; }
 }
+
+/* ============================================================
+   LIGHT THEME — Override all custom properties
+   ============================================================ */
+[data-theme="light"] {
+  /* Core Light Palette */
+  --navy:        #FFFFFF;
+  --navy-mid:    #F8FAFC;
+  --navy-light:  #F1F5F9;
+  --navy-surface:#F1F5F9;
+
+  /* Accent (stays blue) */
+  --blue:        #2563EB;
+  --blue-dark:   #1D4ED8;
+  --blue-light:  #60A5FA;
+  --blue-glow:   rgba(37, 99, 235, 0.2);
+  --blue-soft:   rgba(37, 99, 235, 0.08);
+
+  /* Background */
+  --bg:          #F1F5F9;
+  --bg-alt:      #E2E8F0;
+  --bg-card:     #FFFFFF;
+  --white:       #FFFFFF;
+
+  /* Text */
+  --text-dark:   #0F172A;
+  --text-mid:    #334155;
+  --text-muted:  #64748B;
+  --text-faint:  #94A3B8;
+
+  /* Borders & Glass */
+  --border:      rgba(0, 0, 0, 0.08);
+  --border-strong:rgba(0, 0, 0, 0.14);
+  --glass-bg:    rgba(255, 255, 255, 0.6);
+  --glass-bg-md: rgba(255, 255, 255, 0.8);
+  --glass-bg-lg: rgba(255, 255, 255, 0.9);
+  --glass-border:rgba(0, 0, 0, 0.06);
+  --glass-shadow:0 4px 16px rgba(0, 0, 0, 0.06);
+  --glass-blur:  blur(20px);
+
+  /* Semantic */
+  --success:     #059669;
+  --success-bg:  rgba(5, 150, 105, 0.08);
+  --warning:     #D97706;
+  --warning-bg:  rgba(217, 119, 6, 0.08);
+  --danger:      #DC2626;
+  --danger-bg:   rgba(220, 38, 38, 0.06);
+  --info:        #2563EB;
+  --info-bg:     rgba(37, 99, 235, 0.06);
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg:  0 8px 24px rgba(0, 0, 0, 0.1);
+  --shadow-xl:  0 16px 48px rgba(0, 0, 0, 0.12);
+}
+
+/* Light theme overrides for specific elements */
+[data-theme="light"] body {
+  background: #F1F5F9;
+  color: #334155;
+}
+[data-theme="light"] body::before {
+  opacity: 0.12; /* Slightly more visible on light background */
+}
+
+[data-theme="light"] .sidebar {
+  background: rgba(255, 255, 255, 0.95);
+  border-right: 1px solid rgba(0,0,0,0.08);
+}
+
+[data-theme="light"] .sidebar-user-info .name {
+  color: #0F172A;
+}
+
+[data-theme="light"] .topbar {
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+[data-theme="light"] .nav-item:hover {
+  background: rgba(37, 99, 235, 0.06);
+  color: #0F172A;
+}
+
+[data-theme="light"] .nav-item.active {
+  background: rgba(37, 99, 235, 0.1);
+  color: #2563EB;
+  border: 1px solid rgba(37, 99, 235, 0.15);
+}
+
+[data-theme="light"] .stat-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+[data-theme="light"] .stat-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+[data-theme="light"] .dash-panel {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+[data-theme="light"] .premium-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+[data-theme="light"] .premium-card:hover {
+  box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+  border-color: rgba(37, 99, 235, 0.2);
+}
+
+[data-theme="light"] .progress-bar-wrap {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0,0,0,0.06);
+}
+
+[data-theme="light"] .progress-bar-fill {
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.2);
+}
+
+[data-theme="light"] .toast {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0,0,0,0.08);
+  color: #0F172A;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+[data-theme="light"] .modal-box {
+  background: #FFFFFF;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+[data-theme="light"] .data-table th {
+  background: rgba(241, 245, 249, 0.8);
+  color: #64748B;
+}
+
+[data-theme="light"] .data-table td {
+  border-bottom-color: rgba(0,0,0,0.05);
+  color: #334155;
+}
+
+[data-theme="light"] .worker-toggle {
+  background: rgba(241, 245, 249, 0.6);
+  border-color: rgba(0,0,0,0.08);
+}
+
+[data-theme="light"] .worker-toggle.present {
+  background: rgba(5, 150, 105, 0.08);
+  border-color: rgba(5, 150, 105, 0.2);
+}
+
+[data-theme="light"] .worker-toggle.absent {
+  background: rgba(220, 38, 38, 0.06);
+  border-color: rgba(220, 38, 38, 0.2);
+}
+
+[data-theme="light"] .upload-zone {
+  background: rgba(241, 245, 249, 0.6);
+  border-color: rgba(0,0,0,0.15);
+}
+
+[data-theme="light"] .upload-zone:hover,
+[data-theme="light"] .upload-zone.drag-over {
+  background: rgba(37, 99, 235, 0.06);
+  border-color: #2563EB;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #94A3B8;
+}
+
+/* ── Light theme: Sidebar logo & text ── */
+[data-theme="light"] .sidebar-logo-text {
+  color: #0F172A;
+}
+[data-theme="light"] .sidebar-logo-text span {
+  color: #2563EB;
+}
+[data-theme="light"] .sidebar-logo-icon {
+  background: #2563EB;
+}
+
+/* ── Light theme: Sidebar avatar & user info ── */
+[data-theme="light"] .sidebar-avatar {
+  background: linear-gradient(135deg, #2563EB, #60A5FA);
+}
+[data-theme="light"] .sidebar-user-info .role {
+  color: #64748B;
+}
+
+/* ── Light theme: Nav items ── */
+[data-theme="light"] .nav-section-label {
+  color: #94A3B8;
+}
+[data-theme="light"] .nav-item {
+  color: #475569;
+}
+[data-theme="light"] .nav-item .nav-icon {
+  color: inherit;
+}
+
+/* ── Light theme: Logout button ── */
+[data-theme="light"] .logout-btn {
+  color: #475569;
+}
+[data-theme="light"] .logout-btn:hover {
+  background: rgba(220, 38, 38, 0.06);
+  color: #DC2626;
+}
+
+/* ── Light theme: Topbar ── */
+[data-theme="light"] .topbar-badge .dot {
+  border-color: #FFFFFF;
+}
+[data-theme="light"] .topbar-date {
+  background: rgba(241, 245, 249, 0.8);
+  border-color: rgba(0,0,0,0.08);
+  color: #475569;
+}
+
+/* ── Light theme: Badges ── */
+[data-theme="light"] .badge-navy {
+  background: rgba(15, 23, 42, 0.06);
+  color: #334155;
+  border-color: rgba(0,0,0,0.08);
+}
+
+/* ── Light theme: Stage tracker ── */
+[data-theme="light"] .stage-dot {
+  background: rgba(241, 245, 249, 0.9);
+  border-color: rgba(0,0,0,0.12);
+  color: #64748B;
+}
+[data-theme="light"] .stage-step.done .stage-dot {
+  background: #059669;
+  border-color: #059669;
+  color: #FFFFFF;
+}
+[data-theme="light"] .stage-step.active .stage-dot {
+  background: #2563EB;
+  border-color: #2563EB;
+  color: #FFFFFF;
+}
+[data-theme="light"] .stage-name {
+  color: #64748B;
+}
+[data-theme="light"] .stage-step.done .stage-name {
+  color: #059669;
+}
+[data-theme="light"] .stage-step.active .stage-name {
+  color: #2563EB;
+}
+[data-theme="light"] .stage-step::before {
+  background: rgba(0,0,0,0.08);
+}
+[data-theme="light"] .stage-step.done::before {
+  background: #059669;
+}
+
+/* ── Light theme: Timeline ── */
+[data-theme="light"] .timeline::before {
+  background: rgba(0,0,0,0.08);
+}
+[data-theme="light"] .timeline-item::before {
+  background: rgba(241, 245, 249, 0.9);
+  border-color: rgba(0,0,0,0.12);
+}
+[data-theme="light"] .timeline-item.done::before {
+  background: #059669;
+  border-color: #059669;
+}
+[data-theme="light"] .timeline-item.active::before {
+  background: #2563EB;
+  border-color: #2563EB;
+}
+
+/* ── Light theme: Finance card & cost rows ── */
+[data-theme="light"] .finance-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(0,0,0,0.06);
+}
+[data-theme="light"] .cost-row {
+  border-bottom-color: rgba(0,0,0,0.05);
+}
+[data-theme="light"] .cost-label {
+  color: #334155;
+}
+[data-theme="light"] .cost-val {
+  color: #0F172A;
+}
+[data-theme="light"] .cost-bar {
+  background: rgba(0,0,0,0.04);
+}
+
+/* ── Light theme: Form elements ── */
+[data-theme="light"] .form-group input,
+[data-theme="light"] .form-group textarea,
+[data-theme="light"] .form-group select {
+  background: rgba(241, 245, 249, 0.6);
+  border-color: rgba(0,0,0,0.12);
+  color: #0F172A;
+}
+[data-theme="light"] .form-group input:focus,
+[data-theme="light"] .form-group textarea:focus,
+[data-theme="light"] .form-group select:focus {
+  background: #FFFFFF;
+  border-color: #2563EB;
+}
+[data-theme="light"] .form-group label {
+  color: #0F172A;
+}
+[data-theme="light"] .form-group select option {
+  background: #FFFFFF;
+  color: #0F172A;
+}
+
+/* ── Light theme: Worker attendance ── */
+[data-theme="light"] .worker-toggle .avatar {
+  background: #2563EB;
+  color: #FFFFFF;
+}
+[data-theme="light"] .worker-name {
+  color: #0F172A;
+}
+
+/* ── Light theme: Upload zone ── */
+[data-theme="light"] .upload-zone h4 {
+  color: #0F172A;
+}
+
+/* ── Light theme: Gallery overlay ── */
+[data-theme="light"] .gallery-img::after {
+  background: rgba(255,255,255,0.5);
+}
+
+/* ── Light theme: Btn icon ── */
+[data-theme="light"] .btn-icon {
+  background: rgba(241, 245, 249, 0.8);
+  border-color: rgba(0,0,0,0.08);
+  color: #334155;
+}
+[data-theme="light"] .btn-icon:hover {
+  background: #2563EB;
+  color: #FFFFFF;
+  border-color: #2563EB;
+}
+
+/* ── Light theme: Blueprint bg ── */
+[data-theme="light"] .blueprint-bg {
+  background-color: #F1F5F9;
+  background-image:
+    linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+}
+
+/* ── Light theme: Circle ring track ── */
+[data-theme="light"] .circle-progress-wrap svg circle:first-child {
+  stroke: rgba(0,0,0,0.06) !important;
+}
+
+/* Light theme login page */
+[data-theme="light"] .login-page {
+  background: #F1F5F9;
+}
+
+[data-theme="light"] .login-right {
+  background: rgba(255, 255, 255, 0.95);
+  border-left: 1px solid rgba(0,0,0,0.06);
+}
+
+[data-theme="light"] .role-tabs {
+  background: rgba(241, 245, 249, 0.8);
+  border-color: rgba(0,0,0,0.06);
+}
+
+[data-theme="light"] .role-tab {
+  color: #64748B;
+}
+
+[data-theme="light"] .login-left-logo .name {
+  color: #0F172A;
+}
+[data-theme="light"] .login-left-logo .name span {
+  color: #2563EB;
+}
+[data-theme="light"] .login-tagline {
+  color: #0F172A;
+}
+[data-theme="light"] .login-tagline span {
+  color: #2563EB;
+}
+[data-theme="light"] .login-feature-text .t {
+  color: #0F172A;
+}
+
+[data-theme="light"] .input-wrap input {
+  background: rgba(241, 245, 249, 0.6);
+  border-color: rgba(0,0,0,0.12);
+  color: #0F172A;
+}
+
+[data-theme="light"] .input-wrap input:focus {
+  background: #FFFFFF;
+  border-color: #2563EB;
+}
+
+/* ===== THEME TOGGLE BUTTON ===== */
+.theme-toggle-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--glass-bg-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--trans-base);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  backdrop-filter: blur(8px);
+}
+.theme-toggle-btn:hover {
+  background: var(--blue);
+  border-color: var(--blue);
+  transform: rotate(20deg) scale(1.1);
+  box-shadow: 0 4px 16px var(--blue-glow);
+}
+
+.theme-toggle-float {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+/* ===== Form Elements in Dark Mode Fix ===== */
+[data-theme="dark"] select,
+[data-theme="dark"] input,
+[data-theme="dark"] textarea {
+  background-color: var(--navy);
+  color: var(--white);
+  border: 1px solid var(--border-strong);
+}
+
+[data-theme="dark"] select option {
+  background-color: var(--navy-mid);
+  color: var(--white);
+}
+
+[data-theme="light"] select,
+[data-theme="light"] input,
+[data-theme="light"] textarea {
+  background-color: #ffffff;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+}
+
+[data-theme="light"] select option {
+  background-color: #ffffff;
+  color: #1e293b;
+}
+

@@ -89,8 +89,28 @@ if (msgBox && counter) {
 const contactForm    = document.getElementById('contact-form');
 const formSuccessMsg = document.getElementById('form-success');
 if (contactForm) {
-  contactForm.addEventListener('submit', e => {
+  contactForm.addEventListener('submit', async e => {
     e.preventDefault();
+    
+    // Post to API
+    try {
+      const nameVal = document.getElementById('contact-name').value;
+      const emailVal = document.getElementById('contact-email').value;
+      const subjectVal = document.getElementById('contact-subject') ? document.getElementById('contact-subject').value : '';
+      const messageVal = document.getElementById('contact-message').value;
+
+      await fetch('/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: nameVal,
+          email: emailVal,
+          subject: subjectVal || 'Contact Submission',
+          message: messageVal
+        })
+      });
+    } catch (err) { console.warn('Message failed to send to API'); }
+
     contactForm.style.display = 'none';
     if (formSuccessMsg) formSuccessMsg.style.display = 'block';
   });
