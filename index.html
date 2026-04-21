@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Core Konstruct — Smart Construction Management</title>
+  <meta name="description" content="Core Konstruct is a smart construction management platform for contractors, supervisors, and clients to track projects, manage finances, and stay informed.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="main.css">
+  <style>
+    /* ── Landing page specific styles ── */
+    .landing-nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 48px;
+      background: rgba(11, 17, 32, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+    .landing-nav.scrolled { background: rgba(11, 17, 32, 0.95); box-shadow: var(--shadow-md); }
+    [data-theme="light"] .landing-nav { background: rgba(255,255,255,0.8); border-bottom-color: rgba(0,0,0,0.06); }
+    [data-theme="light"] .landing-nav.scrolled { background: rgba(255,255,255,0.96); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+
+    .landing-brand { display: flex; align-items: center; gap: 12px; }
+    .landing-brand-icon { width: 40px; height: 40px; background: var(--blue); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 4px 12px var(--blue-glow); }
+    .landing-brand-name { font-family: var(--font-head); font-size: 1.25rem; font-weight: 800; color: var(--text-dark); }
+    .landing-brand-name span { color: var(--blue); }
+
+    .landing-nav-links { display: flex; align-items: center; gap: 24px; }
+    .landing-nav-links a { color: var(--text-mid); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .landing-nav-links a:hover { color: var(--blue); }
+
+    /* ── Mobile hamburger ── */
+    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-dark); margin: 5px 0; border-radius: 2px; transition: 0.3s; }
+    .mobile-nav { display: none; }
+
+    .landing-hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 140px 32px 100px; position: relative; overflow: hidden;
+    }
+    .landing-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: 
+        url('hero_doodle_bg.png'),
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: cover, 48px 48px, 48px 48px;
+      opacity: 0.15;
+    }
+    [data-theme="light"] .landing-hero::before {
+      background-image: 
+        url('hero_doodle_bg.png'),
+        linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+      opacity: 0.2;
+    }
+    .landing-hero::after {
+      content: ''; position: absolute; top: -200px; right: -100px; width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%);
+      border-radius: 50%; pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 780px; animation: fadeUp 1s ease; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--blue-soft); border: 1px solid rgba(59,130,246,0.2); padding: 6px 18px; border-radius: 999px; font-size: 0.78rem; font-weight: 600; color: var(--blue); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 28px; backdrop-filter: blur(8px); }
+    .hero-inner h1 { font-family: var(--font-head); font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800; color: var(--text-dark); line-height: 1.12; margin-bottom: 24px; }
+    .hero-inner h1 span { color: var(--blue); }
+    .hero-inner p { font-size: 1.1rem; color: var(--text-muted); max-width: 560px; margin: 0 auto 40px; line-height: 1.75; }
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── Doodles & Orbs ── */
+    .doodle { position: absolute; pointer-events: none; opacity: 0.15; animation: float 8s ease-in-out infinite; }
+    [data-theme="light"] .doodle { opacity: 0.1; }
+    .hero-orb { position: absolute; border-radius: 50%; pointer-events: none; animation: float 6s ease-in-out infinite; }
+    .hero-orb-1 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(59,130,246,0.08), transparent 70%); top: 10%; left: -5%; animation-delay: 0s; }
+    .hero-orb-2 { width: 200px; height: 200px; background: radial-gradient(circle, rgba(45,212,191,0.06), transparent 70%); bottom: 15%; right: 5%; animation-delay: 2s; }
+
+    /* ── Features section ── */
+    .landing-section { padding: var(--section-pad); position: relative; }
+    .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 48px; }
+    .feature-card {
+      background: var(--glass-bg-md); border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 32px 24px; text-align: center; backdrop-filter: blur(12px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .feature-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: rgba(59,130,246,0.3); }
+    [data-theme="light"] .feature-card { background: rgba(255,255,255,0.9); border-color: rgba(0,0,0,0.06); }
+    [data-theme="light"] .feature-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
+    .feature-icon { width: 56px; height: 56px; border-radius: var(--radius-md); background: var(--blue-soft); border: 1px solid rgba(59,130,246,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 16px; }
+    .feature-card h4 { font-size: 1.05rem; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
+    .feature-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── Stats strip ── */
+    .stats-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; padding: 64px 80px; background: var(--glass-bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    [data-theme="light"] .stats-strip { background: rgba(255,255,255,0.6); border-color: rgba(0,0,0,0.06); }
+    .stats-item { text-align: center; }
+    .stats-item .num { font-family: var(--font-head); font-size: 2.2rem; font-weight: 800; color: var(--blue); line-height: 1; }
+    .stats-item .lbl { font-size: 0.88rem; color: var(--text-muted); margin-top: 6px; }
+
+    /* ── Testimonials ── */
+    .testimonial-section { padding: var(--section-pad); overflow: hidden; }
+    .carousel-viewport { overflow: hidden; position: relative; }
+    .carousel-track { display: flex; gap: 28px; transition: transform 0.5s var(--ease); }
+    .testi-card {
+      min-width: 360px; max-width: 400px; flex-shrink: 0;
+      background: var(--glass-bg-md); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 32px 28px;
+      backdrop-filter: blur(12px); transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .testi-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    [data-theme="light"] .testi-card { background: rgba(255,255,255,0.92); border-color: rgba(0,0,0,0.06); }
+    .testi-stars { color: #FBBF24; font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 16px; }
+    .testi-text { font-size: 0.95rem; color: var(--text-mid); line-height: 1.7; margin-bottom: 20px; font-style: italic; }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .testi-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--blue-soft); border: 2px solid rgba(59,130,246,0.2); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--blue); font-size: 0.9rem; }
+    .testi-info .name { font-weight: 700; font-size: 0.92rem; color: var(--text-dark); }
+    .testi-info .role { font-size: 0.8rem; color: var(--text-muted); }
+    .carousel-dots { display: flex; justify-content: center; gap: 10px; margin-top: 28px; }
+    .carousel-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border-strong); border: none; cursor: pointer; transition: 0.3s; }
+    .carousel-dot.active { background: var(--blue); box-shadow: 0 0 10px var(--blue-glow); transform: scale(1.2); }
+
+    /* ── Blog section ── */
+    .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 48px; }
+    .blog-card {
+      background: var(--glass-bg-md); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden;
+      backdrop-filter: blur(12px); transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .blog-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: rgba(59,130,246,0.3); }
+    [data-theme="light"] .blog-card { background: rgba(255,255,255,0.92); border-color: rgba(0,0,0,0.06); }
+    .blog-thumb { height: 180px; background: linear-gradient(135deg, var(--blue-soft), rgba(45,212,191,0.1)); display: flex; align-items: center; justify-content: center; font-size: 3rem; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+    .blog-thumb::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, var(--bg) 100%); opacity: 0.4; }
+    .blog-body { padding: 24px; }
+    .blog-tag { display: inline-block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--blue); background: var(--blue-soft); padding: 4px 10px; border-radius: var(--radius-pill); margin-bottom: 12px; }
+    .blog-card h4 { font-size: 1.05rem; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; line-height: 1.35; }
+    .blog-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+    .blog-meta { font-size: 0.78rem; color: var(--text-faint); display: flex; align-items: center; gap: 12px; }
+
+    /* ── FAQ section ── */
+    .faq-list { max-width: 720px; margin: 48px auto 0; }
+    .faq-item { border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 12px; overflow: hidden; background: var(--glass-bg-md); backdrop-filter: blur(12px); transition: border-color 0.3s; }
+    .faq-item:hover { border-color: rgba(59,130,246,0.25); }
+    .faq-item.active { border-color: var(--blue); }
+    [data-theme="light"] .faq-item { background: rgba(255,255,255,0.9); }
+    .faq-question { width: 100%; padding: 18px 24px; background: none; border: none; text-align: left; font-size: 0.95rem; font-weight: 600; color: var(--text-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-body); }
+    .faq-question::after { content: '+'; font-size: 1.3rem; color: var(--blue); transition: transform 0.3s; }
+    .faq-item.active .faq-question::after { content: '−'; transform: rotate(180deg); }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .faq-answer-inner { padding: 0 24px 18px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+
+    /* ── Contact section ── */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 48px; }
+    .contact-info { display: flex; flex-direction: column; gap: 24px; }
+    .contact-info-card { display: flex; align-items: flex-start; gap: 16px; padding: 20px; background: var(--glass-bg-md); border: 1px solid var(--border); border-radius: var(--radius-md); backdrop-filter: blur(12px); }
+    .contact-info-card:hover { border-color: rgba(59,130,246,0.3); }
+    [data-theme="light"] .contact-info-card { background: rgba(255,255,255,0.9); }
+    .contact-info-icon { width: 44px; height: 44px; border-radius: var(--radius-sm); background: var(--blue-soft); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .contact-info-text h4 { font-size: 0.95rem; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+    .contact-info-text p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+    .contact-form-wrap { background: var(--glass-bg-md); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; backdrop-filter: blur(12px); }
+    [data-theme="light"] .contact-form-wrap { background: rgba(255,255,255,0.92); }
+    .char-counter { font-size: 0.78rem; color: var(--text-faint); margin-top: 4px; text-align: right; }
+    .char-counter.warning { color: var(--warning); }
+    .char-counter.danger { color: var(--danger); }
+    #form-success { display: none; text-align: center; padding: 40px 20px; }
+    #form-success h3 { color: var(--success); margin-bottom: 8px; }
+
+    /* ── CTA ── */
+    .landing-cta { text-align: center; padding: 80px 32px 100px; position: relative; overflow: hidden; }
+    .landing-cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(59,130,246,0.06) 0%, transparent 70%); }
+    .landing-cta h2 { font-family: var(--font-head); font-size: 2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 16px; position: relative; }
+    .landing-cta p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 32px; position: relative; }
+
+    /* ── Footer ── */
+    .landing-footer {
+      padding: 48px 80px 32px;
+      border-top: 1px solid var(--border);
+    }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    .footer-brand-name { font-family: var(--font-head); font-size: 1.2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 12px; }
+    .footer-brand-name span { color: var(--blue); }
+    .footer-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; max-width: 300px; }
+    .footer-col h4 { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dark); margin-bottom: 16px; }
+    .footer-col a { display: block; font-size: 0.85rem; color: var(--text-muted); padding: 4px 0; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--blue); }
+    .footer-bottom { text-align: center; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.82rem; color: var(--text-faint); }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .blog-grid { grid-template-columns: 1fr 1fr; }
+      .stats-strip { grid-template-columns: 1fr 1fr; padding: 48px 32px; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .landing-nav { padding: 14px 20px; }
+      .landing-nav-links a:not(.btn-primary):not(.btn-outline-sm) { display: none; }
+      .hamburger { display: block; }
+      .mobile-nav {
+        display: none; position: fixed; top: 70px; left: 0; right: 0;
+        background: rgba(11,17,32,0.97); backdrop-filter: blur(20px); padding: 24px;
+        border-bottom: 1px solid var(--border); z-index: 999;
+        flex-direction: column; gap: 4px;
+      }
+      .mobile-nav.open { display: flex; }
+      .mobile-nav a { padding: 12px 16px; color: var(--text-mid); font-size: 0.95rem; border-radius: var(--radius-sm); transition: 0.2s; }
+      .mobile-nav a:hover { background: var(--glass-bg-lg); color: var(--blue); }
+      [data-theme="light"] .mobile-nav { background: rgba(255,255,255,0.97); }
+      .features-grid { grid-template-columns: 1fr; }
+      .blog-grid { grid-template-columns: 1fr; }
+      .stats-strip { grid-template-columns: 1fr 1fr; gap: 20px; padding: 40px 24px; }
+      .landing-hero { padding: 120px 20px 60px; }
+      .landing-footer { padding: 40px 24px 24px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+      .testi-card { min-width: 280px; }
+    }
+    @media (max-width: 480px) {
+      .stats-strip { grid-template-columns: 1fr; }
+    }
+
+    .btn-outline-sm {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: transparent; color: var(--text-dark);
+      padding: 8px 16px; border-radius: var(--radius-sm);
+      font-weight: 600; font-size: 0.85rem;
+      border: 1.5px solid var(--border-strong); transition: var(--trans-base);
+    }
+    .btn-outline-sm:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-soft); }
+  </style>
+</head>
+<body>
+
+<!-- ════ NAVBAR ════ -->
+<nav class="landing-nav" id="landing-nav">
+  <div class="landing-brand">
+    <div class="landing-brand-icon"><i class="fa-solid fa-building"></i></div>
+    <div class="landing-brand-name">Core<span>Konstruct</span></div>
+  </div>
+  <div class="landing-nav-links">
+    <a href="#features">Features</a>
+    <a href="#testimonials">Testimonials</a>
+    <a href="#blog">Blog</a>
+    <a href="#contact">Contact</a>
+    <a href="#faq">FAQ</a>
+    <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle Dark/Light Mode">
+      <span class="theme-icon"><i class="fa-solid fa-moon"></i></span>
+    </button>
+    <a href="login.html#signup" class="btn-outline-sm">Sign Up</a>
+    <a href="login.html" class="btn-primary btn-sm">Login →</a>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ════ MOBILE NAV ════ -->
+<div class="mobile-nav" id="mobile-nav">
+  <a href="#features">Features</a>
+  <a href="#testimonials">Testimonials</a>
+  <a href="blog.html">Blog</a>
+  <a href="#contact">Contact</a>
+  <a href="#faq">FAQ</a>
+  <a href="login.html#signup">Sign Up</a>
+  <a href="login.html">Login</a>
+</div>
+
+<!-- ════ HERO ════ -->
+<section class="landing-hero" style="position: relative;">
+  <!-- Decorative Doodles -->
+  <svg class="doodle" style="top: 20%; left: 8%; width: 100px; height: 100px; color: var(--blue); transform: rotate(-12deg);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22v-4l4-4 4 4v4H2zm8 0v-4l4-4 4 4v4h-8zm8 0v-6l2-2 2 2v6h-4zM2 18l10-10 10 10M12 8L22 18"></path></svg>
+  <svg class="doodle" style="bottom: 25%; right: 8%; width: 120px; height: 120px; color: var(--blue);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 12 12 22 22 12 12 2"></polygon><circle cx="12" cy="12" r="4"></circle></svg>
+  <svg class="doodle" style="top: 30%; right: 20%; width: 60px; height: 60px; color: var(--text-muted); opacity: 0.1;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+  <svg class="doodle" style="bottom: 15%; left: 18%; width: 80px; height: 80px; color: var(--text-muted); opacity: 0.1; transform: rotate(15deg);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>
+  
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-inner">
+    <h1>Your Construction<br>Command <span>Centre</span></h1>
+    <p>One platform to manage projects, track real-time progress, monitor sites, and keep every stakeholder informed — from contractor to client.</p>
+    <div class="hero-btns">
+      <a href="login.html#signup" class="btn-primary">Sign Up Free →</a>
+      <a href="#features" class="btn-outline">Explore Features</a>
+    </div>
+  </div>
+</section>
+
+<!-- ════ FEATURES ════ -->
+<section class="landing-section" id="features" style="position: relative; overflow: hidden;">
+  <!-- Decorative Doodles -->
+  <svg class="doodle" style="top: 10%; right: 10%; width: 90px; height: 90px; color: var(--blue);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+  <svg class="doodle" style="bottom: 15%; left: 5%; width: 70px; height: 70px; color: var(--text-muted); opacity: 0.15; transform: rotate(20deg);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
+  <svg class="doodle" style="bottom: 5%; right: 25%; width: 100px; height: 100px; color: var(--text-muted); opacity: 0.1; transform: rotate(-15deg);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 12 2 21 6 21 18 12 22 3 18"></polygon><line x1="12" y1="22" x2="12" y2="12"></line><line x1="3" y1="6" x2="12" y2="12"></line><line x1="21" y1="6" x2="12" y2="12"></line></svg>
+
+  <div class="section-header">
+    <div class="section-label">⚡ Features</div>
+    <h2>Everything You Need to<br>Manage Construction</h2>
+    <p>Built for contractors, supervisors, and clients — a role-based platform that keeps everyone in sync.</p>
+    <div class="divider"></div>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card reveal" data-delay="0">
+      <div class="feature-icon"><i class="fa-solid fa-chart-line"></i></div>
+      <h4>Real-Time Progress</h4>
+      <p>Stage-by-stage dashboards with live data and percentage tracking across all projects.</p>
+    </div>
+    <div class="feature-card reveal" data-delay="100">
+      <div class="feature-icon"><i class="fa-solid fa-camera"></i></div>
+      <h4>Photo Documentation</h4>
+      <p>Supervisors upload daily site photos that instantly sync to admin and client dashboards.</p>
+    </div>
+    <div class="feature-card reveal" data-delay="200">
+      <div class="feature-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+      <h4>Finance & Cost Control</h4>
+      <p>Budget vs actual breakdown by labour, material, and miscellaneous — all auto-tracked.</p>
+    </div>
+    <div class="feature-card reveal" data-delay="300">
+      <div class="feature-icon"><i class="fa-solid fa-lock"></i></div>
+      <h4>Role-Based Access</h4>
+      <p>Admin, Supervisor, Client — each role sees only what they need. Secure JWT authentication.</p>
+    </div>
+    <div class="feature-card reveal" data-delay="400">
+      <div class="feature-icon"><i class="fa-solid fa-helmet-safety"></i></div>
+      <h4>Attendance Tracking</h4>
+      <p>Mark daily worker attendance on-site with instant sync to admin's monitoring panel.</p>
+    </div>
+    <div class="feature-card reveal" data-delay="500">
+      <div class="feature-icon"><i class="fa-solid fa-ruler-combined"></i></div>
+      <h4>Measurements Log</h4>
+      <p>Dynamic measurement fields per project type — Building, Road, Bridge, Drainage.</p>
+    </div>
+    <div class="feature-card reveal" data-delay="600">
+      <div class="feature-icon"><i class="fa-solid fa-scroll"></i></div>
+      <h4>Sanction Documents</h4>
+      <p>Track NOCs, clearances, and government approvals with status and expiry alerts.</p>
+    </div>
+    <div class="feature-card reveal" data-delay="700">
+      <div class="feature-icon"><i class="fa-solid fa-file-pen"></i></div>
+      <h4>Daily Reports</h4>
+      <p>Supervisors submit daily work reports with expenses that auto-update project finances.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════ STATS ════ -->
+<div class="stats-strip" id="stats">
+  <div class="stats-item reveal">
+    <div class="num" data-counter data-target="50" data-suffix="+">0</div>
+    <div class="lbl">Projects Managed</div>
+  </div>
+  <div class="stats-item reveal" data-delay="100">
+    <div class="num" data-counter data-target="120" data-suffix="+">0</div>
+    <div class="lbl">Workers Tracked</div>
+  </div>
+  <div class="stats-item reveal" data-delay="200">
+    <div class="num" data-counter data-target="99" data-suffix="%">0</div>
+    <div class="lbl">Uptime Reliability</div>
+  </div>
+  <div class="stats-item reveal" data-delay="300">
+    <div class="num" data-counter data-target="3">0</div>
+    <div class="lbl">User Roles</div>
+  </div>
+</div>
+
+<!-- ════ TESTIMONIALS ════ -->
+<section class="testimonial-section" id="testimonials">
+  <div class="section-header">
+    <div class="section-label">💬 Testimonials</div>
+    <h2>What Our Clients Say</h2>
+    <p>Real feedback from contractors, supervisors, and clients using Core Konstruct daily.</p>
+    <div class="divider"></div>
+  </div>
+  <div class="carousel-viewport">
+    <div class="carousel-track" id="carousel-track">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Core Konstruct has completely transformed how we manage our construction sites. Real-time tracking and photo documentation saved us hours of manual work every week."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">RK</div>
+          <div class="testi-info">
+            <div class="name">Rajesh Kumar</div>
+            <div class="role">Contractor, Kumar Constructions</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"The finance tracking is incredible. I can see exactly where every rupee goes — labour, material, miscellaneous — all broken down automatically from daily reports."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">PM</div>
+          <div class="testi-info">
+            <div class="name">Priya Mehta</div>
+            <div class="role">Client, Mehta Developers</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"As a site supervisor, daily reporting used to be a headache. Now I just upload photos, fill in expenses, and everything syncs to the admin dashboard instantly."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">AS</div>
+          <div class="testi-info">
+            <div class="name">Arjun Singh</div>
+            <div class="role">Site Supervisor</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"The role-based access is exactly what we needed. My clients can see progress without accessing sensitive financials. It builds trust and transparency."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">VN</div>
+          <div class="testi-info">
+            <div class="name">Vikram Nair</div>
+            <div class="role">Project Manager, Nair Infra</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Attendance tracking and daily reports in one place? Game changer. We reduced paperwork by 80% and improved site accountability significantly."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">SD</div>
+          <div class="testi-info">
+            <div class="name">Sunita Deshpande</div>
+            <div class="role">Civil Engineer, SD Associates</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="carousel-dots">
+    <button class="carousel-dot active" data-slide="0" aria-label="Slide 1"></button>
+    <button class="carousel-dot" data-slide="1" aria-label="Slide 2"></button>
+    <button class="carousel-dot" data-slide="2" aria-label="Slide 3"></button>
+    <button class="carousel-dot" data-slide="3" aria-label="Slide 4"></button>
+    <button class="carousel-dot" data-slide="4" aria-label="Slide 5"></button>
+  </div>
+</section>
+
+<!-- ════ BLOG ════ -->
+<section class="landing-section" id="blog" style="position: relative; overflow: hidden;">
+  <!-- Decorative Doodles -->
+  <svg class="doodle" style="top: 10%; right: 12%; width: 80px; height: 80px; color: var(--blue); animation-delay: 1s;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+  <svg class="doodle" style="bottom: 10%; left: 8%; width: 90px; height: 90px; color: var(--text-muted); opacity: 0.1; transform: rotate(-20deg); animation-delay: 3s;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+
+  <div class="section-header">
+    <div class="section-label">📰 Blog</div>
+    <h2>Latest from Our Blog</h2>
+    <p>Tips, insights, and updates on construction management and technology.</p>
+    <div class="divider"></div>
+  </div>
+  <div class="blog-grid">
+    <div class="blog-card reveal" data-delay="0" onclick="location.href='blog.html'" style="cursor:pointer;">
+      <div class="blog-thumb"><i class="fa-solid fa-building"></i></div>
+      <div class="blog-body">
+        <div class="blog-tag">Industry</div>
+        <h4>5 Ways Technology is Reshaping Construction Management in 2026</h4>
+        <p>From AI-powered scheduling to drone surveys, discover how modern tech is transforming job sites across India.</p>
+        <div class="blog-meta">
+          <span><i class="fa-solid fa-calendar-days"></i> Mar 28, 2026</span>
+          <span>·</span>
+          <span>5 min read</span>
+        </div>
+      </div>
+    </div>
+    <div class="blog-card reveal" data-delay="100" onclick="location.href='blog.html'" style="cursor:pointer;">
+      <div class="blog-thumb"><i class="fa-solid fa-sack-dollar"></i></div>
+      <div class="blog-body">
+        <div class="blog-tag">Finance</div>
+        <h4>How to Reduce Cost Overruns by 40% with Real-Time Expense Tracking</h4>
+        <p>Learn how automatic finance tracking from daily reports helps contractors stay within budget and improve profitability.</p>
+        <div class="blog-meta">
+          <span><i class="fa-solid fa-calendar-days"></i> Mar 15, 2026</span>
+          <span>·</span>
+          <span>4 min read</span>
+        </div>
+      </div>
+    </div>
+    <div class="blog-card reveal" data-delay="200" onclick="location.href='blog.html'" style="cursor:pointer;">
+      <div class="blog-thumb"><i class="fa-solid fa-helmet-safety"></i></div>
+      <div class="blog-body">
+        <div class="blog-tag">Best Practices</div>
+        <h4>The Complete Guide to Site Supervision: From Attendance to Daily Reports</h4>
+        <p>A step-by-step guide for site supervisors to maximize productivity and maintain accurate project documentation.</p>
+        <div class="blog-meta">
+          <span><i class="fa-solid fa-calendar-days"></i> Feb 28, 2026</span>
+          <span>·</span>
+          <span>7 min read</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ FAQ ════ -->
+<section class="landing-section" id="faq" style="position: relative; overflow: hidden;">
+  <!-- Decorative Doodles -->
+  <svg class="doodle" style="top: 15%; left: 10%; width: 70px; height: 70px; color: var(--blue); animation-delay: 2s;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+  <svg class="doodle" style="bottom: 10%; right: 10%; width: 100px; height: 100px; color: var(--text-muted); opacity: 0.1; transform: rotate(10deg); animation-delay: 4s;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+
+  <div class="section-header">
+    <div class="section-label">❓ FAQ</div>
+    <h2>Frequently Asked Questions</h2>
+    <p>Quick answers to common questions about Core Konstruct.</p>
+    <div class="divider"></div>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-question">What is Core Konstruct?</button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">Core Konstruct is a role-based construction monitoring platform designed for contractors, supervisors, and clients. It provides real-time project tracking, daily reporting, expense management, attendance monitoring, and photo documentation — all in one dashboard.</div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Who can use Core Konstruct?</button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">The platform supports three user roles: <strong>Admin (Contractor)</strong> for overall project management, <strong>Supervisor</strong> for site-level reporting and attendance, and <strong>Client</strong> for viewing project progress and updates. Each role has a tailored dashboard.</div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Is my data secure?</button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">Yes. Core Konstruct uses JWT-based authentication with encrypted passwords (bcrypt hashing). Each user only sees data relevant to their role, ensuring privacy and security across all dashboards.</div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Can supervisors upload photos from the field?</button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">Absolutely. Supervisors can upload daily site photos directly from their mobile or desktop. These photos are instantly synced to the admin dashboard and can be shared with clients for transparency.</div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">How does the finance tracking work?</button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">When supervisors submit daily reports with expenses (labour, material, miscellaneous), the system automatically aggregates these into the project's finance panel. Admins can see budget vs actual spending with category-wise breakdowns in real time.</div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Is there a free trial or sign-up?</button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">Yes! You can sign up for a free account directly from our login page. Choose your role (Admin, Supervisor, or Client) and start exploring the full platform immediately. Demo credentials are also available for evaluation.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ CONTACT ════ -->
+<section class="landing-section" id="contact" style="position: relative; overflow: hidden;">
+  <!-- Decorative Doodles -->
+  <svg class="doodle" style="top: 12%; right: 8%; width: 80px; height: 80px; color: var(--blue); animation-delay: 1.5s;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+  <svg class="doodle" style="bottom: 15%; left: 6%; width: 110px; height: 110px; color: var(--text-muted); opacity: 0.08; transform: rotate(-12deg); animation-delay: 5s;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+
+  <div class="section-header">
+    <div class="section-label">📧 Contact</div>
+    <h2>Get in Touch</h2>
+    <p>Have questions or need a demo? We'd love to hear from you.</p>
+    <div class="divider"></div>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <div class="contact-info-card">
+        <div class="contact-info-icon"><i class="fa-solid fa-location-dot"></i></div>
+        <div class="contact-info-text">
+          <h4>Office Address</h4>
+          <p>Core Konstruct HQ<br>Mumbai, Maharashtra, India</p>
+        </div>
+      </div>
+      <div class="contact-info-card">
+        <div class="contact-info-icon">📧</div>
+        <div class="contact-info-text">
+          <h4>Email Us</h4>
+          <p>contact@corekonstruct.com<br>support@corekonstruct.com</p>
+        </div>
+      </div>
+      <div class="contact-info-card">
+        <div class="contact-info-icon">📞</div>
+        <div class="contact-info-text">
+          <h4>Call Us</h4>
+          <p>+91 98765 43210<br>Mon — Sat, 9 AM — 6 PM</p>
+        </div>
+      </div>
+      <div class="contact-info-card">
+        <div class="contact-info-icon">🕐</div>
+        <div class="contact-info-text">
+          <h4>Working Hours</h4>
+          <p>Mon — Sat: 9:00 AM — 6:00 PM<br>Sunday: Closed</p>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form-wrap">
+      <form id="contact-form">
+        <div class="form-group">
+          <label for="contact-name">Full Name</label>
+          <input type="text" id="contact-name" placeholder="Your full name" required>
+        </div>
+        <div class="form-group">
+          <label for="contact-email">Email Address</label>
+          <input type="email" id="contact-email" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label for="contact-subject">Subject</label>
+          <input type="text" id="contact-subject" placeholder="How can we help?">
+        </div>
+        <div class="form-group">
+          <label for="contact-message">Message</label>
+          <textarea id="contact-message" placeholder="Tell us about your project or query..." rows="5"></textarea>
+          <div class="char-counter" id="char-counter">0 / 500 characters</div>
+        </div>
+        <button type="submit" class="btn-primary w-100" style="justify-content: center;">Send Message →</button>
+      </form>
+      <div id="form-success">
+        <h3><i class="fa-solid fa-circle-check"></i> Message Sent!</h3>
+        <p>Thank you for reaching out. We'll get back to you within 24 hours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ CTA ════ -->
+<section class="landing-cta">
+  <h2>Ready to Streamline Your<br>Construction Workflow?</h2>
+  <p>Start managing your projects with real-time dashboards, expense tracking, and team coordination.</p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;position:relative;">
+    <a href="login.html#signup" class="btn-primary" style="padding:16px 36px;font-size:1rem;">Create Free Account →</a>
+    <a href="login.html" class="btn-outline" style="padding:16px 36px;font-size:1rem;">Login to Dashboard</a>
+  </div>
+</section>
+
+<!-- ════ FOOTER ════ -->
+<footer class="landing-footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">Core<span>Konstruct</span></div>
+      <p class="footer-desc">Smart construction management for modern contractors. Track projects, manage finances, and keep your team in sync — all from one platform.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <a href="#features">Features</a>
+      <a href="#stats">About</a>
+      <a href="#blog">Blog</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="footer-col">
+      <h4>Roles</h4>
+      <a href="login.html">Admin Dashboard</a>
+      <a href="login.html">Supervisor Panel</a>
+      <a href="login.html">Client Portal</a>
+    </div>
+    <div class="footer-col">
+      <h4>Get Started</h4>
+      <a href="login.html#signup">Sign Up Free</a>
+      <a href="login.html">Login</a>
+      <a href="#contact">Contact Us</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2026 Core Konstruct — Smart Construction Management. All rights reserved.
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="main.js"></script>
+<script>
+  // Theme
+  function initTheme() {
+    const saved = localStorage.getItem('ck_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon(saved);
+  }
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'dark';
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('ck_theme', next);
+    updateThemeIcon(next);
+  }
+  function updateThemeIcon(theme) {
+    document.querySelectorAll('.theme-icon').forEach(el => {
+      el.innerHTML = theme === 'dark' ? '<i class="fa-solid fa-sun"></i>️' : '<i class="fa-solid fa-moon"></i>';
+    });
+  }
+  initTheme();
+
+  // Navbar scroll
+  const nav = document.getElementById('landing-nav');
+  window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 20); }, { passive: true });
+</script>
+</body>
+</html>

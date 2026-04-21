@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Dashboard — Core Konstruct</title>
+  <meta name="description" content="Core Konstruct Client Dashboard — view your project progress, photos, timeline, and completed works.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="dash-layout">
+
+  <!-- ████ SIDEBAR ████ -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar"><i class="fa-solid fa-chevron-left"></i></button>
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon"><i class="fa-solid fa-building"></i></div>
+      <span class="sidebar-logo-text">Core<span>Konstruct</span></span>
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="sidebar-initials">PM</div>
+      <div class="sidebar-user-info">
+        <div class="name" id="sidebar-name">Priya Mehta</div>
+        <div class="role" id="sidebar-role">Client</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">My Projects</div>
+      <button class="nav-item" data-nav="ongoing" onclick="switchClientPanel('ongoing')">
+        <span class="nav-icon"><i class="fa-solid fa-trowel-bricks"></i></span><span class="nav-label">Ongoing Projects</span>
+      </button>
+      <button class="nav-item" data-nav="detail" onclick="switchClientPanel('detail')">
+        <span class="nav-icon"><i class="fa-solid fa-chart-bar"></i></span><span class="nav-label">Project Details</span>
+      </button>
+      <button class="nav-item" data-nav="completed" onclick="switchClientPanel('completed')">
+        <span class="nav-icon"><i class="fa-solid fa-check-double"></i></span><span class="nav-label">Completed Works</span>
+      </button>
+      <div class="nav-section-label">Tools</div>
+      <button class="nav-item" data-nav="gallery" onclick="switchClientPanel('gallery')">
+        <span class="nav-icon"><i class="fa-solid fa-images"></i></span><span class="nav-label">Project Gallery</span>
+      </button>
+      <button class="nav-item" data-nav="converter" onclick="switchClientPanel('converter')">
+        <span class="nav-icon"><i class="fa-solid fa-money-bill-transfer"></i></span><span class="nav-label">Currency Converter</span>
+      </button>
+    </nav>
+    <div class="sidebar-bottom">
+      <button class="logout-btn" onclick="logout()">
+        <span><i class="fa-solid fa-right-from-bracket"></i></span><span style="margin-left: 8px;">Logout</span>
+      </button>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- ████ MAIN ████ -->
+  <div class="dash-main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="mobile-sidebar-trigger" class="btn-icon hide-desktop" aria-label="Open sidebar"><i class="fa-solid fa-bars"></i></button>
+        <div>
+          <h2 id="topbar-title">My Projects</h2>
+          <div class="breadcrumb">Welcome, <span id="topbar-user">Priya Mehta</span></div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle Dark/Light Mode">
+          <span class="theme-icon" id="theme-icon"><i class="fa-solid fa-moon"></i></span>
+        </button>
+        <div class="topbar-date" id="topbar-date"></div>
+        <div class="badge badge-success" style="font-size:0.78rem;padding:6px 12px;"><i class="fa-solid fa-lock" style="margin-right:4px;"></i> Read Only View</div>
+      </div>
+    </header>
+
+    <main class="dash-content">
+
+      <!-- ══ ONGOING PROJECTS ══ -->
+      <div class="client-panel" id="cp-ongoing">
+        <div style="margin-bottom:24px;">
+          <h2 style="font-size:1.2rem;margin-bottom:4px;"><i class="fa-solid fa-helmet-safety" style="margin-right:8px;"></i> My Ongoing Projects</h2>
+          <p style="color:var(--text-muted);font-size:0.9rem;">Track the real-time progress of your active construction projects.</p>
+        </div>
+        <div class="three-col-grid" id="ongoing-projects">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- ══ PROJECT DETAIL ══ -->
+      <div class="client-panel hidden" id="cp-detail">
+        <!-- Cover Image Banner -->
+        <div id="detail-cover-wrap" style="height:220px;overflow:hidden;border-radius:var(--radius-lg);margin-bottom:24px;position:relative;">
+          <img id="detail-cover-img" src="" style="width:100%;height:100%;object-fit:cover;" alt="Project cover">
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(11,31,58,0.8),transparent 60%);"></div>
+          <div style="position:absolute;bottom:20px;left:24px;color:white;">
+            <h2 style="font-size:1.4rem;font-weight:800;margin:0;" id="detail-name">...</h2>
+            <div style="font-size:0.85rem;opacity:0.85;margin-top:4px;">
+              <span id="detail-type">...</span> &bull; <i class="fa-solid fa-location-dot" style="margin-right:4px;"></i> <span id="detail-location">...</span>
+            </div>
+          </div>
+        </div>
+        <!-- Header -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
+          <button onclick="switchClientPanel('ongoing')" class="btn-icon" title="Back" style="background:var(--glass-bg-lg);">←</button>
+          <div style="flex:1;"></div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <span class="badge badge-blue" id="detail-stage">...</span>
+            <span class="badge badge-success">In Progress</span>
+          </div>
+        </div>
+
+        <div class="two-col-grid" style="margin-bottom:24px;">
+          <!-- Progress ring -->
+          <div class="dash-panel">
+            <div class="dash-panel-header">
+              <h3><i class="fa-solid fa-chart-pie" style="margin-right:8px;"></i> Overall Progress</h3>
+            </div>
+            <div class="dash-panel-body" style="display:flex;flex-direction:column;align-items:center;gap:20px;">
+              <div class="circle-progress-wrap" style="margin:12px 0">
+                <svg id="client-ring"></svg>
+                <div class="circle-label">
+                  <span style="font-family:Outfit,sans-serif;font-size:2rem;font-weight:800;color:var(--blue);" id="detail-pct-label">68%</span>
+                  <span style="font-size:0.68rem;color:var(--text-muted);">complete</span>
+                </div>
+              </div>
+              <div style="width:100%;">
+                <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-muted);margin-bottom:6px;">
+                  <span>Progress</span><span id="detail-pct-label-2"></span>
+                </div>
+                <div class="progress-bar-wrap" style="height:10px;">
+                  <div class="progress-bar-fill" id="detail-bar-fill" style="width:0%;"></div>
+                </div>
+              </div>
+              <p style="font-size:0.82rem;color:var(--text-muted);text-align:center;" id="detail-milestone"></p>
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <div class="dash-panel">
+            <div class="dash-panel-header">
+              <h3><i class="fa-solid fa-calendar-days" style="margin-right:8px;"></i> Project Timeline</h3>
+            </div>
+            <div class="dash-panel-body">
+              <div class="timeline" id="detail-timeline">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo Gallery -->
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <h3><i class="fa-solid fa-camera" style="margin-right:8px;"></i> Site Photo Gallery</h3>
+            <span style="font-size:0.8rem;color:var(--text-muted);">Click any photo to view full size</span>
+          </div>
+          <div class="dash-panel-body">
+            <div class="gallery-grid" id="detail-gallery">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ COMPLETED PROJECTS ══ -->
+      <div class="client-panel hidden" id="cp-completed">
+        <div style="margin-bottom:24px;">
+          <h2 style="font-size:1.2rem;margin-bottom:4px;"><i class="fa-solid fa-check-double" style="margin-right:8px;"></i> Completed Projects</h2>
+          <p style="color:var(--text-muted);font-size:0.9rem;">Portfolio of successfully delivered projects by Core Konstruct.</p>
+        </div>
+        <div class="three-col-grid" id="completed-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- ══ PROJECT GALLERY WITH FILTERING ══ -->
+      <div class="client-panel hidden" id="cp-gallery">
+        <div style="margin-bottom:24px;">
+          <h2 style="font-size:1.2rem;margin-bottom:4px;"><i class="fa-solid fa-images" style="margin-right:8px;"></i> Project Gallery</h2>
+          <p style="color:var(--text-muted);font-size:0.9rem;">Browse site photos across all your projects, filterable by category.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;" id="gallery-filters">
+          <button class="btn-primary" onclick="filterGallery('all')" data-filter="all" style="font-size:0.82rem;padding:6px 16px;">All</button>
+          <button class="btn-outline" onclick="filterGallery('foundation')" data-filter="foundation" style="font-size:0.82rem;padding:6px 16px;">Foundation</button>
+          <button class="btn-outline" onclick="filterGallery('structure')" data-filter="structure" style="font-size:0.82rem;padding:6px 16px;">Structure</button>
+          <button class="btn-outline" onclick="filterGallery('finishing')" data-filter="finishing" style="font-size:0.82rem;padding:6px 16px;">Finishing</button>
+          <button class="btn-outline" onclick="filterGallery('site')" data-filter="site" style="font-size:0.82rem;padding:6px 16px;">Site Photos</button>
+        </div>
+        <div class="gallery-masonry" id="client-gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- ══ CURRENCY CONVERTER ══ -->
+      <div class="client-panel hidden" id="cp-converter">
+        <div style="margin-bottom:24px;">
+          <h2 style="font-size:1.2rem;margin-bottom:4px;"><i class="fa-solid fa-money-bill-transfer" style="margin-right:8px;"></i> Currency Converter</h2>
+          <p style="color:var(--text-muted);font-size:0.9rem;">Convert project budgets and costs across currencies using real-time exchange rates.</p>
+        </div>
+        <div class="two-col-grid">
+          <div class="dash-panel">
+            <div class="dash-panel-header"><h3>Convert Currency</h3></div>
+            <div class="dash-panel-body">
+              <div style="margin-bottom:16px;">
+                <label style="font-size:0.82rem;color:var(--text-muted);display:block;margin-bottom:6px;">Amount</label>
+                <input type="number" id="conv-amount" value="100000" min="0" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--glass-bg);color:var(--text-dark);font-size:1.1rem;font-weight:700;font-family:Outfit,sans-serif;" oninput="convertCurrency()">
+              </div>
+              <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:end;margin-bottom:20px;">
+                <div>
+                  <label style="font-size:0.82rem;color:var(--text-muted);display:block;margin-bottom:6px;">From</label>
+                  <select id="conv-from" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--glass-bg);color:var(--text-dark);font-size:0.95rem;" onchange="convertCurrency()">
+                    <option value="INR" selected>🇮🇳 INR</option>
+                    <option value="USD">🇺🇸 USD</option>
+                    <option value="EUR">🇪🇺 EUR</option>
+                    <option value="GBP">🇬🇧 GBP</option>
+                    <option value="AED">🇦🇪 AED</option>
+                    <option value="JPY">🇯🇵 JPY</option>
+                    <option value="CAD">🇨🇦 CAD</option>
+                    <option value="AUD">🇦🇺 AUD</option>
+                    <option value="SGD">🇸🇬 SGD</option>
+                    <option value="CNY">🇨🇳 CNY</option>
+                  </select>
+                </div>
+                <button onclick="swapCurrencies()" style="background:var(--blue);color:white;border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;font-size:1.2rem;transition:transform 0.3s;" onmouseover="this.style.transform='rotate(180deg)'" onmouseout="this.style.transform='rotate(0)'">⇄</button>
+                <div>
+                  <label style="font-size:0.82rem;color:var(--text-muted);display:block;margin-bottom:6px;">To</label>
+                  <select id="conv-to" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--glass-bg);color:var(--text-dark);font-size:0.95rem;" onchange="convertCurrency()">
+                    <option value="INR">🇮🇳 INR</option>
+                    <option value="USD" selected>🇺🇸 USD</option>
+                    <option value="EUR">🇪🇺 EUR</option>
+                    <option value="GBP">🇬🇧 GBP</option>
+                    <option value="AED">🇦🇪 AED</option>
+                    <option value="JPY">🇯🇵 JPY</option>
+                    <option value="CAD">🇨🇦 CAD</option>
+                    <option value="AUD">🇦🇺 AUD</option>
+                    <option value="SGD">🇸🇬 SGD</option>
+                    <option value="CNY">🇨🇳 CNY</option>
+                  </select>
+                </div>
+              </div>
+              <div id="conv-result" style="background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(45,212,191,0.06));border:1px solid var(--border);border-radius:var(--radius-md);padding:20px;text-align:center;">
+                <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:6px;">Converted Amount</div>
+                <div style="font-family:Outfit,sans-serif;font-size:2rem;font-weight:800;color:var(--blue);" id="conv-output">—</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px;" id="conv-rate-info"></div>
+              </div>
+            </div>
+          </div>
+          <div class="dash-panel">
+            <div class="dash-panel-header"><h3><i class="fa-solid fa-chart-bar" style="margin-right:8px;"></i> Popular Rates (vs INR)</h3></div>
+            <div class="dash-panel-body" id="conv-popular-rates" style="padding:0;">
+              <div style="text-align:center;padding:40px;color:var(--text-muted);">Loading rates...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Client Project Quick Modal -->
+<div id="quick-project-modal" class="modal hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;">
+  <div id="quick-project-modal-content" class="modal-content" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;width:90%;max-width:450px;position:relative;box-shadow:0 10px 25px rgba(0,0,0,0.2);transform:scale(0.95);transition:transform 0.3s;max-height:90vh;overflow-y:auto;">
+    <button onclick="closeQuickModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-muted);"><i class="fa-solid fa-xmark"></i></button>
+    <h3 id="modal-qm-title" style="margin-bottom:8px;font-size:1.4rem;">Project Name</h3>
+    <div style="display:flex;gap:8px;margin-bottom:16px;">
+      <span class="badge badge-navy" id="modal-qm-type">Type</span>
+      <span class="badge badge-blue" id="modal-qm-stage">Stage</span>
+    </div>
+    <div style="margin-bottom:16px;font-size:0.9rem;color:var(--text-muted);">
+      <i class="fa-solid fa-location-dot" style="margin-right:4px;"></i> <span id="modal-qm-loc">Location</span>
+    </div>
+    <div style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:4px;font-weight:600;">
+        <span>Progress</span>
+        <span id="modal-qm-prog-text" style="color:var(--blue);">0%</span>
+      </div>
+      <div class="progress-bar-wrap" style="height:8px;">
+         <div class="progress-bar-fill" id="modal-qm-prog-bar" style="width:0%;"></div>
+      </div>
+    </div>
+    <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:24px;">
+      Start: <strong id="modal-qm-start">...</strong> &bull; Est. End: <strong id="modal-qm-end">...</strong>
+    </div>
+    <button onclick="openProjectView(window.currentQuickModalId); closeQuickModal();" class="btn-primary" style="width:100%;">View Full Details</button>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="auth.js"></script>
+<script src="client.js"></script>
+<script>
+  const origSwitch = window.switchClientPanel;
+  window.switchClientPanel = function(id) {
+    origSwitch(id);
+    const titles = { ongoing:'My Projects', detail:'Project Details', completed:'Completed Works', gallery:'Project Gallery', converter:'Currency Converter' };
+    const h2 = document.getElementById('topbar-title');
+    if (h2) h2.textContent = titles[id] || 'Dashboard';
+    if (id === 'detail' && !document.getElementById('client-ring').firstChild) {
+      openProjectView(1);
+    }
+    if (id === 'converter') convertCurrency();
+    if (id === 'gallery') renderClientGallery();
+  };
+</script>
+</body>
+</html>
