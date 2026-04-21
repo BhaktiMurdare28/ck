@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Supervisor Dashboard - BuildPro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>BuildPro</h2>
+            <ul>
+                <li><a href="#">Dashboard</a></li>
+             <li><a href="attendance.html">Attendance</a></li>
+                <li><a href="#updates">Daily Updates</a></li>
+                <li><a href="#measurement">Measurements</a></li>
+                <li><a href="#">Logout</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+
+            <h1>Supervisor Dashboard</h1>
+
+            <!-- Cards -->
+            <div class="dashboard-cards">
+                <div class="dash-card">
+                    <h3>Labour Present</h3>
+                    <p>25</p>
+                </div>
+
+                <div class="dash-card">
+                    <h3>Work Updates Today</h3>
+                    <p>3</p>
+                </div>
+
+                <div class="dash-card">
+                    <h3>Measurements Added</h3>
+                    <p>5</p>
+                </div>
+            </div>
+
+            <!-- Attendance Section -->
+            <section id="attendance" class="form-section">
+                <h2>Mark Attendance</h2>
+                <form>
+                    <input type="text" placeholder="Labour Name">
+                    <input type="date">
+                    <select>
+                        <option>Present</option>
+                        <option>Absent</option>
+                    </select>
+                    <button type="submit">Submit</button>
+                </form>
+            </section>
+
+            <!-- Daily Update Section -->
+            <section id="updates" class="form-section">
+                <h2>Add Daily Work Update</h2>
+                <form>
+                    <textarea placeholder="Enter work details..."></textarea>
+                    <input type="date">
+                    <button type="submit">Submit</button>
+                </form>
+            </section>
+
+            <!-- Measurement Section -->
+            <section id="measurement" class="form-section">
+                <h2>Add Measurement</h2>
+                <form>
+                    <input type="text" placeholder="Type of Work">
+                    <input type="number" placeholder="Quantity">
+                    <input type="text" placeholder="Unit (sqm, kg etc)">
+                    <button type="submit">Submit</button>
+                </form>
+            </section>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

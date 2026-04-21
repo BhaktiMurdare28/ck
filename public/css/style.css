@@ -1,0 +1,256 @@
+/* ===== GLOBAL ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #F4F7FA;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 80px;
+    background: #1F4E79;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 700;
+    color: #F4A261;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
+    color: #F4A261;
+}
+
+.nav-links .btn {
+    background: #F4A261;
+    padding: 8px 18px;
+    border-radius: 5px;
+    color: white;
+}
+
+/* ===== HERO ===== */
+.hero {
+    height: 95vh;
+    background: linear-gradient(
+                    rgba(31,78,121,0.85),
+                    rgba(31,78,121,0.85)
+                ),
+                url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=2070')
+                no-repeat center center/cover;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 20px;
+}
+
+.hero-content {
+    max-width: 700px;
+    animation: slideUp 1.2s ease-out;
+}
+
+.hero h1 {
+    font-size: 45px;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.hero-btn {
+    background: #F4A261;
+    padding: 12px 30px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.hero-btn:hover {
+    transform: scale(1.05);
+}
+
+/* ===== FEATURES ===== */
+.features {
+    padding: 90px 60px;
+    text-align: center;
+}
+
+.features h2 {
+    font-size: 32px;
+    margin-bottom: 50px;
+    color: #1F4E79;
+}
+
+.card-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.card {
+    background: white;
+    width: 260px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.card h3 {
+    color: #1F4E79;
+    margin-bottom: 15px;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    border-bottom: 4px solid #F4A261;
+}
+
+/* ===== TESTIMONIALS ===== */
+.testimonials {
+    padding: 90px 60px;
+    text-align: center;
+}
+
+.testimonials h2 {
+    font-size: 32px;
+    margin-bottom: 50px;
+    color: #1F4E79;
+}
+
+.testimonial-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.testimonial-card {
+    background: white;
+    width: 260px;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-8px);
+}
+
+/* ===== ABOUT ===== */
+.about {
+    background: #1F4E79;
+    color: white;
+    padding: 80px 60px;
+    text-align: center;
+}
+
+.about h2 {
+    margin-bottom: 20px;
+}
+
+/* ===== CTA ===== */
+.cta {
+    background: #F4A261;
+    color: white;
+    padding: 80px 60px;
+    text-align: center;
+}
+
+.cta-btn {
+    display: inline-block;
+    margin-top: 20px;
+    background: #1F4E79;
+    padding: 12px 30px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.cta-btn:hover {
+    transform: scale(1.05);
+}
+
+/* ===== FOOTER ===== */
+footer {
+    background: #0E2A47;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+/* ===== ANIMATION ===== */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+
+    .navbar {
+        flex-direction: column;
+        padding: 20px;
+        gap: 15px;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .hero h1 {
+        font-size: 28px;
+    }
+
+    .features,
+    .about,
+    .testimonials,
+    .cta {
+        padding: 60px 20px;
+    }
+
+    .card,
+    .testimonial-card {
+        width: 100%;
+    }
+}
