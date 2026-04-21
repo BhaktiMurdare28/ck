@@ -70,7 +70,7 @@
           <span class="theme-icon" id="theme-icon"><i class="fa-solid fa-moon"></i></span>
         </button>
         <div class="topbar-date" id="topbar-date"></div>
-        <div class="badge badge-success" style="font-size:0.78rem;padding:6px 12px;"><i class="fa-solid fa-lock" style="margin-right:4px;"></i> Read Only View</div>
+        <div class="badge badge-success client-readonly-badge"><i class="fa-solid fa-lock" style="margin-right:4px;"></i> Read Only View</div>
       </div>
     </header>
 
@@ -81,6 +81,18 @@
         <div style="margin-bottom:24px;">
           <h2 style="font-size:1.2rem;margin-bottom:4px;"><i class="fa-solid fa-helmet-safety" style="margin-right:8px;"></i> My Ongoing Projects</h2>
           <p style="color:var(--text-muted);font-size:0.9rem;">Track the real-time progress of your active construction projects.</p>
+        </div>
+        <div class="client-summary-grid" id="client-summary-cards" aria-live="polite">
+          <!-- Rendered by JS -->
+        </div>
+        <div class="dash-panel client-feed-panel" style="margin-bottom:20px;">
+          <div class="dash-panel-header">
+            <h3><i class="fa-solid fa-bell" style="margin-right:8px;"></i> Recent Project Updates</h3>
+            <span class="badge badge-blue" id="client-updates-count">0 updates</span>
+          </div>
+          <div class="dash-panel-body" id="client-notifications-feed">
+            <!-- Rendered by JS -->
+          </div>
         </div>
         <div class="three-col-grid" id="ongoing-projects">
           <!-- Rendered by JS -->
@@ -104,6 +116,9 @@
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
           <button onclick="switchClientPanel('ongoing')" class="btn-icon" title="Back" style="background:var(--glass-bg-lg);">←</button>
           <div style="flex:1;"></div>
+          <span class="badge badge-success" id="detail-health">Healthy</span>
+          <span class="badge badge-warning" id="detail-risk">On Schedule</span>
+          <button class="btn-outline btn-sm" onclick="exportClientSnapshot()"><i class="fa-solid fa-file-arrow-down" style="margin-right:6px;"></i> Download Snapshot</button>
           <div style="display:flex;gap:10px;align-items:center;">
             <span class="badge badge-blue" id="detail-stage">...</span>
             <span class="badge badge-success">In Progress</span>
@@ -180,6 +195,17 @@
           <h2 style="font-size:1.2rem;margin-bottom:4px;"><i class="fa-solid fa-images" style="margin-right:8px;"></i> Project Gallery</h2>
           <p style="color:var(--text-muted);font-size:0.9rem;">Browse site photos across all your projects, filterable by category.</p>
         </div>
+        <div class="gallery-toolbar">
+          <div class="gallery-search-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="gallery-search" type="search" placeholder="Search by project or stage..." aria-label="Search gallery">
+          </div>
+          <select id="gallery-sort" aria-label="Sort gallery photos">
+            <option value="latest" selected>Latest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="project">Project name</option>
+          </select>
+        </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;" id="gallery-filters">
           <button class="btn-primary" onclick="filterGallery('all')" data-filter="all" style="font-size:0.82rem;padding:6px 16px;">All</button>
           <button class="btn-outline" onclick="filterGallery('foundation')" data-filter="foundation" style="font-size:0.82rem;padding:6px 16px;">Foundation</button>
@@ -187,7 +213,7 @@
           <button class="btn-outline" onclick="filterGallery('finishing')" data-filter="finishing" style="font-size:0.82rem;padding:6px 16px;">Finishing</button>
           <button class="btn-outline" onclick="filterGallery('site')" data-filter="site" style="font-size:0.82rem;padding:6px 16px;">Site Photos</button>
         </div>
-        <div class="gallery-masonry" id="client-gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;">
+        <div class="gallery-masonry client-gallery-grid" id="client-gallery-grid">
           <!-- Rendered by JS -->
         </div>
       </div>
@@ -239,7 +265,7 @@
                   </select>
                 </div>
               </div>
-              <div id="conv-result" style="background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(45,212,191,0.06));border:1px solid var(--border);border-radius:var(--radius-md);padding:20px;text-align:center;">
+              <div id="conv-result" style="background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(45,212,191,0.06));border:1px solid var(--border);border-radius:var(--radius-md);padding:20px;text-align:center;">
                 <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:6px;">Converted Amount</div>
                 <div style="font-family:Outfit,sans-serif;font-size:2rem;font-weight:800;color:var(--blue);" id="conv-output">—</div>
                 <div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px;" id="conv-rate-info"></div>
@@ -260,9 +286,9 @@
 </div>
 
 <!-- Client Project Quick Modal -->
-<div id="quick-project-modal" class="modal hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;">
+<div id="quick-project-modal" class="modal hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;" role="dialog" aria-modal="true" aria-labelledby="modal-qm-title">
   <div id="quick-project-modal-content" class="modal-content" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;width:90%;max-width:450px;position:relative;box-shadow:0 10px 25px rgba(0,0,0,0.2);transform:scale(0.95);transition:transform 0.3s;max-height:90vh;overflow-y:auto;">
-    <button onclick="closeQuickModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-muted);"><i class="fa-solid fa-xmark"></i></button>
+    <button onclick="closeQuickModal()" aria-label="Close quick project modal" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-muted);"><i class="fa-solid fa-xmark"></i></button>
     <h3 id="modal-qm-title" style="margin-bottom:8px;font-size:1.4rem;">Project Name</h3>
     <div style="display:flex;gap:8px;margin-bottom:16px;">
       <span class="badge badge-navy" id="modal-qm-type">Type</span>

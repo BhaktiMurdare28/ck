@@ -53,6 +53,9 @@
       <button class="nav-item" data-nav="progress" onclick="switchSuperPanel('progress')">
         <span class="nav-icon"><i class="fa-solid fa-arrow-trend-up"></i></span><span class="nav-label">Update Progress</span>
       </button>
+      <button class="nav-item" data-nav="documents" onclick="switchSuperPanel('documents')">
+        <span class="nav-icon"><i class="fa-solid fa-file-contract"></i></span><span class="nav-label">Documents</span>
+      </button>
     </nav>
     <div class="sidebar-bottom">
       <button class="logout-btn" onclick="logout()">
@@ -370,6 +373,32 @@
         </div>
       </div>
 
+      <!-- ══ DOCUMENTS ══ -->
+      <div class="super-panel hidden" id="sp-documents">
+        <div style="margin-bottom:24px;">
+          <h2 style="font-size:1.3rem;margin-bottom:4px;"><i class="fa-solid fa-file-contract"></i> Project Documents</h2>
+          <p style="color:var(--text-muted);font-size:0.9rem;">Upload and manage compliance documents required for your assigned projects</p>
+        </div>
+
+        <!-- Category tabs -->
+        <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;border-bottom:2px solid var(--border);padding-bottom:12px;">
+          <button onclick="switchSuperDocCategory('pre-construction')" class="doc-tab-btn active" data-tab="pre-construction" style="padding:8px 16px;border:none;background:none;color:var(--text-muted);cursor:pointer;font-weight:600;border-bottom:3px solid transparent;transition:all 0.3s;">
+            <i class="fa-solid fa-clipboard-check"></i> Pre-Construction
+          </button>
+          <button onclick="switchSuperDocCategory('execution')" class="doc-tab-btn" data-tab="execution" style="padding:8px 16px;border:none;background:none;color:var(--text-muted);cursor:pointer;font-weight:600;border-bottom:3px solid transparent;transition:all 0.3s;">
+            <i class="fa-solid fa-hammer"></i> Execution
+          </button>
+          <button onclick="switchSuperDocCategory('post-construction')" class="doc-tab-btn" data-tab="post-construction" style="padding:8px 16px;border:none;background:none;color:var(--text-muted);cursor:pointer;font-weight:600;border-bottom:3px solid transparent;transition:all 0.3s;">
+            <i class="fa-solid fa-check-circle"></i> Post-Construction
+          </button>
+        </div>
+
+        <!-- Document cards -->
+        <div class="three-col-grid" id="supervisor-documents-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
     </main>
   </div>
 </div>
@@ -381,9 +410,10 @@
   const origSwitch = window.switchSuperPanel;
   window.switchSuperPanel = function(id) {
     origSwitch(id);
-    const titles = { projects:'My Projects', report:'Daily Report', attendance:'Labour Attendance', materials:'Material Log', measurements:'Work Measurements', photos:'Site Photos', progress:'Update Progress' };
+    const titles = { projects:'My Projects', report:'Daily Report', attendance:'Labour Attendance', materials:'Material Log', measurements:'Work Measurements', photos:'Site Photos', progress:'Update Progress', documents:'Project Documents' };
     const h2 = document.getElementById('topbar-title');
     if (h2) h2.textContent = titles[id] || 'Dashboard';
+    if (id === 'documents') renderSupervisorDocuments();
   };
 </script>
 </body>

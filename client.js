@@ -17,6 +17,7 @@ function apiHeaders() {
 
 // ── Client-visible project data (no financials) ───────────────
 let CLIENT_PROJECTS = [];
+let CURRENT_CLIENT_PROJECT = null;
 
 let COMPLETED_PROJECTS = [
   {
@@ -45,11 +46,104 @@ let COMPLETED_PROJECTS = [
   }
 ];
 
+const DEMO_CLIENT_PROJECTS = [
+  {
+    _id: 'demo-1',
+    id: 1,
+    name: 'Skyline Residency Tower B',
+    type: 'Building',
+    location: 'Pune, MH',
+    progress: 72,
+    status: 'In Progress',
+    currentStage: 'Finishing',
+    startDate: '2025-07-10',
+    endDate: '2026-07-25',
+    milestone: 'Foundation ✓ | Structure ✓ | Brickwork ✓ | Finishing 72%',
+    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200',
+    photos: [
+      'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800',
+      'https://images.unsplash.com/photo-1541888081688-ce7d91e604f6?q=80&w=800'
+    ],
+    timeline: [
+      { date: 'Jul 2025', label: 'Foundation', done: true, active: false },
+      { date: 'Sep 2025', label: 'Structure', done: true, active: false },
+      { date: 'Dec 2025', label: 'Brickwork', done: true, active: false },
+      { date: 'Apr 2026', label: 'Finishing', done: false, active: true },
+      { date: 'Jul 2026', label: 'Handover', done: false, active: false }
+    ]
+  },
+  {
+    _id: 'demo-2',
+    id: 2,
+    name: 'Metro Link Service Road',
+    type: 'Road',
+    location: 'Nashik, MH',
+    progress: 38,
+    status: 'In Progress',
+    currentStage: 'Structure',
+    startDate: '2025-11-01',
+    endDate: '2026-06-12',
+    milestone: 'Planning ✓ | Foundation ✓ | Structure 38%',
+    image: 'https://images.unsplash.com/photo-1545558014-8692077e9b5c?q=80&w=1200',
+    photos: [
+      'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=800'
+    ],
+    timeline: [
+      { date: 'Nov 2025', label: 'Planning', done: true, active: false },
+      { date: 'Jan 2026', label: 'Foundation', done: true, active: false },
+      { date: 'Mar 2026', label: 'Structure', done: false, active: true },
+      { date: 'May 2026', label: 'Finishing', done: false, active: false }
+    ]
+  }
+];
+
+const DEMO_CLIENT_UPDATES = [
+  { title: 'Material delivery complete', desc: 'Cement and rebar delivery confirmed at site gate.', when: Date.now() - 1000 * 60 * 45 },
+  { title: 'Stage advanced', desc: 'Skyline Residency moved from Brickwork to Finishing.', when: Date.now() - 1000 * 60 * 170 },
+  { title: 'Photo evidence uploaded', desc: 'Supervisor uploaded 4 new finishing photos.', when: Date.now() - 1000 * 60 * 360 }
+];
+
+function useDemoProjects() {
+  CLIENT_PROJECTS = DEMO_CLIENT_PROJECTS.map((p, idx) => ({ ...p, id: idx + 1 }));
+}
+
+function getDaysRemaining(endDate) {
+  const t = Date.parse(endDate || '');
+  if (!t) return null;
+  return Math.ceil((t - Date.now()) / 86400000);
+}
+
+function getProjectHealth(project) {
+  const pct = Number(project.progress || 0);
+  if (pct >= 70) return { label: 'Healthy', className: 'good', icon: 'fa-heart-pulse' };
+  if (pct >= 40) return { label: 'Watch', className: 'watch', icon: 'fa-eye' };
+  return { label: 'At Risk', className: 'risk', icon: 'fa-triangle-exclamation' };
+}
+
+function getProjectRisk(project) {
+  const days = getDaysRemaining(project.endDate);
+  if (days === null) return { label: 'No ETA', className: 'safe', icon: 'fa-calendar' };
+  if (days < 0) return { label: 'Overdue', className: 'overdue', icon: 'fa-clock' };
+  if (days <= 21) return { label: `Due in ${days}d`, className: 'warning', icon: 'fa-hourglass-half' };
+  return { label: `Due in ${days}d`, className: 'safe', icon: 'fa-flag-checkered' };
+}
+
+function timeAgo(ts) {
+  const diffMin = Math.max(1, Math.floor((Date.now() - ts) / 60000));
+  if (diffMin < 60) return `${diffMin}m ago`;
+  const h = Math.floor(diffMin / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
+}
+
 // ── Load live project data from API ───────────────────────────
 async function loadClientProjects() {
   try {
     const token = getToken();
-    if (!token) return;
+    if (!token) {
+      useDemoProjects();
+      return;
+    }
     const res = await fetch('/api/projects', { headers: apiHeaders() });
     if (!res.ok) return;
     const apiProjects = await res.json();
@@ -105,6 +199,10 @@ async function loadClientProjects() {
   } catch (err) {
     console.warn('Could not load report photos:', err);
   }
+
+  if (CLIENT_PROJECTS.length === 0) {
+    useDemoProjects();
+  }
 }
 
 async function loadCompletedProjects() {
@@ -132,13 +230,23 @@ async function loadCompletedProjects() {
 function renderOngoingProjects() {
   const wrap = document.getElementById('ongoing-projects');
   if (!wrap) return;
+  renderClientSummary();
+  renderClientNotifications();
   
   if (CLIENT_PROJECTS.length === 0) {
-    wrap.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text-muted);">No active projects found.</div>';
+    wrap.innerHTML = `
+      <div class="dash-panel" style="grid-column:1/-1;padding:30px;text-align:center;">
+        <p style="font-size:1rem;color:var(--text-muted);margin-bottom:12px;">No active projects found for your account yet.</p>
+        <button class="btn-outline" onclick="renderOngoingProjects()"><i class="fa-solid fa-rotate-right" style="margin-right:6px;"></i> Refresh</button>
+      </div>
+    `;
     return;
   }
 
-  wrap.innerHTML = CLIENT_PROJECTS.map(p => `
+  wrap.innerHTML = CLIENT_PROJECTS.map(p => {
+    const health = getProjectHealth(p);
+    const risk = getProjectRisk(p);
+    return `
     <div class="premium-card">
       <div style="height:180px;overflow:hidden;position:relative;cursor:pointer;" onclick="openProjectView(${p.id})">
         <img src="${p.image}" style="width:100%;height:100%;object-fit:cover;" alt="${p.name}">
@@ -154,6 +262,10 @@ function renderOngoingProjects() {
           <span style="font-size:0.82rem;color:var(--text-muted);"><i class="fa-solid fa-location-dot"></i> ${p.location}</span>
           <span class="badge badge-success">${p.status}</span>
         </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+          <span class="health-chip ${health.className}"><i class="fa-solid ${health.icon}"></i> ${health.label}</span>
+          <span class="risk-chip ${risk.className}"><i class="fa-solid ${risk.icon}"></i> ${risk.label}</span>
+        </div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
           <span style="font-size:0.85rem;font-weight:600;color:var(--text-dark);">Progress</span>
           <span style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--blue);">${p.progress}%</span>
@@ -163,11 +275,76 @@ function renderOngoingProjects() {
         </div>
         <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;">
           <div style="font-size:0.78rem;color:var(--text-muted);">Est. End: <strong style="color:var(--text-dark);">${p.endDate || 'TBD'}</strong></div>
-          <button class="btn-outline" style="padding:6px 14px;font-size:0.8rem;white-space:nowrap;" onclick="openQuickModal(${p.id})"><i class="fa-solid fa-bolt" style="margin-right:4px;"></i> Quick Size</button>
+          <button class="btn-outline" style="padding:6px 14px;font-size:0.8rem;white-space:nowrap;" onclick="openQuickModal(${p.id})"><i class="fa-solid fa-bolt" style="margin-right:4px;"></i> Quick View</button>
         </div>
       </div>
     </div>
+  `;
+  }).join('');
+}
+
+function renderClientNotifications() {
+  const feed = document.getElementById('client-notifications-feed');
+  const count = document.getElementById('client-updates-count');
+  if (!feed) return;
+
+  const projectNotes = CLIENT_PROJECTS.map((p, i) => ({
+    title: `${p.name} · ${p.currentStage}`,
+    desc: `Progress is currently ${p.progress}%. Next milestone tracking is active for this project.`,
+    when: Date.now() - (i + 1) * 1000 * 60 * 95
+  }));
+
+  const notes = [...projectNotes, ...DEMO_CLIENT_UPDATES]
+    .sort((a, b) => b.when - a.when)
+    .slice(0, 6);
+
+  if (count) {
+    count.textContent = `${notes.length} updates`;
+  }
+
+  feed.innerHTML = notes.map(n => `
+    <div class="client-notice-item">
+      <div class="client-notice-head">
+        <div class="client-notice-title">${n.title}</div>
+        <div class="client-notice-meta">${timeAgo(n.when)}</div>
+      </div>
+      <div class="client-notice-desc">${n.desc}</div>
+    </div>
   `).join('');
+}
+
+function renderClientSummary() {
+  const wrap = document.getElementById('client-summary-cards');
+  if (!wrap) return;
+
+  if (CLIENT_PROJECTS.length === 0) {
+    wrap.innerHTML = '';
+    return;
+  }
+
+  const total = CLIENT_PROJECTS.length;
+  const avgProgress = Math.round(CLIENT_PROJECTS.reduce((sum, p) => sum + (p.progress || 0), 0) / total);
+  const maxProgress = Math.max(...CLIENT_PROJECTS.map(p => p.progress || 0));
+  const atRisk = CLIENT_PROJECTS.filter(p => (p.progress || 0) < 35).length;
+
+  wrap.innerHTML = `
+    <div class="client-summary-card">
+      <div class="client-summary-label">Active Projects</div>
+      <div class="client-summary-value">${total}</div>
+    </div>
+    <div class="client-summary-card">
+      <div class="client-summary-label">Average Progress</div>
+      <div class="client-summary-value">${avgProgress}%</div>
+    </div>
+    <div class="client-summary-card">
+      <div class="client-summary-label">Top Completion</div>
+      <div class="client-summary-value">${maxProgress}%</div>
+    </div>
+    <div class="client-summary-card">
+      <div class="client-summary-label">Needs Attention</div>
+      <div class="client-summary-value">${atRisk}</div>
+    </div>
+  `;
 }
 
 // ── Quick Modal Logic ─────────────────────────────────────────
@@ -213,6 +390,20 @@ document.addEventListener('click', (e) => {
   }
 });
 
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+
+  const modal = document.getElementById('quick-project-modal');
+  if (modal && !modal.classList.contains('hidden')) {
+    closeQuickModal();
+  }
+
+  const lightbox = document.querySelector('.lightbox-overlay');
+  if (lightbox) {
+    lightbox.remove();
+  }
+});
+
 // ── Open project detail view ──────────────────────────────────
 function openProjectView(idOrName, isRealtimeUpdate = false) {
   let p;
@@ -222,6 +413,7 @@ function openProjectView(idOrName, isRealtimeUpdate = false) {
     p = CLIENT_PROJECTS.find(x => x.id === idOrName);
   }
   if (!p) return;
+  CURRENT_CLIENT_PROJECT = p;
 
   // Switch to detail panel if not a seamless refresh
   if (!isRealtimeUpdate) switchClientPanel('detail');
@@ -237,6 +429,18 @@ function openProjectView(idOrName, isRealtimeUpdate = false) {
   
   const stageEl = document.getElementById('detail-stage');
   if (stageEl) stageEl.textContent = p.currentStage;
+  const detailHealth = document.getElementById('detail-health');
+  const detailRisk = document.getElementById('detail-risk');
+  const health = getProjectHealth(p);
+  const risk = getProjectRisk(p);
+  if (detailHealth) {
+    detailHealth.textContent = health.label;
+    detailHealth.className = `health-chip ${health.className}`;
+  }
+  if (detailRisk) {
+    detailRisk.textContent = risk.label;
+    detailRisk.className = `risk-chip ${risk.className}`;
+  }
   const pctLabel = document.getElementById('detail-pct-label');
   if (pctLabel) pctLabel.textContent = p.progress + '%';
   const milestoneEl = document.getElementById('detail-milestone');
@@ -286,6 +490,42 @@ function openProjectView(idOrName, isRealtimeUpdate = false) {
   }
 }
 window.openProjectView = openProjectView;
+
+function exportClientSnapshot() {
+  const p = CURRENT_CLIENT_PROJECT;
+  if (!p) return;
+
+  const timelineHtml = (p.timeline || []).map(t => `<li>${t.label} ${t.done ? '✓' : t.active ? '(Active)' : ''}</li>`).join('');
+  const photosHtml = (p.photos || []).slice(0, 4).map(src => `<img src="${src}" style="width:48%;margin:1%;border-radius:8px;object-fit:cover;height:180px;" alt="Project photo">`).join('');
+  const health = getProjectHealth(p).label;
+  const risk = getProjectRisk(p).label;
+
+  const w = window.open('', '_blank');
+  if (!w) return;
+  w.document.write(`
+    <html>
+      <head><title>${p.name} Snapshot</title></head>
+      <body style="font-family:Arial,sans-serif;padding:24px;color:#0f172a;">
+        <h1 style="margin-bottom:0;">${p.name}</h1>
+        <p style="margin-top:6px;color:#475569;">${p.type} · ${p.location}</p>
+        <hr>
+        <p><strong>Progress:</strong> ${p.progress}%</p>
+        <p><strong>Stage:</strong> ${p.currentStage}</p>
+        <p><strong>Health:</strong> ${health}</p>
+        <p><strong>Deadline:</strong> ${risk}</p>
+        <p><strong>Start:</strong> ${p.startDate || 'N/A'} &nbsp; <strong>End:</strong> ${p.endDate || 'N/A'}</p>
+        <h3>Timeline</h3>
+        <ul>${timelineHtml || '<li>No timeline data</li>'}</ul>
+        <h3>Recent Site Photos</h3>
+        <div>${photosHtml || '<p>No photos available.</p>'}</div>
+      </body>
+    </html>
+  `);
+  w.document.close();
+  w.focus();
+  setTimeout(() => w.print(), 300);
+}
+window.exportClientSnapshot = exportClientSnapshot;
 
 // ── Client progress ring ───────────────────────────────────────
 function renderClientRing(pct) {
@@ -421,7 +661,7 @@ async function convertCurrency() {
     // Render popular rates table
     renderPopularRates(data);
   } else {
-    outputEl.textContent = '<i class="fa-solid fa-triangle-exclamation"></i> Rate unavailable';
+    outputEl.textContent = 'Rate unavailable';
     if (rateInfoEl) rateInfoEl.textContent = 'Could not fetch exchange rates. Try again later.';
   }
 }
@@ -467,11 +707,13 @@ window.swapCurrencies = swapCurrencies;
 // ═══════════════════════════════════════════════════════════════
 let allGalleryPhotos = [];
 let currentGalleryFilter = 'all';
+let gallerySearchQuery = '';
+let gallerySortMode = 'latest';
 
 async function renderClientGallery() {
   const grid = document.getElementById('client-gallery-grid');
   if (!grid) return;
-  grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);grid-column:1/-1;">Loading gallery...</div>';
+  grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);grid-column:1/-1;">Loading gallery photos...</div>';
 
   // Collect photos from reports
   allGalleryPhotos = [];
@@ -528,10 +770,28 @@ function applyGalleryFilter() {
   const grid = document.getElementById('client-gallery-grid');
   if (!grid) return;
 
-  const filtered = currentGalleryFilter === 'all' ? allGalleryPhotos : allGalleryPhotos.filter(p => p.category === currentGalleryFilter);
+  let filtered = currentGalleryFilter === 'all' ? [...allGalleryPhotos] : allGalleryPhotos.filter(p => p.category === currentGalleryFilter);
+
+  if (gallerySearchQuery) {
+    const q = gallerySearchQuery.toLowerCase();
+    filtered = filtered.filter(p =>
+      (p.project || '').toLowerCase().includes(q) ||
+      (p.stage || '').toLowerCase().includes(q)
+    );
+  }
+
+  if (gallerySortMode === 'project') {
+    filtered.sort((a, b) => (a.project || '').localeCompare(b.project || ''));
+  } else {
+    filtered.sort((a, b) => {
+      const ad = Date.parse(a.date || '') || 0;
+      const bd = Date.parse(b.date || '') || 0;
+      return gallerySortMode === 'oldest' ? ad - bd : bd - ad;
+    });
+  }
 
   if (filtered.length === 0) {
-    grid.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);grid-column:1/-1;">No photos found in "${currentGalleryFilter}" category.</div>`;
+    grid.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);grid-column:1/-1;">No photos match your selected filters.</div>`;
     return;
   }
 
@@ -567,12 +827,37 @@ function filterGallery(category) {
 }
 window.filterGallery = filterGallery;
 
+function setupGalleryControls() {
+  const searchEl = document.getElementById('gallery-search');
+  const sortEl = document.getElementById('gallery-sort');
+
+  if (searchEl) {
+    searchEl.addEventListener('input', (e) => {
+      gallerySearchQuery = (e.target.value || '').trim();
+      applyGalleryFilter();
+    });
+  }
+
+  if (sortEl) {
+    sortEl.addEventListener('change', (e) => {
+      gallerySortMode = e.target.value || 'latest';
+      applyGalleryFilter();
+    });
+  }
+}
+
 // ── Init ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
   const user = authGuard('client');
   if (!user) return;
   fillSidebarUser();
   initSidebar();
+  setupGalleryControls();
+
+  const ongoingWrap = document.getElementById('ongoing-projects');
+  if (ongoingWrap) {
+    ongoingWrap.innerHTML = '<div style="grid-column:1/-1;padding:30px;text-align:center;color:var(--text-muted);">Loading projects...</div>';
+  }
 
   // Load live data from API
   await Promise.all([loadClientProjects(), loadCompletedProjects()]);

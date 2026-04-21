@@ -645,6 +645,86 @@ async function checkDailyPhotoInterval() {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   SUPERVISOR DOCUMENT MANAGEMENT
+   ═══════════════════════════════════════════════════════════════ */
+
+let SUPER_CURRENT_DOC_CATEGORY = 'pre-construction';
+let SUPER_ALL_DOCUMENTS = [];
+
+// Initialize supervisor documents
+function initializeSupervisorDocuments() {
+  SUPER_ALL_DOCUMENTS = [];
+  
+  // Get documents for supervisor's assigned projects
+  const user = JSON.parse(sessionStorage.getItem('ck_user') || '{}');
+  if (!user.assignedProjects) return;
+  
+  user.assignedProjects.forEach(pid => {
+    const projDocs = DEMO_DOCUMENTS.filter(d => d.projectId == pid);
+    SUPER_ALL_DOCUMENTS.push(...projDocs);
+  });
+  
+  renderSupervisorDocuments();
+}
+window.initializeSupervisorDocuments = initializeSupervisorDocuments;
+
+// Switch supervisor document category
+function switchSuperDocCategory(category) {
+  SUPER_CURRENT_DOC_CATEGORY = category;
+  document.querySelectorAll('#sp-documents .doc-tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+    btn.style.borderBottomColor = 'transparent';
+  });
+  document.querySelector(`#sp-documents [data-tab="${category}"]`).classList.add('active');
+  document.querySelector(`#sp-documents [data-tab="${category}"]`).style.borderBottomColor = '#3B82F6';
+  renderSupervisorDocuments();
+}
+window.switchSuperDocCategory = switchSuperDocCategory;
+
+// Render supervisor documents
+function renderSupervisorDocuments() {
+  const grid = document.getElementById('supervisor-documents-grid');
+  if (!grid) return;
+  
+  let filtered = SUPER_ALL_DOCUMENTS.filter(d => d.category === SUPER_CURRENT_DOC_CATEGORY);
+  const docTypes = DOCUMENT_TYPES[SUPER_CURRENT_DOC_CATEGORY] || [];
+  
+  let html = '';
+  docTypes.forEach(docType => {
+    const doc = filtered.find(d => d.docType === docType.id);
+    const statusClass = doc ? (doc.status === 'approved' ? 'success' : doc.status === 'under-review' ? 'warning' : doc.status === 'uploaded' ? 'info' : 'danger') : 'danger';
+    const statusIcon = { approved: '✅', 'under-review': '⏳', uploaded: '📤', rejected: '❌', expired: '⚠️', missing: '❓' }[doc?.status || 'missing'];
+    
+    html += `
+      <div class="dash-card" style="border-radius:12px;border:1.5px solid var(--border);overflow:hidden;background:var(--bg-card);">
+        <div style="padding:16px;background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(45,212,191,0.06));border-bottom:1px solid var(--border);">
+          <div style="font-size:1.4rem;margin-bottom:8px;">${docType.icon}</div>
+          <h4 style="margin:0;font-size:0.95rem;font-weight:700;color:var(--text-dark);">${docType.name}</h4>
+        </div>
+        <div style="padding:16px;">
+          ${doc ? `
+            <span class="badge badge-${statusClass}" style="font-size:0.75rem;padding:4px 10px;margin-bottom:12px;">
+              ${statusIcon} ${doc.status.replace('-', ' ')}
+            </span>
+            <button class="btn-sm" style="font-size:0.75rem;padding:6px 12px;background:var(--blue);color:white;border:none;border-radius:6px;cursor:pointer;margin-top:12px;width:100%;" onclick="showSuperToast('📥 Downloading: ${doc.fileName}', 'info')">
+              📥 Download
+            </button>
+          ` : `
+            <div style="text-align:center;padding:12px;">
+              <div style="font-size:2rem;margin-bottom:8px;">📭</div>
+              <div style="font-size:0.85rem;color:var(--text-muted);">Not uploaded</div>
+            </div>
+          `}
+        </div>
+      </div>
+    `;
+  });
+  
+  grid.innerHTML = html;
+}
+window.renderSupervisorDocuments = renderSupervisorDocuments;
+
 // ── Init ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
   const user = authGuard('supervisor');
@@ -655,6 +735,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadMaterialsFromAPI();
   await loadAssignedProjects();
   renderSupervisorStages();
+  initializeSupervisorDocuments();
   switchSuperPanel('projects');
 
   checkDailyPhotoInterval();

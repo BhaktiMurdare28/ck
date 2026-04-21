@@ -7,6 +7,67 @@
 // ── Global State for Export ──────────────────────────────────
 let ATTENDANCE_ADMIN = [];
 let SANCTION_DOCS = [];
+let ALL_DOCUMENTS = [];
+let CURRENT_DOC_CATEGORY = 'pre-construction';
+
+// ── Document type definitions ─────────────────────────────────
+const DOCUMENT_TYPES = {
+  'pre-construction': [
+    { id: 'sanction-plan', name: 'Sanction Plan', icon: '📋', mandatory: true },
+    { id: 'na-order', name: 'NA Order', icon: '📜', mandatory: true },
+    { id: 'environmental-noc', name: 'Environmental NOC', icon: '🌍', mandatory: true },
+    { id: 'forest-noc', name: 'Forest NOC', icon: '🌲', mandatory: false },
+    { id: 'railway-noc', name: 'Railway NOC', icon: '🚂', mandatory: false },
+    { id: 'rera-registration', name: 'RERA Registration', icon: '🏠', mandatory: true },
+    { id: 'fire-noc-approval', name: 'Fire NOC Approval', icon: '🔥', mandatory: true },
+    { id: 'water-noc', name: 'Water NOC', icon: '💧', mandatory: false },
+    { id: 'pollution-noc', name: 'Pollution NOC', icon: '🏭', mandatory: true }
+  ],
+  'execution': [
+    { id: 'boq', name: 'Bill of Quantities (BOQ)', icon: '💰', mandatory: true },
+    { id: 'gfc-drawings', name: 'GFC Drawings', icon: '📐', mandatory: true },
+    { id: 'tender-document', name: 'Tender Document', icon: '📄', mandatory: true },
+    { id: 'work-order', name: 'Work Order', icon: '✍️', mandatory: true },
+    { id: 'contractor-agreement', name: 'Contractor Agreement', icon: '🤝', mandatory: true },
+    { id: 'insurance-certificate', name: 'Insurance Certificate', icon: '🛡️', mandatory: true },
+    { id: 'material-cert', name: 'Material Test Certificates', icon: '🧪', mandatory: true },
+    { id: 'labour-bill', name: 'Labour Bills', icon: '👷', mandatory: false },
+    { id: 'purchase-invoice', name: 'Purchase Invoices', icon: '🧾', mandatory: false }
+  ],
+  'post-construction': [
+    { id: 'completion-certificate', name: 'Completion Certificate', icon: '✅', mandatory: true },
+    { id: 'occupancy-cert', name: 'Occupancy Certificate', icon: '🏢', mandatory: true },
+    { id: 'fire-noc-handover', name: 'Fire NOC (Handover)', icon: '🔒', mandatory: true },
+    { id: 'utility-noc-final', name: 'Utility NOCs (Final)', icon: '⚡', mandatory: true },
+    { id: 'defect-liability-cert', name: 'Defect Liability Certificate', icon: '🔍', mandatory: false },
+    { id: 'possession-letter', name: 'Possession Letter', icon: '🔑', mandatory: true },
+    { id: 'warranty-doc', name: 'Warranty Document', icon: '📋', mandatory: false },
+    { id: 'as-built-drawings', name: 'As-Built Drawings', icon: '📐', mandatory: true }
+  ]
+};
+
+// ── Demo documents for testing ────────────────────────────────
+const DEMO_DOCUMENTS = [
+  // City Center Complex - Pre-construction
+  { id: 'doc1', projectId: 1, projectName: 'City Center Complex', docType: 'sanction-plan', category: 'pre-construction', name: 'Sanction Plan - CCC', status: 'approved', uploadedBy: 'admin', uploadedDate: new Date('2025-02-15'), fileName: 'sanction-plan-ccc.pdf', approvalDate: new Date('2025-02-20') },
+  { id: 'doc2', projectId: 1, projectName: 'City Center Complex', docType: 'environmental-noc', category: 'pre-construction', name: 'Environmental NOC', status: 'approved', uploadedBy: 'admin', uploadedDate: new Date('2025-02-18'), fileName: 'env-noc.pdf', approvalDate: new Date('2025-02-25') },
+  { id: 'doc3', projectId: 1, projectName: 'City Center Complex', docType: 'fire-noc-approval', category: 'pre-construction', name: 'Fire NOC Approval', status: 'under-review', uploadedBy: 'admin', uploadedDate: new Date('2025-03-10'), fileName: 'fire-noc.pdf' },
+  { id: 'doc4', projectId: 1, projectName: 'City Center Complex', docType: 'rera-registration', category: 'pre-construction', name: 'RERA Registration', status: 'approved', uploadedBy: 'admin', uploadedDate: new Date('2025-02-20'), fileName: 'rera-reg.pdf', expiryDate: new Date('2027-02-20'), approvalDate: new Date('2025-02-25') },
+  
+  // City Center Complex - Execution
+  { id: 'doc5', projectId: 1, projectName: 'City Center Complex', docType: 'boq', category: 'execution', name: 'BOQ - CCC Phase 1', status: 'approved', uploadedBy: 'supervisor', uploadedDate: new Date('2025-03-05'), fileName: 'boq-phase1.pdf', approvalDate: new Date('2025-03-12') },
+  { id: 'doc6', projectId: 1, projectName: 'City Center Complex', docType: 'work-order', category: 'execution', name: 'Work Order - Foundation', status: 'approved', uploadedBy: 'admin', uploadedDate: new Date('2025-03-08'), fileName: 'wo-foundation.pdf', approvalDate: new Date('2025-03-10') },
+  { id: 'doc7', projectId: 1, projectName: 'City Center Complex', docType: 'contractor-agreement', category: 'execution', name: 'Contractor Agreement', status: 'approved', uploadedBy: 'admin', uploadedDate: new Date('2025-02-28'), fileName: 'contractor-agreement.pdf', approvalDate: new Date('2025-03-05') },
+  { id: 'doc8', projectId: 1, projectName: 'City Center Complex', docType: 'insurance-certificate', category: 'execution', name: 'Contractor Insurance', status: 'approved', uploadedBy: 'admin', uploadedDate: new Date('2025-03-02'), fileName: 'insurance.pdf', expiryDate: new Date('2026-03-02'), approvalDate: new Date('2025-03-05') },
+  
+  // NH-48 Road - Pre-construction
+  { id: 'doc9', projectId: 2, projectName: 'NH-48 Road Expansion', docType: 'sanction-plan', category: 'pre-construction', name: 'Sanction Plan - NH48', status: 'approved', uploadedBy: 'admin', uploadedDate: new Date('2025-05-10'), fileName: 'sanction-nh48.pdf', approvalDate: new Date('2025-05-15') },
+  { id: 'doc10', projectId: 2, projectName: 'NH-48 Road Expansion', docType: 'railway-noc', category: 'pre-construction', name: 'Railway NOC', status: 'approved', uploadedBy: 'admin', uploadedDate: new Date('2025-05-12'), fileName: 'railway-noc.pdf', approvalDate: new Date('2025-05-20') },
+  { id: 'doc11', projectId: 2, projectName: 'NH-48 Road Expansion', docType: 'environmental-noc', category: 'pre-construction', name: 'Environmental Clearance', status: 'under-review', uploadedBy: 'admin', uploadedDate: new Date('2025-05-25'), fileName: 'env-clearance.pdf' },
+  
+  // Residency Park Bridge - Post-construction
+  { id: 'doc12', projectId: 3, projectName: 'Residency Park Bridge', docType: 'completion-certificate', category: 'post-construction', name: 'Completion Certificate (Draft)', status: 'uploaded', uploadedBy: 'supervisor', uploadedDate: new Date('2026-03-15'), fileName: 'completion-cert.pdf' }
+];
 
 // ── Helpers ───────────────────────────────────────────────────
 function getToken() {
@@ -1481,3 +1542,414 @@ async function exportDataToExcel() {
   }
 }
 window.exportDataToExcel = exportDataToExcel;
+
+/* ═══════════════════════════════════════════════════════════════
+   DOCUMENT MANAGEMENT — Compliance & Regulatory Tracking
+   ═══════════════════════════════════════════════════════════════ */
+
+// Initialize documents from demo or API
+async function initializeDocuments() {
+  try {
+    if (getToken()) {
+      const res = await fetch('/api/documents?projectId=1', { headers: apiHeaders() });
+      if (res.ok) {
+        ALL_DOCUMENTS = await res.json();
+      } else {
+        ALL_DOCUMENTS = [...DEMO_DOCUMENTS];
+      }
+    } else {
+      ALL_DOCUMENTS = [...DEMO_DOCUMENTS];
+    }
+  } catch (err) {
+    console.warn('Using demo documents:', err.message);
+    ALL_DOCUMENTS = [...DEMO_DOCUMENTS];
+  }
+  renderDocumentProjectFilter();
+  renderDocumentsGrid();
+}
+window.initializeDocuments = initializeDocuments;
+
+// Render project filter dropdown
+function renderDocumentProjectFilter() {
+  const select = document.getElementById('doc-project-filter');
+  if (!select) return;
+  
+  const projects = [...new Set(ALL_DOCUMENTS.map(d => ({ id: d.projectId, name: d.projectName })).map(p => JSON.stringify(p)))].map(p => JSON.parse(p));
+  
+  let html = '<option value="">All Projects</option>';
+  projects.forEach(p => {
+    html += `<option value="${p.id}">${p.name}</option>`;
+  });
+  select.innerHTML = html;
+}
+
+// Switch document category tab
+function switchDocCategory(category) {
+  CURRENT_DOC_CATEGORY = category;
+  document.querySelectorAll('.doc-tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+    btn.style.borderBottomColor = 'transparent';
+  });
+  document.querySelector(`[data-tab="${category}"]`).classList.add('active');
+  document.querySelector(`[data-tab="${category}"]`).style.borderBottomColor = '#3B82F6';
+  renderDocumentsGrid();
+}
+window.switchDocCategory = switchDocCategory;
+
+// Render documents grid
+function renderDocumentsGrid() {
+  const grid = document.getElementById('documents-grid');
+  if (!grid) return;
+  
+  const projectFilterEl = document.getElementById('doc-project-filter');
+  const selectedProjectId = projectFilterEl ? projectFilterEl.value : '';
+  
+  let filtered = ALL_DOCUMENTS.filter(d => d.category === CURRENT_DOC_CATEGORY);
+  if (selectedProjectId) {
+    filtered = filtered.filter(d => d.projectId == selectedProjectId);
+  }
+  
+  // Get all document types for this category
+  const docTypes = DOCUMENT_TYPES[CURRENT_DOC_CATEGORY] || [];
+  
+  // Create cards for all doc types (including missing ones)
+  let html = '';
+  docTypes.forEach(docType => {
+    const doc = filtered.find(d => d.docType === docType.id);
+    const statusClass = doc ? (doc.status === 'approved' ? 'success' : doc.status === 'under-review' ? 'warning' : doc.status === 'uploaded' ? 'info' : 'danger') : 'danger';
+    const statusIcon = {
+      approved: '✅', 'under-review': '⏳', uploaded: '📤', rejected: '❌', expired: '⚠️', missing: '❓'
+    }[doc?.status || 'missing'];
+    
+    const statusLabel = doc?.status || 'missing';
+    const daysToExpiry = doc && doc.expiryDate ? Math.ceil((new Date(doc.expiryDate) - Date.now()) / (1000 * 60 * 60 * 24)) : null;
+    
+    html += `
+      <div class="dash-card" style="border-radius:12px;border:1.5px solid var(--border);overflow:hidden;background:var(--bg-card);transition:all 0.3s;">
+        <div style="padding:16px;background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(45,212,191,0.06));border-bottom:1px solid var(--border);">
+          <div style="font-size:1.6rem;margin-bottom:8px;">${docType.icon}</div>
+          <h4 style="margin:0;font-size:0.95rem;font-weight:700;color:var(--text-dark);">${docType.name}</h4>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">${docType.mandatory ? '🔴 Mandatory' : '🟢 Optional'}</div>
+        </div>
+        <div style="padding:16px;">
+          ${doc ? `
+            <div style="margin-bottom:12px;">
+              <span class="badge badge-${statusClass}" style="font-size:0.75rem;padding:4px 10px;">
+                ${statusIcon} ${statusLabel.replace('-', ' ')}
+              </span>
+              ${daysToExpiry !== null ? `
+                <span class="badge ${daysToExpiry < 30 ? 'badge-danger' : 'badge-info'}" style="font-size:0.75rem;padding:4px 10px;margin-left:8px;">
+                  ⏰ ${daysToExpiry} days
+                </span>
+              ` : ''}
+            </div>
+            <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px;line-height:1.4;">
+              <strong>Uploaded:</strong> ${new Date(doc.uploadedDate).toLocaleDateString('en-IN')}<br>
+              <strong>By:</strong> ${doc.uploadedBy}
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn-sm" style="font-size:0.75rem;padding:6px 12px;background:var(--success);color:white;border:none;border-radius:6px;cursor:pointer;" onclick="downloadDocument('${doc.id}')">
+                📥 Download
+              </button>
+              <button class="btn-sm" style="font-size:0.75rem;padding:6px 12px;background:var(--blue);color:white;border:none;border-radius:6px;cursor:pointer;" onclick="openDocumentDetail('${doc.id}')">
+                👁️ View
+              </button>
+              <button class="btn-sm" style="font-size:0.75rem;padding:6px 12px;background:var(--danger);color:white;border:none;border-radius:6px;cursor:pointer;" onclick="deleteDocument('${doc.id}')">
+                🗑️ Delete
+              </button>
+            </div>
+          ` : `
+            <div style="padding:20px;text-align:center;color:var(--text-muted);">
+              <div style="font-size:2rem;margin-bottom:8px;">📭</div>
+              <div style="font-size:0.85rem;margin-bottom:16px;">Not yet uploaded</div>
+              <button class="btn-sm" style="font-size:0.75rem;padding:6px 12px;background:var(--blue);color:white;border:none;border-radius:6px;cursor:pointer;width:100%;" onclick="openDocumentUploadModal('${docType.id}', '${CURRENT_DOC_CATEGORY}')">
+                📤 Upload Now
+              </button>
+              <button class="btn-sm" style="font-size:0.75rem;padding:6px 12px;background:var(--success);color:white;border:none;border-radius:6px;cursor:pointer;width:100%;margin-top:8px;" onclick="generateDocument('${docType.id}', '${CURRENT_DOC_CATEGORY}')">
+                🔨 Generate
+              </button>
+            </div>
+          `}
+        </div>
+      </div>
+    `;
+  });
+  
+  grid.innerHTML = html || '<div style="padding:40px;text-align:center;color:var(--text-muted);grid-column:1/-1;">No documents in this category.</div>';
+}
+window.renderDocumentsGrid = renderDocumentsGrid;
+
+// Open upload modal
+function openDocumentUploadModal(docType = '', category = '') {
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;';
+  modal.innerHTML = `
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;width:90%;max-width:500px;max-height:90vh;overflow-y:auto;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h3 style="margin:0;font-size:1.2rem;">Upload Document</h3>
+        <button onclick="this.closest('div').parentElement.remove()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-muted);">×</button>
+      </div>
+      
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:0.82rem;color:var(--text-muted);margin-bottom:8px;font-weight:600;">Select Project</label>
+        <select id="upload-project" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:8px;background:var(--glass-bg);color:var(--text-dark);">
+          ${PROJECTS_DATA.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
+        </select>
+      </div>
+      
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:0.82rem;color:var(--text-muted);margin-bottom:8px;font-weight:600;">Document Type</label>
+        <select id="upload-doctype" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:8px;background:var(--glass-bg);color:var(--text-dark);">
+          ${Object.entries(DOCUMENT_TYPES).map(([cat, types]) => 
+            `<optgroup label="${cat.toUpperCase()}">
+              ${types.map(t => `<option value="${t.id}" ${t.id === docType ? 'selected' : ''}>${t.name}</option>`).join('')}
+            </optgroup>`
+          ).join('')}
+        </select>
+      </div>
+      
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:0.82rem;color:var(--text-muted);margin-bottom:8px;font-weight:600;">Document File</label>
+        <input type="file" id="upload-file" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:8px;background:var(--glass-bg);" accept=".pdf,.doc,.docx,.jpg,.png">
+      </div>
+      
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:0.82rem;color:var(--text-muted);margin-bottom:8px;font-weight:600;">Expiry Date (Optional)</label>
+        <input type="date" id="upload-expiry" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:8px;background:var(--glass-bg);color:var(--text-dark);">
+      </div>
+      
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button onclick="this.closest('div').parentElement.remove()" class="btn-outline btn-sm" style="padding:10px 20px;">Cancel</button>
+        <button onclick="submitDocumentUpload()" class="btn-primary btn-sm" style="padding:10px 20px;">Upload</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+window.openDocumentUploadModal = openDocumentUploadModal;
+
+// Submit document upload
+async function submitDocumentUpload() {
+  const projectId = document.getElementById('upload-project').value;
+  const docType = document.getElementById('upload-doctype').value;
+  const file = document.getElementById('upload-file').files[0];
+  const expiryDate = document.getElementById('upload-expiry').value;
+  
+  if (!file) {
+    alert('Please select a file');
+    return;
+  }
+  
+  const project = PROJECTS_DATA.find(p => p.id == projectId);
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('projectId', projectId);
+  formData.append('projectName', project?.name || 'Project');
+  formData.append('docType', docType);
+  formData.append('name', file.name);
+  if (expiryDate) formData.append('expiryDate', expiryDate);
+  
+  // Determine category from docType
+  let category = 'execution';
+  for (const [cat, types] of Object.entries(DOCUMENT_TYPES)) {
+    if (types.find(t => t.id === docType)) {
+      category = cat;
+      break;
+    }
+  }
+  formData.append('category', category);
+  
+  try {
+    const token = getToken();
+    if (token) {
+      const res = await fetch('/api/documents', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + token },
+        body: formData
+      });
+      if (res.ok) {
+        const newDoc = await res.json();
+        ALL_DOCUMENTS.push(newDoc);
+        alert('Document uploaded successfully!');
+        document.querySelector('[style*="position:fixed"]').remove();
+        renderDocumentsGrid();
+      } else {
+        alert('Upload failed');
+      }
+    } else {
+      // Mock upload for demo
+      const newDoc = {
+        id: 'doc-' + Date.now(),
+        projectId,
+        projectName: project?.name || 'Project',
+        docType,
+        category,
+        name: file.name,
+        status: 'uploaded',
+        uploadedBy: 'You',
+        uploadedDate: new Date(),
+        fileName: file.name,
+        expiryDate: expiryDate ? new Date(expiryDate) : null
+      };
+      ALL_DOCUMENTS.push(newDoc);
+      alert('Document uploaded (demo mode)!');
+      document.querySelector('[style*="position:fixed"]').remove();
+      renderDocumentsGrid();
+    }
+  } catch (err) {
+    alert('Upload failed: ' + err.message);
+  }
+}
+window.submitDocumentUpload = submitDocumentUpload;
+
+function buildDocumentTemplateHtml(docType, projectName, projectLocation) {
+  const today = new Date().toLocaleDateString('en-IN');
+  const titleMap = {
+    'boq': 'Bill of Quantities (BOQ)',
+    'work-order': 'Work Order',
+    'completion-certificate': 'Completion Certificate',
+    'sanction-plan': 'Sanction Plan',
+    'rera-registration': 'RERA Registration Summary',
+    'insurance-certificate': 'Insurance Certificate Summary',
+    'occupancy-cert': 'Occupancy Certificate Dossier',
+    'possession-letter': 'Possession Letter'
+  };
+  const title = titleMap[docType] || docType.replace(/-/g, ' ').toUpperCase();
+  return `<!DOCTYPE html>
+  <html><head><meta charset="UTF-8"><title>${title}</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 28px; color: #1f2937; }
+    h1 { color: #0b1f3a; margin-bottom: 8px; }
+    .meta { color: #4b5563; margin-bottom: 18px; }
+    .box { border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; margin-top: 12px; }
+  </style></head>
+  <body>
+    <h1>${title}</h1>
+    <div class="meta">Generated on ${today}</div>
+    <div class="box">
+      <p><strong>Project:</strong> ${projectName || 'Project'}</p>
+      <p><strong>Location:</strong> ${projectLocation || 'Location'}</p>
+      <p><strong>Type:</strong> ${docType}</p>
+    </div>
+    <div class="box">Draft generated for admin preview/download.</div>
+  </body></html>`;
+}
+
+// Generate document from template
+async function generateDocument(docType, category) {
+  try {
+    const projectId = document.getElementById('doc-project-filter')?.value || 1;
+    const project = PROJECTS_DATA.find(p => p.id == projectId);
+    
+    const token = getToken();
+    if (token) {
+      const res = await fetch('/api/documents/generate-template', {
+        method: 'POST',
+        headers: { ...apiHeaders() },
+        body: JSON.stringify({
+          projectId: project?.dbId || projectId,
+          projectName: project?.name,
+          docType,
+          category,
+          name: `${docType.replace(/-/g, ' ').toUpperCase()} - ${project?.name || 'Project'}`
+        })
+      });
+      if (res.ok) {
+        const generatedDoc = await res.json();
+        const idx = ALL_DOCUMENTS.findIndex(d => (d._id || d.id) === (generatedDoc._id || generatedDoc.id));
+        if (idx >= 0) ALL_DOCUMENTS[idx] = generatedDoc;
+        else ALL_DOCUMENTS.push(generatedDoc);
+        alert('Document generated successfully!');
+        renderDocumentsGrid();
+        return;
+      }
+    }
+    
+    // Mock generation
+    const newDoc = {
+      id: 'doc-gen-' + Date.now(),
+      projectId,
+      projectName: project?.name || 'Project',
+      docType,
+      category,
+      name: `Generated ${docType} for ${project?.name}`,
+      status: 'uploaded',
+      uploadedBy: 'System',
+      uploadedDate: new Date(),
+      fileName: `${docType}-${Date.now()}.html`,
+      generatedFrom: `template-${docType}`,
+      htmlContent: buildDocumentTemplateHtml(docType, project?.name, project?.location)
+    };
+    ALL_DOCUMENTS.push(newDoc);
+    alert(`✅ ${docType.replace('-', ' ').toUpperCase()} generated successfully!`);
+    renderDocumentsGrid();
+  } catch (err) {
+    alert('Generation failed: ' + err.message);
+  }
+}
+window.generateDocument = generateDocument;
+
+// Download document
+async function downloadDocument(docId) {
+  try {
+    const doc = ALL_DOCUMENTS.find(d => (d.id === docId || d._id === docId));
+    if (!doc) return alert('Document not found');
+    
+    const token = getToken();
+    if (token && doc.uploadPath) {
+      window.open(`/api/documents/${docId}/download`, '_blank');
+    } else {
+      const html = doc.htmlContent || buildDocumentTemplateHtml(doc.docType, doc.projectName, doc.projectLocation);
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }
+  } catch (err) {
+    alert('Download failed: ' + err.message);
+  }
+}
+window.downloadDocument = downloadDocument;
+
+// View document detail
+function openDocumentDetail(docId) {
+  const doc = ALL_DOCUMENTS.find(d => d.id === docId);
+  if (!doc) return;
+  
+  const daysToExpiry = doc.expiryDate ? Math.ceil((new Date(doc.expiryDate) - Date.now()) / (1000 * 60 * 60 * 24)) : null;
+  
+  alert(`
+📄 ${doc.name}
+━━━━━━━━━━━━━━━━━━━━━━
+Status: ${doc.status}
+Project: ${doc.projectName}
+Uploaded: ${new Date(doc.uploadedDate).toLocaleDateString('en-IN')}
+By: ${doc.uploadedBy}
+${doc.expiryDate ? `Expires: ${new Date(doc.expiryDate).toLocaleDateString('en-IN')} (${daysToExpiry} days)` : ''}
+${doc.approvalRemarks ? `Remarks: ${doc.approvalRemarks}` : ''}
+  `);
+}
+window.openDocumentDetail = openDocumentDetail;
+
+// Delete document
+async function deleteDocument(docId) {
+  if (!confirm('Delete this document?')) return;
+  
+  try {
+    const token = getToken();
+    if (token) {
+      await fetch(`/api/documents/${docId}`, { method: 'DELETE', headers: apiHeaders() });
+    }
+    ALL_DOCUMENTS = ALL_DOCUMENTS.filter(d => d.id !== docId);
+    renderDocumentsGrid();
+    alert('Document deleted');
+  } catch (err) {
+    alert('Delete failed: ' + err.message);
+  }
+}
+window.deleteDocument = deleteDocument;
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(initializeDocuments, 1000);
+});
