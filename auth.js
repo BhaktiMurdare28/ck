@@ -192,16 +192,19 @@ if (loginForm) {
       console.warn('API login unavailable, trying demo credentials');
     }
 
-    // Fallback to hardcoded demo credentials
-    if (!authenticated && email === user.email && pw === user.password) {
-      sessionStorage.setItem('ck_user', JSON.stringify({
-        name:     user.name,
-        role:     user.role,
-        roleKey:  activeRole,
-        initials: user.initials
-      }));
-      loggedInRoleKey = activeRole;
-      authenticated = true;
+    // Fallback to hardcoded demo credentials — check ALL roles, not just the active tab
+    if (!authenticated) {
+      const matchedRole = Object.values(USERS).find(u => u.email === email && u.password === pw);
+      if (matchedRole) {
+        sessionStorage.setItem('ck_user', JSON.stringify({
+          name:     matchedRole.name,
+          role:     matchedRole.role,
+          roleKey:  matchedRole.roleKey,
+          initials: matchedRole.initials
+        }));
+        loggedInRoleKey = matchedRole.roleKey;
+        authenticated = true;
+      }
     }
 
     if (authenticated) {

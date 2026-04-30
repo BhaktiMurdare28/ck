@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -233,7 +233,7 @@
             </div>
             <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:20px;">Tap a worker card to toggle present/absent. Green = Present, Red = Absent. Click <i class="fa-solid fa-xmark"></i> to remove.</p>
             <div class="attendance-grid" id="attendance-grid"></div>
-            <button id="save-attendance" class="btn-primary" style="margin-top:24px;width:100%;">Save Attendance ✓</button>
+            <button id="save-attendance" class="btn-primary" style="margin-top:24px;width:100%;"><i class="fa-solid fa-floppy-disk" style="margin-right:8px;"></i>Save Attendance</button>
           </div>
         </div>
       </div>
@@ -306,7 +306,7 @@
                 <label for="meas-notes">Notes / Remarks</label>
                 <textarea id="meas-notes" name="notes" rows="2" placeholder="Any additional notes..."></textarea>
               </div>
-              <button type="submit" class="btn-primary" style="width:100%;">Save Measurements ✓</button>
+              <button type="submit" class="btn-primary" style="width:100%;"><i class="fa-solid fa-floppy-disk" style="margin-right:8px;"></i>Save Measurements</button>
             </form>
           </div>
         </div>
@@ -333,7 +333,7 @@
             <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:20px;">Upload site photos before submitting your daily report.</p>
             <div class="upload-zone" id="upload-zone" tabindex="0" role="button">
               <input type="file" id="photo-input" accept="image/*" multiple>
-              <div class="upload-icon">📷</div>
+              <div class="upload-icon" style="font-size:2.8rem;margin-bottom:12px;"><i class="fa-solid fa-camera" style="color:var(--blue);"></i></div>
               <h4>Click to Upload or Drag & Drop</h4>
               <p>Supports JPG, PNG, WEBP &bull; Multiple files</p>
               <div style="margin-top:16px;">
@@ -368,7 +368,7 @@
                 <div class="progress-bar-fill" id="progress-preview-bar" style="width:50%;"></div>
               </div>
             </div>
-            <button id="btn-update-progress" class="btn-primary" style="width:100%;">Update Progress ✓</button>
+            <button id="btn-update-progress" class="btn-primary" style="width:100%;"><i class="fa-solid fa-check" style="margin-right:8px;"></i>Update Progress</button>
           </div>
         </div>
       </div>

@@ -29,7 +29,22 @@ let selectedProject = null;
 const currentUser = JSON.parse(sessionStorage.getItem('ck_user') || '{}');
 const workerStorageKey = 'ck_workers_' + (currentUser.email || currentUser.name || 'default');
 
-let workers = JSON.parse(localStorage.getItem(workerStorageKey) || '[]');
+let workers = JSON.parse(localStorage.getItem(workerStorageKey) || 'null');
+if (!workers || workers.length === 0) {
+  workers = [
+  { id: 1, name: 'Ramesh Kumar',    init: 'RK' },
+  { id: 2, name: 'Suresh Patil',    init: 'SP' },
+  { id: 3, name: 'Amit Singh',      init: 'AS' },
+  { id: 4, name: 'Vijay Yadav',     init: 'VY' },
+  { id: 5, name: 'Pradeep Sharma',  init: 'PS' },
+  { id: 6, name: 'Mohan Das',       init: 'MD' },
+  { id: 7, name: 'Raju Tiwari',     init: 'RT' },
+  { id: 8, name: 'Deepak Nair',     init: 'DN' },
+  { id: 9, name: 'Santosh Gupta',   init: 'SG' },
+  { id: 10, name: 'Ganesh Patel',   init: 'GP' }
+];
+  localStorage.setItem(workerStorageKey, JSON.stringify(workers));
+}
 
 const attendance = {};
 workers.forEach(w => attendance[w.id] = 'present');
@@ -140,7 +155,13 @@ if (saveAttBtn) {
 }
 
 // ── Material entries (synced to API) ──────────────────────────
-let allMaterials = [];
+let allMaterials = [
+  { item: 'Cement OPC 53',        qty: 150, unit: 'bags', project: '__DEMO__', date: '2026-04-28' },
+  { item: 'TMT Steel Rebar 12mm', qty: 5,   unit: 'MT',   project: '__DEMO__', date: '2026-04-27' },
+  { item: 'River Sand (Coarse)',   qty: 2,   unit: 'cu.m', project: '__DEMO__', date: '2026-04-27' },
+  { item: 'Crushed Stone 20mm',    qty: 3.5, unit: 'cu.m', project: '__DEMO__', date: '2026-04-26' },
+  { item: 'AAC Blocks 600x200',   qty: 800, unit: 'nos',  project: '__DEMO__', date: '2026-04-25' }
+];
 let materials = [];
 
 async function loadMaterialsFromAPI() {
@@ -319,6 +340,15 @@ async function loadMeasurementHistory() {
     } else {
       data = [];
     }
+
+      const DEMO_MEASUREMENTS = [
+        { date: '2026-04-29', project: 'Mehta Residence', projectType: 'Building',  fields: { 'area': '420 m²', 'height': '3.2 m', 'wall': '84 m' }, notes: 'GF slab poured, curing started' },
+        { date: '2026-04-27', project: 'Mehta Residence', projectType: 'Building',  fields: { 'area': '210 m²', 'height': '3.2 m', 'wall': '42 m' }, notes: 'Plinth beam shuttering complete' },
+        { date: '2026-04-24', project: 'NH-48 Widening',  projectType: 'Road',      fields: { 'length': '320 m', 'width': '7.5 m', 'thickness': '80 mm' }, notes: 'Sub-base compaction passed QA' },
+        { date: '2026-04-21', project: 'Navi Mumbai Drain', projectType: 'Drainage', fields: { 'pipe': '160 m', 'trench': '1.8 m', 'manholes': '4' }, notes: 'Manhole covers installed' }
+      ];
+      data = data.length > 0 ? data : DEMO_MEASUREMENTS;
+
 
     if (data.length === 0) {
       histWrap.innerHTML = '<div style="padding:16px;color:var(--text-muted);text-align:center;">No measurement records yet. Submit your first measurement above.</div>';
@@ -694,7 +724,15 @@ function renderSupervisorDocuments() {
   docTypes.forEach(docType => {
     const doc = filtered.find(d => d.docType === docType.id);
     const statusClass = doc ? (doc.status === 'approved' ? 'success' : doc.status === 'under-review' ? 'warning' : doc.status === 'uploaded' ? 'info' : 'danger') : 'danger';
-    const statusIcon = { approved: '✅', 'under-review': '⏳', uploaded: '📤', rejected: '❌', expired: '⚠️', missing: '❓' }[doc?.status || 'missing'];
+    const statusIconMap = {
+      approved:       '<i class="fa-solid fa-circle-check" style="color:var(--success);margin-right:4px;"></i>',
+      'under-review': '<i class="fa-solid fa-clock" style="color:var(--warning);margin-right:4px;"></i>',
+      uploaded:       '<i class="fa-solid fa-cloud-arrow-up" style="color:var(--info);margin-right:4px;"></i>',
+      rejected:       '<i class="fa-solid fa-circle-xmark" style="color:var(--danger);margin-right:4px;"></i>',
+      expired:        '<i class="fa-solid fa-triangle-exclamation" style="color:var(--warning);margin-right:4px;"></i>',
+      missing:        '<i class="fa-solid fa-circle-question" style="color:var(--text-muted);margin-right:4px;"></i>'
+    };
+    const statusIcon = statusIconMap[doc?.status || 'missing'];
     
     html += `
       <div class="dash-card" style="border-radius:12px;border:1.5px solid var(--border);overflow:hidden;background:var(--bg-card);">
@@ -707,12 +745,12 @@ function renderSupervisorDocuments() {
             <span class="badge badge-${statusClass}" style="font-size:0.75rem;padding:4px 10px;margin-bottom:12px;">
               ${statusIcon} ${doc.status.replace('-', ' ')}
             </span>
-            <button class="btn-sm" style="font-size:0.75rem;padding:6px 12px;background:var(--blue);color:white;border:none;border-radius:6px;cursor:pointer;margin-top:12px;width:100%;" onclick="showSuperToast('📥 Downloading: ${doc.fileName}', 'info')">
-              📥 Download
+            <button class="btn-sm" style="font-size:0.75rem;padding:6px 12px;background:var(--blue);color:white;border:none;border-radius:6px;cursor:pointer;margin-top:12px;width:100%;" onclick="showSuperToast('<i class="fa-solid fa-download" style="margin-right:6px;"></i>Downloading: ${doc.fileName}', 'info')">
+              <i class="fa-solid fa-download" style="margin-right:6px;"></i>Download
             </button>
           ` : `
             <div style="text-align:center;padding:12px;">
-              <div style="font-size:2rem;margin-bottom:8px;">📭</div>
+              <div style="margin-bottom:12px;"><i class="fa-solid fa-inbox" style="font-size:2rem;color:var(--text-muted);"></i></div>
               <div style="font-size:0.85rem;color:var(--text-muted);">Not uploaded</div>
             </div>
           `}

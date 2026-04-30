@@ -167,10 +167,10 @@ function renderMaterials() {
   if (!tbody) return;
   tbody.innerHTML = materials.map((m, i) => `
     <tr>
-      <td>${m.item}</td>
-      <td>${m.qty}</td>
-      <td>${m.unit}</td>
-      <td>
+      <td data-label="Material">${m.item}</td>
+      <td data-label="Quantity">${m.qty}</td>
+      <td data-label="Unit">${m.unit}</td>
+      <td data-label="Action">
         <button onclick="removeMaterial(${i}, '${m._id || ''}')" class="btn-icon" style="width:28px;height:28px;font-size:0.75rem;background:rgba(239,68,68,0.1);color:var(--danger);"><i class="fa-solid fa-xmark"></i></button>
       </td>
     </tr>
@@ -329,11 +329,11 @@ async function loadMeasurementHistory() {
       <tbody>${data.slice(0, 20).map(m => {
         const fieldsStr = m.fields ? Object.entries(m.fields).map(([k,v]) => `<span style="margin-right:8px;">${k.replace('meas-','')}: <strong>${v}</strong></span>`).join('') : 'N/A';
         return `<tr>
-          <td>${m.date || 'N/A'}</td>
-          <td>${m.project || 'N/A'}</td>
-          <td><span class="badge badge-navy">${m.projectType || 'N/A'}</span></td>
-          <td style="font-size:0.82rem;">${fieldsStr}</td>
-          <td style="font-size:0.82rem;color:var(--text-muted);">${m.notes || '—'}</td>
+          <td data-label="Date">${m.date || 'N/A'}</td>
+          <td data-label="Project">${m.project || 'N/A'}</td>
+          <td data-label="Type"><span class="badge badge-navy">${m.projectType || 'N/A'}</span></td>
+          <td data-label="Measurements" style="font-size:0.82rem;">${fieldsStr}</td>
+          <td data-label="Notes" style="font-size:0.82rem;color:var(--text-muted);">${m.notes || '—'}</td>
         </tr>`;
       }).join('')}</tbody></table>`;
   } catch (err) {

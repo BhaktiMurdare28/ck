@@ -323,8 +323,12 @@
     const titles = { ongoing:'My Projects', detail:'Project Details', completed:'Completed Works', gallery:'Project Gallery', converter:'Currency Converter' };
     const h2 = document.getElementById('topbar-title');
     if (h2) h2.textContent = titles[id] || 'Dashboard';
+    // FIX: removed hardcoded openProjectView(1) — use the first real project instead
     if (id === 'detail' && !document.getElementById('client-ring').firstChild) {
-      openProjectView(1);
+      const firstProject = (typeof CLIENT_PROJECTS !== 'undefined' && CLIENT_PROJECTS.length > 0)
+        ? CLIENT_PROJECTS[0]
+        : null;
+      if (firstProject) openProjectView(firstProject.id);
     }
     if (id === 'converter') convertCurrency();
     if (id === 'gallery') renderClientGallery();
