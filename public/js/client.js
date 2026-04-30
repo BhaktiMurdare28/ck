@@ -144,7 +144,9 @@ async function loadClientProjects() {
       useDemoProjects();
       return;
     }
-    const res = await fetch('/api/projects', { headers: apiHeaders() });
+    const fetchPromise = fetch('/api/projects', { headers: apiHeaders() });
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000));
+    const res = await Promise.race([fetchPromise, timeoutPromise]);
     if (!res.ok) throw new Error('API responded with ' + res.status);
     const apiProjects = await res.json();
     const userStr = sessionStorage.getItem('ck_user');
@@ -182,7 +184,9 @@ async function loadClientProjects() {
 
   // Also load photos from reports
   try {
-    const repRes = await fetch('/api/reports', { headers: apiHeaders() });
+    const repFetch = fetch('/api/reports', { headers: apiHeaders() });
+    const repTimeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000));
+    const repRes = await Promise.race([repFetch, repTimeout]);
     if (repRes.ok) {
       const reports = await repRes.json();
       reports.forEach(r => {
@@ -207,7 +211,9 @@ async function loadClientProjects() {
 
 async function loadCompletedProjects() {
   try {
-    const res = await fetch('/api/completed-projects');
+    const fetchPromise = fetch('/api/completed-projects');
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000));
+    const res = await Promise.race([fetchPromise, timeoutPromise]);
     if (res.ok) {
       const apiCompleted = await res.json();
       if (apiCompleted.length > 0) {
