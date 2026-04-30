@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="main.css">
-  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
 <div class="dash-layout">
@@ -55,6 +55,9 @@
       </button>
       <button class="nav-item" data-nav="documents" onclick="switchSuperPanel('documents')">
         <span class="nav-icon"><i class="fa-solid fa-file-contract"></i></span><span class="nav-label">Documents</span>
+      </button>
+      <button class="nav-item" data-nav="receipts" onclick="switchSuperPanel('receipts')">
+        <span class="nav-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span><span class="nav-label">Bills & Receipts</span>
       </button>
     </nav>
     <div class="sidebar-bottom">
@@ -233,7 +236,7 @@
             </div>
             <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:20px;">Tap a worker card to toggle present/absent. Green = Present, Red = Absent. Click <i class="fa-solid fa-xmark"></i> to remove.</p>
             <div class="attendance-grid" id="attendance-grid"></div>
-            <button id="save-attendance" class="btn-primary" style="margin-top:24px;width:100%;">Save Attendance ✓</button>
+            <button id="save-attendance" class="btn-primary" style="margin-top:24px;width:100%;"><i class="fa-solid fa-floppy-disk" style="margin-right:8px;"></i>Save Attendance</button>
           </div>
         </div>
       </div>
@@ -275,17 +278,10 @@
             <h3><i class="fa-solid fa-box"></i> Material Log</h3>
           </div>
           <div class="dash-panel-body" style="padding:0;">
-            <div class="table-scroll-wrap">
-              <table class="data-table">
-                <thead><tr>
-                  <th>Material</th>
-                  <th>Quantity</th>
-                  <th>Unit</th>
-                  <th>Action</th>
-                </tr></thead>
-                <tbody id="material-tbody"></tbody>
-              </table>
-            </div>
+            <table class="data-table">
+              <thead><tr><th>Material</th><th>Quantity</th><th>Unit</th><th>Action</th></tr></thead>
+              <tbody id="material-tbody"></tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -313,7 +309,7 @@
                 <label for="meas-notes">Notes / Remarks</label>
                 <textarea id="meas-notes" name="notes" rows="2" placeholder="Any additional notes..."></textarea>
               </div>
-              <button type="submit" class="btn-primary" style="width:100%;">Save Measurements ✓</button>
+              <button type="submit" class="btn-primary" style="width:100%;"><i class="fa-solid fa-floppy-disk" style="margin-right:8px;"></i>Save Measurements</button>
             </form>
           </div>
         </div>
@@ -323,11 +319,8 @@
             <h3><i class="fa-solid fa-clipboard-list"></i> Measurement History</h3>
             <span class="badge badge-blue">Recent Records</span>
           </div>
-          <div class="dash-panel-body" style="padding:0;">
-            <!-- .table-scroll-wrap added by JS when table is rendered -->
-            <div class="table-scroll-wrap" id="meas-history">
-              <div style="padding:20px;color:var(--text-muted);text-align:center;">Loading measurement history...</div>
-            </div>
+          <div class="dash-panel-body" style="padding:0;" id="meas-history">
+            <div style="padding:20px;color:var(--text-muted);text-align:center;">Loading measurement history...</div>
           </div>
         </div>
       </div>
@@ -343,7 +336,7 @@
             <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:20px;">Upload site photos before submitting your daily report.</p>
             <div class="upload-zone" id="upload-zone" tabindex="0" role="button">
               <input type="file" id="photo-input" accept="image/*" multiple>
-              <div class="upload-icon">📷</div>
+              <div class="upload-icon" style="font-size:2.8rem;margin-bottom:12px;"><i class="fa-solid fa-camera" style="color:var(--blue);"></i></div>
               <h4>Click to Upload or Drag & Drop</h4>
               <p>Supports JPG, PNG, WEBP &bull; Multiple files</p>
               <div style="margin-top:16px;">
@@ -364,39 +357,21 @@
           </div>
           <div class="dash-panel-body">
             <p style="margin-bottom:24px;color:var(--text-muted);font-size:0.9rem;">Update completion percentage for your active work stage. This reflects on admin dashboard and client views.</p>
-
-            <!-- Live percentage readout -->
-            <div style="text-align:center;margin-bottom:28px;">
-              <div style="font-family:var(--font-head);font-size:4rem;font-weight:900;color:var(--blue);line-height:1;" id="progress-display">50%</div>
-              <div style="font-size:0.78rem;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;">Stage completion</div>
-            </div>
-
-            <!-- Slider -->
-            <div style="margin:0 0 24px;">
-              <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-muted);margin-bottom:10px;">
-                <span>0% &mdash; Just started</span>
-                <span>100% &mdash; Stage done</span>
+            <div style="margin:24px 0;">
+              <div style="display:flex;justify-content:space-between;font-size:0.88rem;margin-bottom:12px;">
+                <span>Stage Completion</span>
+                <span id="progress-display" style="font-family:Outfit,sans-serif;font-size:1.5rem;font-weight:800;color:var(--blue);">50%</span>
               </div>
-              <input type="range" id="progress-slider" min="0" max="100" value="50"
-                style="width:100%;height:8px;cursor:pointer;accent-color:var(--blue);appearance:none;-webkit-appearance:none;background:transparent;"
-                aria-label="Stage progress"
-              >
+              <input type="range" id="progress-slider" min="0" max="100" value="50" style="width:100%;accent-color:var(--blue);height:6px;cursor:pointer;">
+              <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-muted);margin-top:4px;"><span>0% (Just Started)</span><span>100% (Done)</span></div>
             </div>
-
-            <!-- Track preview bar -->
-            <div style="margin-bottom:28px;">
-              <div style="font-size:0.78rem;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;">Stage Progress Preview</div>
-              <div style="background:var(--glass-bg-lg);border-radius:var(--radius-pill);height:14px;overflow:hidden;border:1px solid var(--border);">
-                <div id="progress-preview-bar"
-                  style="width:50%;height:100%;border-radius:var(--radius-pill);background:linear-gradient(90deg,var(--blue),#60A5FA);transition:width 0.3s ease;box-shadow:0 0 8px var(--blue-glow);"
-                ></div>
-              </div>
-              <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--text-muted);margin-top:4px;">
-                <span>Start</span><span>Complete</span>
+            <div style="margin:20px 0;">
+              <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:6px;">Stage Progress Preview:</div>
+              <div class="progress-bar-wrap" style="height:12px;">
+                <div class="progress-bar-fill" id="progress-preview-bar" style="width:50%;"></div>
               </div>
             </div>
-
-            <button id="btn-update-progress" class="btn-primary" style="width:100%;font-size:1rem;padding:14px;">Update Progress <i class="fa-solid fa-check" style="margin-left:8px;"></i></button>
+            <button id="btn-update-progress" class="btn-primary" style="width:100%;"><i class="fa-solid fa-check" style="margin-right:8px;"></i>Update Progress</button>
           </div>
         </div>
       </div>
@@ -427,18 +402,83 @@
         </div>
       </div>
 
-    </main>
+    
+      <!-- ████ PANEL: BILLS & RECEIPTS ████ -->
+      <div class="super-panel hidden" id="sp-receipts">
+        <div class="dash-panel" style="margin-bottom: 24px;">
+          <div class="dash-panel-header"><h3><i class="fa-solid fa-plus-circle" style="margin-right:8px;color:var(--blue);"></i> Log New Bill</h3></div>
+          <div class="dash-panel-body">
+            <form id="form-add-bill" style="display:flex; flex-direction:column; gap:16px;">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
+                <div>
+                  <label class="form-label">Vendor / Shop Name</label>
+                  <input type="text" class="form-input" id="bill-vendor" placeholder="e.g. Shree Ram Hardware" required>
+                </div>
+                <div>
+                  <label class="form-label">Amount (₹)</label>
+                  <input type="number" class="form-input" id="bill-amount" placeholder="e.g. 2500" required min="1">
+                </div>
+                <div>
+                  <label class="form-label">Category</label>
+                  <select class="form-select" id="bill-category" required>
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="Materials">Materials</option>
+                    <option value="Hardware">Hardware</option>
+                    <option value="Fuel">Fuel</option>
+                    <option value="Food/Water">Food/Water</option>
+                    <option value="Labour">Labour/Wages</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label class="form-label">Receipt Photo</label>
+                <div style="border:2px dashed var(--border-strong); border-radius:var(--radius-md); padding:32px; text-align:center; background:var(--glass-bg-md); cursor:pointer; position:relative;">
+                  <input type="file" id="bill-photo" accept="image/*" required style="position:absolute; inset:0; opacity:0; cursor:pointer; width:100%;">
+                  <i class="fa-solid fa-camera" style="font-size:2rem; color:var(--blue); margin-bottom:12px;"></i>
+                  <p style="font-size:0.9rem; color:var(--text-muted); font-weight:500;">Click or drag to upload receipt</p>
+                  <p id="bill-photo-name" style="font-size:0.8rem; color:var(--text-muted); margin-top:8px;"></p>
+                </div>
+              </div>
+              <button type="submit" class="btn-primary" style="align-self:flex-start;"><i class="fa-solid fa-file-invoice-dollar" style="margin-right:6px;"></i> + Log Bill</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="dash-panel-header"><h3><i class="fa-solid fa-clock-rotate-left" style="margin-right:8px;"></i> Recent Bills Log</h3></div>
+          <div class="dash-panel-body" style="padding:0;">
+            <div class="table-scroll-wrap">
+              <table class="data-table" style="width:100%; min-width:600px;">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Vendor</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Receipt</th>
+                  </tr>
+                </thead>
+                <tbody id="receipts-tbody">
+                  <!-- JS injected -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+</main>
   </div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="auth.js"></script>
-<script src="supervisor.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/supervisor.js"></script>
 <script>
   const origSwitch = window.switchSuperPanel;
   window.switchSuperPanel = function(id) {
     origSwitch(id);
-    const titles = { projects:'My Projects', report:'Daily Report', attendance:'Labour Attendance', materials:'Material Log', measurements:'Work Measurements', photos:'Site Photos', progress:'Update Progress', documents:'Project Documents' };
+    const titles = { projects:'My Projects', report:'Daily Report', attendance:'Labour Attendance', materials:'Material Log', measurements:'Work Measurements', photos:'Site Photos', progress:'Update Progress', documents:'Project Documents' , receipts:'Bills & Receipts' };
     const h2 = document.getElementById('topbar-title');
     if (h2) h2.textContent = titles[id] || 'Dashboard';
     if (id === 'documents') renderSupervisorDocuments();

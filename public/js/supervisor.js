@@ -574,6 +574,40 @@ async function loadAssignedProjects() {
   // Automatically refresh the stage tracker if project is selected
   if (selectedProject) {
     renderSupervisorStages();
+  renderReceipts();
+  const billForm = document.getElementById('form-add-bill');
+  if (billForm) {
+    billForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const vendor = document.getElementById('bill-vendor').value;
+      const amount = parseInt(document.getElementById('bill-amount').value, 10);
+      const category = document.getElementById('bill-category').value;
+      
+      loggedBills.unshift({
+        id: 'b' + Date.now(),
+        date: new Date().toISOString().split('T')[0],
+        vendor, amount, category
+      });
+      
+      billForm.reset();
+      document.getElementById('bill-photo-name').textContent = '';
+      renderReceipts();
+      
+      const btn = billForm.querySelector('button[type="submit"]');
+      const ogHtml = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Logged!';
+      btn.style.background = '#10b981';
+      setTimeout(() => { btn.innerHTML = ogHtml; btn.style.background = ''; }, 2000);
+    });
+    
+    const fileInput = document.getElementById('bill-photo');
+    if (fileInput) {
+      fileInput.addEventListener('change', (e) => {
+        document.getElementById('bill-photo-name').textContent = e.target.files[0] ? e.target.files[0].name : '';
+      });
+    }
+  }
+
   }
 }
 
@@ -762,6 +796,34 @@ function renderSupervisorDocuments() {
   grid.innerHTML = html;
 }
 window.renderSupervisorDocuments = renderSupervisorDocuments;
+
+
+// ── Bills & Receipts Log ────────────────────────────────────────────────────────
+let loggedBills = [
+  { id: 'b1', date: new Date().toISOString().split('T')[0], vendor: 'Shree Ram Hardware', category: 'Hardware', amount: 2500 },
+  { id: 'b2', date: new Date().toISOString().split('T')[0], vendor: 'Bharat Petroleum', category: 'Fuel', amount: 1200 },
+  { id: 'b3', date: new Date(Date.now() - 86400000).toISOString().split('T')[0], vendor: 'Sai Enterprises', category: 'Materials', amount: 14500 }
+];
+
+function renderReceipts() {
+  const tbody = document.getElementById('receipts-tbody');
+  if (!tbody) return;
+  if (loggedBills.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted);">No bills logged yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = loggedBills.map(b => `
+    <tr>
+      <td style="font-weight:500;color:var(--text-dark);">${b.date}</td>
+      <td style="font-weight:600;">${b.vendor}</td>
+      <td><span class="status-badge" style="background:var(--blue-glow);color:var(--blue);border:1px solid var(--border);">${b.category}</span></td>
+      <td style="font-family:Outfit,sans-serif;font-weight:700;color:var(--text-dark);">₹${b.amount.toLocaleString('en-IN')}</td>
+      <td>
+        <button class="btn-icon" title="View Receipt" style="color:var(--blue);" onclick="alert('Viewing receipt for ${b.vendor}')"><i class="fa-solid fa-eye"></i></button>
+      </td>
+    </tr>
+  `).join('');
+}
 
 // ── Init ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {

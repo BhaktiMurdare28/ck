@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -55,6 +55,9 @@
       </button>
       <button class="nav-item" data-nav="documents" onclick="switchSuperPanel('documents')">
         <span class="nav-icon"><i class="fa-solid fa-file-contract"></i></span><span class="nav-label">Documents</span>
+      </button>
+      <button class="nav-item" data-nav="receipts" onclick="switchSuperPanel('receipts')">
+        <span class="nav-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span><span class="nav-label">Bills & Receipts</span>
       </button>
     </nav>
     <div class="sidebar-bottom">
@@ -399,7 +402,72 @@
         </div>
       </div>
 
-    </main>
+    
+      <!-- ████ PANEL: BILLS & RECEIPTS ████ -->
+      <div class="super-panel hidden" id="sp-receipts">
+        <div class="dash-panel" style="margin-bottom: 24px;">
+          <div class="dash-panel-header"><h3><i class="fa-solid fa-plus-circle" style="margin-right:8px;color:var(--blue);"></i> Log New Bill</h3></div>
+          <div class="dash-panel-body">
+            <form id="form-add-bill" style="display:flex; flex-direction:column; gap:16px;">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
+                <div>
+                  <label class="form-label">Vendor / Shop Name</label>
+                  <input type="text" class="form-input" id="bill-vendor" placeholder="e.g. Shree Ram Hardware" required>
+                </div>
+                <div>
+                  <label class="form-label">Amount (₹)</label>
+                  <input type="number" class="form-input" id="bill-amount" placeholder="e.g. 2500" required min="1">
+                </div>
+                <div>
+                  <label class="form-label">Category</label>
+                  <select class="form-select" id="bill-category" required>
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="Materials">Materials</option>
+                    <option value="Hardware">Hardware</option>
+                    <option value="Fuel">Fuel</option>
+                    <option value="Food/Water">Food/Water</option>
+                    <option value="Labour">Labour/Wages</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label class="form-label">Receipt Photo</label>
+                <div style="border:2px dashed var(--border-strong); border-radius:var(--radius-md); padding:32px; text-align:center; background:var(--glass-bg-md); cursor:pointer; position:relative;">
+                  <input type="file" id="bill-photo" accept="image/*" required style="position:absolute; inset:0; opacity:0; cursor:pointer; width:100%;">
+                  <i class="fa-solid fa-camera" style="font-size:2rem; color:var(--blue); margin-bottom:12px;"></i>
+                  <p style="font-size:0.9rem; color:var(--text-muted); font-weight:500;">Click or drag to upload receipt</p>
+                  <p id="bill-photo-name" style="font-size:0.8rem; color:var(--text-muted); margin-top:8px;"></p>
+                </div>
+              </div>
+              <button type="submit" class="btn-primary" style="align-self:flex-start;"><i class="fa-solid fa-file-invoice-dollar" style="margin-right:6px;"></i> + Log Bill</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="dash-panel-header"><h3><i class="fa-solid fa-clock-rotate-left" style="margin-right:8px;"></i> Recent Bills Log</h3></div>
+          <div class="dash-panel-body" style="padding:0;">
+            <div class="table-scroll-wrap">
+              <table class="data-table" style="width:100%; min-width:600px;">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Vendor</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Receipt</th>
+                  </tr>
+                </thead>
+                <tbody id="receipts-tbody">
+                  <!-- JS injected -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+</main>
   </div>
 </div>
 
@@ -410,7 +478,7 @@
   const origSwitch = window.switchSuperPanel;
   window.switchSuperPanel = function(id) {
     origSwitch(id);
-    const titles = { projects:'My Projects', report:'Daily Report', attendance:'Labour Attendance', materials:'Material Log', measurements:'Work Measurements', photos:'Site Photos', progress:'Update Progress', documents:'Project Documents' };
+    const titles = { projects:'My Projects', report:'Daily Report', attendance:'Labour Attendance', materials:'Material Log', measurements:'Work Measurements', photos:'Site Photos', progress:'Update Progress', documents:'Project Documents' , receipts:'Bills & Receipts' };
     const h2 = document.getElementById('topbar-title');
     if (h2) h2.textContent = titles[id] || 'Dashboard';
     if (id === 'documents') renderSupervisorDocuments();
