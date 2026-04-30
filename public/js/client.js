@@ -145,7 +145,7 @@ async function loadClientProjects() {
       return;
     }
     const res = await fetch('/api/projects', { headers: apiHeaders() });
-    if (!res.ok) return;
+    if (!res.ok) throw new Error('API responded with ' + res.status);
     const apiProjects = await res.json();
     const userStr = sessionStorage.getItem('ck_user');
     const uName = userStr ? JSON.parse(userStr).name : '';

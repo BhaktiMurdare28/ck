@@ -145,7 +145,7 @@ async function loadClientProjects() {
       return;
     }
     const res = await fetch('/api/projects', { headers: apiHeaders() });
-    if (!res.ok) return;
+    if (!res.ok) throw new Error('API responded with ' + res.status);
     const apiProjects = await res.json();
     const userStr = sessionStorage.getItem('ck_user');
     const uName = userStr ? JSON.parse(userStr).name : '';
@@ -754,11 +754,16 @@ async function renderClientGallery() {
   }
 
   if (allGalleryPhotos.length === 0) {
-    // Show placeholder photos
+    // Demo gallery — 8 categorised construction site photos
     allGalleryPhotos = [
-      { src: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=400', project: 'Sample', date: '', stage: 'Foundation', category: 'foundation', submittedBy: '' },
-      { src: 'https://images.unsplash.com/photo-1541888081688-ce7d91e604f6?q=80&w=400', project: 'Sample', date: '', stage: 'Structure', category: 'structure', submittedBy: '' },
-      { src: 'https://images.unsplash.com/photo-1560184897-ae75f418493e?q=80&w=400', project: 'Sample', date: '', stage: 'Finishing', category: 'finishing', submittedBy: '' },
+      { src: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=600', project: 'Mehta Residence',   date: '2026-04-28', stage: 'Foundation Work',   category: 'foundation', submittedBy: 'Arjun Singh' },
+      { src: 'https://images.unsplash.com/photo-1590496793929-36417d3117de?q=80&w=600', project: 'Mehta Residence',   date: '2026-04-25', stage: 'Plinth Beam',       category: 'foundation', submittedBy: 'Arjun Singh' },
+      { src: 'https://images.unsplash.com/photo-1541888081688-ce7d91e604f6?q=80&w=600', project: 'Mehta Residence',   date: '2026-04-22', stage: 'Column Casting',    category: 'structure',  submittedBy: 'Arjun Singh' },
+      { src: 'https://images.unsplash.com/photo-1599707254369-90b4b4f4a9cb?q=80&w=600', project: 'NH-48 Widening',    date: '2026-04-21', stage: 'Brickwork GF',      category: 'structure',  submittedBy: 'Kavita Rao'  },
+      { src: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=600', project: 'NH-48 Widening',    date: '2026-04-19', stage: 'Sub-base Laying',   category: 'structure',  submittedBy: 'Kavita Rao'  },
+      { src: 'https://images.unsplash.com/photo-1560184897-ae75f418493e?q=80&w=600', project: 'Navi Mumbai Drain', date: '2026-04-17', stage: 'Plastering',        category: 'finishing',  submittedBy: 'Ravi Mehta'  },
+      { src: 'https://images.unsplash.com/photo-1565008447742-97f6f38c985c?q=80&w=600', project: 'Navi Mumbai Drain', date: '2026-04-14', stage: 'Internal Painting', category: 'finishing',  submittedBy: 'Ravi Mehta'  },
+      { src: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=600', project: 'Mehta Residence',   date: '2026-04-12', stage: 'Tile Fixing',       category: 'finishing',  submittedBy: 'Arjun Singh' }
     ];
   }
 
